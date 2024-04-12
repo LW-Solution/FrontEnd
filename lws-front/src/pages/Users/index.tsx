@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
 import UsersCreate from "../../components/Users/UsersCreate";
 import BodyHeader from "../../components/BodyHeader";
+import UsersRead from "../../components/Users/UsersRead";
+import UsersUpdate from "../../components/Users/UsersUpdate";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
@@ -48,7 +49,7 @@ export default function Users() {
       <div className="my-3 tab-content">
         {/* Listagem de Usuários */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          AQUI VAI A LISTAGEM DOPS USERS
+          <UsersRead />
           {/* <ListagemUsuario
             usuarios={usuarios}
             onEditUser={handleEditarUsuario}
@@ -62,12 +63,12 @@ export default function Users() {
         </div>
 
         {/* Edição de Usuário */}
-        {/* <div className="tab-pane" id="editar" role="tabpanel">
-          <EditarUsuario
-            usuarioId={usuarioEditandoId}
-            updateUserList={updateUserList}
+        <div className="tab-pane" id="editar" role="tabpanel">
+          <UsersUpdate
+            /* usuarioId={usuarioEditandoId}
+            updateUserList={updateUserList} */
           />
-        </div> */}
+        </div>
       </div>
     </>
   );
