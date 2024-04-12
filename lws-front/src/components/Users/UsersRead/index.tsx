@@ -1,28 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./style.scss";
 import Modal from "../../Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
-
-
-const usuarios = [
-  {
-    id: 1,
-    nome: "João da Silva",
-  },
-  {
-    id: 2,
-    nome: "Maria Oliveira",
-  },
-  {
-    id: 3,
-    nome: "José Pereira",
-  },
-];
-
-export default function UsersRead () {
+export default function UsersRead() {
   /* const [usuarios, setUsuarios] = useState([]); */
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:3000/user/").then((response) => {
+      setUser(response.data);
+    });
+  }, []);
+
   const [modalData, setModalData] = useState({
     showModal: false,
     userIdToDelete: null,
@@ -74,20 +65,16 @@ export default function UsersRead () {
           </tr>
         </thead>
         <tbody>
-          {usuarios.map((usuario) => (
+          {user.map((usuario: { id: number; user_name: string }) => (
             <tr key={usuario.id}>
               <td className="col-1">{usuario.id}</td>
-              <td className="col-8">{usuario.nome}</td>
+              <td className="col-8">{usuario.user_name}</td>
               <td className="col-3">
                 {/* Ícone de Editar */}
-                <FontAwesomeIcon icon={faEdit} 
-                onClick={() => handleEdit(usuario.id)}/>
+                <FontAwesomeIcon icon={faEdit} />
 
                 {/* Ícone de Excluir */}
-                <FontAwesomeIcon icon={faTrash}
-                onClick={() => handleEdit(usuario.id)}
-                
-                />
+                <FontAwesomeIcon icon={faTrash} />
               </td>
             </tr>
           ))}
@@ -101,8 +88,8 @@ export default function UsersRead () {
             {deleteStatus === "success"
               ? "Exclusão Bem-sucedida"
               : deleteStatus === "fail"
-              ? "Exclusão Falhou"
-              : "Confirmação de Exclusão"}
+                ? "Exclusão Falhou"
+                : "Confirmação de Exclusão"}
           </h5>
         )}
         footer={() => (
@@ -111,7 +98,7 @@ export default function UsersRead () {
               <>
                 <button
                   className="btn btn-danger"
-                  onClick={() => {}}
+                  onClick={() => { }}
                 >
                   Excluir
                 </button>
