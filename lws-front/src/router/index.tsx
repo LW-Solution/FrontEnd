@@ -6,7 +6,7 @@ import Stations from "../pages/Stations";
 import Template from "../Template";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
-import UserCreate from "../pages/Users/UserCreate";
+import UserCreate from "../pages/Users/index";
 import Users from "../pages/Users";
 
 export default[    

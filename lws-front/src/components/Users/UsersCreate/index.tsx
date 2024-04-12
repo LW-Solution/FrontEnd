@@ -1,23 +1,43 @@
 import { useState } from "react";
+import axios from "axios";
 
 export default function UsersCreate(/* {updateUserList} */) {
-  const [usuario, setUsuario] = useState({
-    nome: "",
+  const [user, setUser] = useState({
+    name: "",
     email: "",
-    senha: "",
-    confirmarSenha: "",
-    role: "LIDER_DE_PROJETO",
+    password: "",
+    confirmPassword: "",
+    permissionsId: [1],
   });
 
   const handleChange = (e: { target: { name: string; value: string; }; }) => {
     const { name, value } = e.target;
-    setUsuario((prevUsuario) => ({
-      ...prevUsuario,
+    setUser((prevUser) => ({
+      ...prevUser,
       [name]: value,
     }));
   };
 
-    return (
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:3000/user/", user);
+      
+      setUser({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        permissionsId: [1],
+      });
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+  };
+
+  return (
     <div className="container mt-2">
       <div className="card p-4">
         <h2 className="mb-3">Cadastro de Usuário</h2>
@@ -28,10 +48,10 @@ export default function UsersCreate(/* {updateUserList} */) {
             </label>
             <input
               type="text"
-              id="nome"
-              name="nome"
-              value={usuario.nome}
-              onChange={handleChange}             
+              id="name"
+              name="name"
+              value={user.name}
+              onChange={handleChange}
               className="form-control"
               required
             />
@@ -44,10 +64,10 @@ export default function UsersCreate(/* {updateUserList} */) {
               type="text"
               id="email"
               name="email"
-              value={usuario.email}
+              value={user.email}
               onChange={handleChange}
               className="form-control"
-              inputMode="text"             
+              inputMode="text"
               required
             />
           </div>
@@ -57,9 +77,9 @@ export default function UsersCreate(/* {updateUserList} */) {
             </label>
             <input
               type="password"
-              id="senha"
-              name="senha"
-              value={usuario.senha}
+              id="password"
+              name="password"
+              value={user.password}
               onChange={handleChange}
               className="form-control"
               required
@@ -71,19 +91,18 @@ export default function UsersCreate(/* {updateUserList} */) {
             </label>
             <input
               type="password"
-              id="confirmarSenha"
-              name="confirmarSenha"
-              value={usuario.confirmarSenha}
+              id="confirmPassword"
+              name="confirmPassword"
+              value={user.confirmPassword}
               onChange={handleChange}
               className="form-control"
               required
             />
           </div>
 
-          {/* Campo hidden de "role" */}
           <input type="hidden" name="role" value="user" />
 
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
             Cadastrar Usuário
           </button>
         </form>
