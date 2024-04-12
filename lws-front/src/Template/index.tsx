@@ -1,17 +1,24 @@
 import { Outlet } from "react-router";
 import "./style.scss";
 
-import { useMatches } from "react-router-dom";
-
+import { useMatches, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 import logo from "@/assets/images/LW_logo_w_light.png";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import GenericButton from "../components/Button";
 
-export default function Template(){
+export default function Template() {
   const matches = useMatches();
-  const title: string = matches.slice(-1)[0]?.handle?.title || "Home";
-  
+  const title = matches.slice(-1)[0]?.handle?.title || "HOME";
+
+  const navigate = useNavigate();
+  const logout = () => {
+    navigate("/login");
+  };
+
   return (
     <>
       <div className="app">
@@ -20,10 +27,10 @@ export default function Template(){
         </div>
         <Header title={title} />
         <Sidebar />
-        <div className="wrapper">
+        <div className="wrapper">          
           <Outlet />
         </div>
       </div>
     </>
-  )
+  );
 }

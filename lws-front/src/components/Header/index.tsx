@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import "./style.scss"
 
 interface HeaderProps {
   title: string;
@@ -16,7 +17,7 @@ export default function Header(props: HeaderProps) {
   };
 
   return (
-    <div className="d-flex justify-content-between">
+    <div className="header d-flex justify-content-between">
       <h2>{title}</h2>      
       <div className="d-flex">
         {!esconderBotaoAdmin && (

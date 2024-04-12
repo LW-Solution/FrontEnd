@@ -63,14 +63,9 @@ export default function Sidebar() {
     <>
       <div className="sidebar p-2 d-flex flex-column">
         {buttons()}
-        <a
-          onClick={logout}
-          className="sair d-flex btn text-start py-3 mt-auto justify-content-between"
-        >
+        <a onClick={logout} className="sair d-flex btn text-start py-3 mt-auto justify-content-between">
           SAIR
-          <span>
-            <FontAwesomeIcon icon={faRightToBracket} />
-          </span>
+          <span ><FontAwesomeIcon icon={faRightToBracket} /></span>      
         </a>
       </div>
     </>
