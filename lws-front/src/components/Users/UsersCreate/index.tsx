@@ -5,8 +5,7 @@ export default function UsersCreate(/* {updateUserList} */) {
     nome: "",
     email: "",
     senha: "",
-    confirmarSenha: "",
-    role: "LIDER_DE_PROJETO",
+    confirmarSenha: "",    
   });
 
   const handleChange = (e: { target: { name: string; value: string; }; }) => {
@@ -78,10 +77,7 @@ export default function UsersCreate(/* {updateUserList} */) {
               className="form-control"
               required
             />
-          </div>
-
-          {/* Campo hidden de "role" */}
-          <input type="hidden" name="role" value="user" />
+          </div>         
 
           <button type="submit" className="btn btn-primary">
             Cadastrar Usuário

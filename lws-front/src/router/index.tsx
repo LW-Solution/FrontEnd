@@ -6,7 +6,6 @@ import Stations from "../pages/Stations";
 import Template from "../Template";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
-import UserCreate from "../pages/Users/UserCreate";
 import Users from "../pages/Users";
 
 export default[    
@@ -23,12 +22,7 @@ export default[
                     path: "/admin/users",
                     element: <Users />,
                     handle: { title: "USUÁRIOS" }
-                },
-                {
-                    path: "/admin/usercreate",
-                    element: <UserCreate/>,
-                    handle: { title: "CADASTRAR USUÁRIO" }
-                },
+                },               
                 {
                     path: "/admin/stations",
                     element: <Stations />,
