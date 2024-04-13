@@ -22,11 +22,11 @@ const Modal = (props: ModalProps) => {
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <div className="col-4">{header && header()}</div>
+              <div className="col-4 text-center">{header && header()}</div>
               <div className="col-4 text-center">
                 <img
                   src={logo}
-                  alt="9tech-logo"
+                  alt="LWS Logo"
                   width="90"
                   className="mx-auto"
                 ></img>
@@ -38,7 +38,7 @@ const Modal = (props: ModalProps) => {
 
             <div className="modal-body">{children}</div>
 
-            {footer && <div className="modal-footer">{footer()}</div>}
+            {footer && <div className="modal-footer mx-auto">{footer()}</div>}
           </div>
         </div>
       </div>

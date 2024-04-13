@@ -1,16 +1,23 @@
 import { useState } from "react";
-import axios from "axios";
+import Toast from "../../Toast";
 
-export default function UsersCreate({ updateUserList }: {  updateUserList: () => Promise<void> } ) {
+
+export default function UsersCreate({
+  updateUserList,
+}: {
+  updateUserList: () => Promise<void>;
+}) {
+  const [toast, setToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const [user, setUser] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
     permissionsId: [1],
-  });
+  });  
 
-  const handleChange = (e: { target: { name: string; value: string; }; }) => {
+  const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
       ...prevUser,
@@ -18,13 +25,14 @@ export default function UsersCreate({ updateUserList }: {  updateUserList: () =>
     }));
   };
 
-
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
-
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/user/", user);
-      
+      await window.axios.post("user", user);
+
+      setToastMessage(`Usuário cadastrado com sucesso!`);
+      setToast(true);
+
       setUser({
         name: "",
         email: "",
@@ -35,14 +43,23 @@ export default function UsersCreate({ updateUserList }: {  updateUserList: () =>
       updateUserList();
     } catch (error) {
       console.error("Erro na requisição:", error);
-    }
+      setToast(true);
+    }    
   };
 
   return (
     <div className="container mt-2">
+      <Toast
+        show={toast}
+        toggle={() => setToast(false)}
+        type={toastMessage.includes("sucesso") ? "success" : "danger"}
+      >
+        {toastMessage}
+      </Toast>
+
       <div className="card p-4">
         <h2 className="mb-3">Cadastro de Usuário</h2>
-        <form /* onSubmit={} */>
+        <form >
           <div className="mb-2">
             <label htmlFor="nome" className="form-label">
               Nome:
@@ -86,7 +103,7 @@ export default function UsersCreate({ updateUserList }: {  updateUserList: () =>
               required
             />
           </div>
-          <div className="mb-2">
+          {/* <div className="mb-2">
             <label htmlFor="senha" className="form-label">
               Confrimar Senha:
             </label>
@@ -99,12 +116,16 @@ export default function UsersCreate({ updateUserList }: {  updateUserList: () =>
               className="form-control"
               required
             />
-          </div>
+          </div> */}
 
           <input type="hidden" name="role" value="user" />
 
-          <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
-            Cadastrar Usuário
+          <button
+            type="submit"
+            className="btn btn-secondary"
+            onClick={handleSubmit}
+          >
+            Cadastrar
           </button>
         </form>
       </div>

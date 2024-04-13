@@ -18,13 +18,12 @@ export default function Users() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/user/");
+        const response = await axios.get("user");
         setUser(response.data);
       } catch (error) {
         console.error("Erro na requisição:", error);
       }
     };
-
     fetchData();
   }, []); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
@@ -33,15 +32,16 @@ export default function Users() {
     setuserUpdateIdId(id);
 
     // Ativa a aba de edição
-    const element = document.getElementById("Editar")!;
+    const element = document.getElementById("Editar");
     if (element) {
       element.click();
-    }
+    }    
   };
+  
 
   const updateUserList = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/user/");
+      const response = await axios.get("user");
       setUser(response.data);
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -54,12 +54,7 @@ export default function Users() {
       <div className="my-3 tab-content">
         {/* Listagem de Usuários */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <UsersRead userList={user} onEditUser={handleEditarUsuario}/>
-          {/* <ListagemUsuario
-            usuarios={usuarios}
-            onEditUser={handleEditarUsuario}
-            updateUserList={updateUserList}
-          /> */}
+          <UsersRead userList={user} onEditUser={handleEditarUsuario}/>          
         </div>       
 
         {/* Cadastro de Usuário */}
@@ -68,12 +63,13 @@ export default function Users() {
         </div>
 
         {/* Edição de Usuário */}
+        
         <div className="tab-pane" id="editar" role="tabpanel">
           <UsersUpdate
-            usuarioId={userUpdateId}
+            usuarioId={userUpdateId}            
             updateUserList={updateUserList}
           />
-        </div>
+        </div>        
       </div>
     </>
   );
