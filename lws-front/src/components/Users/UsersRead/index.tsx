@@ -3,6 +3,7 @@ import "./style.scss";
 import Modal from "../../Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export default function UsersRead({ userList ,onEditUser }: { userList: never[],onEditUser: (id: SetStateAction<null>) => void }) {
   const [user, setUser] = useState([]);
@@ -25,6 +26,13 @@ export default function UsersRead({ userList ,onEditUser }: { userList: never[],
       userToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
+  };
+
+  const handleDelete = async (id: number) => {
+    const response = await axios.delete(`http://localhost:3000/user/${id ? String(id) : ''}`);
+    if (response.status === 200) {
+      setUser(user.filter((usuario: { id: number; }) => usuario.id !== id));
+    } 
   };
 
   const handleEdit = (id: SetStateAction<null>) => {
@@ -78,7 +86,7 @@ export default function UsersRead({ userList ,onEditUser }: { userList: never[],
 
 
                 {/* Ícone de Excluir */}
-                <FontAwesomeIcon icon={faTrash} />
+                <FontAwesomeIcon icon={faTrash} onClick={() => handleDelete(usuario.id)}/>
               </td>
             </tr>
           ))}
