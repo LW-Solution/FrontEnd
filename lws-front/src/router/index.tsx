@@ -4,10 +4,9 @@ import Params from "../pages/Params";
 import Reports from "../pages/Reports";
 import Stations from "../pages/Stations";
 import Template from "../Template";
-import Users from "../pages/Users";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
-
+import Users from "../pages/Users";
 
 export default[    
         {
@@ -23,7 +22,7 @@ export default[
                     path: "/admin/users",
                     element: <Users />,
                     handle: { title: "USUÁRIOS" }
-                },
+                },               
                 {
                     path: "/admin/stations",
                     element: <Stations />,
@@ -44,8 +43,6 @@ export default[
                     element: <Alerts />,
                     handle: { title: "ALERTAS" }
                 },
-                
-
             ]
         },
         {
