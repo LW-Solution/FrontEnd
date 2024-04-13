@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function UsersCreate(/* {updateUserList} */) {
+export default function UsersCreate({ updateUserList }: {  updateUserList: () => Promise<void> } ) {
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -32,6 +32,7 @@ export default function UsersCreate(/* {updateUserList} */) {
         confirmPassword: "",
         permissionsId: [1],
       });
+      updateUserList();
     } catch (error) {
       console.error("Erro na requisição:", error);
     }

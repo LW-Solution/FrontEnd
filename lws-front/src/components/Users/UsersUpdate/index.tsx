@@ -1,72 +1,60 @@
 
-import { useState } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 
-export default function UsersUpdate(/* { usuarioId, updateUserList } */) {
-  const [usuario, setUsuario] = useState({   
-    nome: "",
+export default function UsersUpdate({ usuarioId, updateUserList }: { usuarioId: null, updateUserList: () => Promise<void> }) {
+  const [user, setUser] = useState({   
+    user_name: "",
     email: "",
-    senha: "",
-    confirmarSenha: "",    
+    password: "",
+    confirmPassword: "",
+    permissionsId: [1],    
   });  
 
-/*   useEffect(() => {
-    // Verifica se há um ID válido
-    if (!usuarioId) {
-      setToastMessage("Clique em editar na página de Listagem");
-      setToast(true);
-      return;
-    }
-
+  useEffect(() => {  
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `auth/lideres/${parseInt(usuarioId, 10)}`,
-        );
-        setLider(response.data);
+        const response = await axios.get(`http://localhost:3000/user/byid/${usuarioId ? parseInt(usuarioId) : ''}`);
+        setUser(response.data);
       } catch (error) {
         console.error("Erro na requisição:", error);
-        // Lide com o erro da forma que desejar (ex.: redirecione para uma página de erro)
       }
     };
 
     fetchData();
-  }, [usuarioId]); */
+  }, [usuarioId]);
 
   const handleChange = (e: { target: { name: string; value: string; }; }) => {
     const { name, value } = e.target;
-    setUsuario((prevUsuario) => ({
-      ...prevUsuario,
+    setUser((prevUser) => ({
+      ...prevUser,
       [name]: value,
     }));
   };
 
-  /* const handleUpdate = async () => {
-    const { senha, login, cpf, nome } = lider;
-    const updateLider = { senha, login, nome, cpf };
+ const handleUpdate = async () => {
+    const updateUser = {
+      name: user.user_name,
+      email: user.email,
+      password: user.password,
+      confirmPassword: user.confirmPassword,
+      permissionsId: [1],
+    };
 
     try {
-      await axios.put(`auth/atualizar/${usuarioId}`, updateLider);
+      await axios.put(`http://localhost:3000/user/${usuarioId ? parseInt(usuarioId) : ''}`, updateUser);
       updateUserList();
 
-      document.getElementById("Listagem").click();
-      setToastMessage("Líder atualizado com sucesso!");
-      setToast(true);
-    } catch (error) {
-      console.error("Erro ao atualizar o líder:", error);
-      // Lide com o erro da forma que desejar (ex.: exiba uma mensagem de erro no toast)
-
-      // Verifica se o erro é de validação (código 400)
-      if (error.response && error.response.status === 400) {
-        setToastMessage("Nome já cadastrado!");
-      } else {
-        // Se for um erro diferente de validação, você pode lidar de outra forma
-        setToastMessage("Erro ao processar a requisição.");
+      const element = document.getElementById("Listagem");
+      if (element) {
+        element.click();
       }
-
-      setToast(true);
+    } catch (error) {
+      console.error("Erro ao atualizar o Usuário:", error);
+    
     }
-  }; */
+  };
 
   return (
     <div className="container mt-2">
@@ -82,9 +70,9 @@ export default function UsersUpdate(/* { usuarioId, updateUserList } */) {
             </label>
             <input
               type="text"
-              id="nome"
-              name="nome"
-              value={usuario.nome}
+              id="user_name"
+              name="user_name"
+              value={user.user_name}
               onChange={handleChange}             
               className="form-control"
               required
@@ -98,7 +86,7 @@ export default function UsersUpdate(/* { usuarioId, updateUserList } */) {
               type="text"
               id="email"
               name="email"
-              value={usuario.email}
+              value={user.email}
               onChange={handleChange}
               className="form-control"
               inputMode="text"             
@@ -111,9 +99,9 @@ export default function UsersUpdate(/* { usuarioId, updateUserList } */) {
             </label>
             <input
               type="password"
-              id="senha"
-              name="senha"
-              value={usuario.senha}
+              id="password"
+              name="password"
+              value={user.password}
               onChange={handleChange}
               className="form-control"
               required
@@ -125,9 +113,9 @@ export default function UsersUpdate(/* { usuarioId, updateUserList } */) {
             </label>
             <input
               type="password"
-              id="confirmarSenha"
-              name="confirmarSenha"
-              value={usuario.confirmarSenha}
+              id="confirmPassword"
+              name="confirmPassword"
+              value={user.confirmPassword}
               onChange={handleChange}
               className="form-control"
               required
@@ -138,7 +126,7 @@ export default function UsersUpdate(/* { usuarioId, updateUserList } */) {
             <button
               type="button"
               className="btn btn-primary"
-              /* onClick={handleUpdate} */
+               onClick={handleUpdate}
             >
               Atualizar Usuário
             </button>

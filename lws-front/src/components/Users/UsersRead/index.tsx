@@ -1,18 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import "./style.scss";
 import Modal from "../../Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 
-export default function UsersRead() {
-  /* const [usuarios, setUsuarios] = useState([]); */
+export default function UsersRead({ userList ,onEditUser }: { userList: never[],onEditUser: (id: SetStateAction<null>) => void }) {
   const [user, setUser] = useState([]);
+  
   useEffect(() => {
-    axios.get("http://localhost:3000/user/").then((response) => {
-      setUser(response.data);
-    });
-  }, []);
+    setUser(userList);
+  }, [userList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,
@@ -28,6 +25,11 @@ export default function UsersRead() {
       userToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
+  };
+
+  const handleEdit = (id: SetStateAction<null>) => {
+    console.log(`Editar usuário com ID ${id}`);
+    onEditUser && onEditUser(id);
   };
 
   const modalContent =
@@ -71,7 +73,9 @@ export default function UsersRead() {
               <td className="col-8">{usuario.user_name}</td>
               <td className="col-3">
                 {/* Ícone de Editar */}
-                <FontAwesomeIcon icon={faEdit} />
+
+                <FontAwesomeIcon icon={faEdit} onClick={() => handleEdit(usuario.id  as unknown as SetStateAction<null>)}/>
+
 
                 {/* Ícone de Excluir */}
                 <FontAwesomeIcon icon={faTrash} />
