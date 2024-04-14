@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import Toast from "../../Toast";
 
@@ -23,7 +22,7 @@ export default function UsersUpdate({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await window.axios.get(
+        const response = await window.users3000.get(
           `user/byid/${usuarioId ? parseInt(usuarioId) : ""}`
         );
         setUser(response.data);
@@ -55,7 +54,7 @@ export default function UsersUpdate({
     };
 
     try {
-      await window.axios.put(
+      await window.users3000.put(
         `user/${usuarioId ? parseInt(usuarioId) : ""}`,
         updateUser
       );

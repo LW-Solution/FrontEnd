@@ -3,7 +3,6 @@ import BodyHeader from "../../components/BodyHeader";
 import UsersRead from "../../components/Users/UsersRead";
 import UsersUpdate from "../../components/Users/UsersUpdate";
 import { SetStateAction, useEffect, useState } from "react";
-import axios from "axios";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
@@ -18,7 +17,7 @@ export default function Users() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("user");
+        const response = await window.users3000.get("user");
         setUser(response.data);
       } catch (error) {
         console.error("Erro na requisição:", error);
@@ -41,7 +40,7 @@ export default function Users() {
 
   const updateUserList = async () => {
     try {
-      const response = await axios.get("user");
+      const response = await window.users3000.get("user");
       setUser(response.data);
     } catch (error) {
       console.error("Erro na requisição:", error);

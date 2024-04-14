@@ -28,7 +28,7 @@ export default function UsersCreate({
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await window.axios.post("user", user);
+      await window.users3000.post("user", user);
 
       setToastMessage(`Usuário cadastrado com sucesso!`);
       setToast(true);

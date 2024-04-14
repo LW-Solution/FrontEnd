@@ -1,11 +1,16 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 declare global {
     interface Window {
-        axios: typeof axios;
+        users3000: AxiosInstance;
+        stations3001: AxiosInstance;
     }
 }
 
-window.axios = axios;
+window.users3000 = axios.create({
+    baseURL: "http://localhost:3000"
+});
 
-window.axios.defaults.baseURL = "http://localhost:3000";
+window.stations3001 = axios.create({
+    baseURL: "http://localhost:3001"
+});

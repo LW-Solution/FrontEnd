@@ -3,7 +3,6 @@ import "./style.scss";
 import Modal from "../../Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import Toast from "../../Toast";
 
 export default function UsersRead({
@@ -57,7 +56,7 @@ export default function UsersRead({
   const confirmDelete = async (id: number) => {
     try {
       // Realizar a solicitação DELETE
-      const response = await axios.delete(`user/${id ? String(id) : ""}`);
+      const response = await window.users3000.delete(`user/${id ? String(id) : ""}`);
       if (response.status === 200) {
         setUser(user.filter((usuario: { id: number }) => usuario.id !== id));
       }
