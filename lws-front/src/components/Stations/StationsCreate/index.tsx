@@ -30,7 +30,7 @@ export default function StationsCreate({
     try {
       await window.users3000.post("user", user);
 
-      setToastMessage(`Usuário cadastrado com sucesso!`);
+      setToastMessage(`Estação cadastrada com sucesso!`);
       setToast(true);
 
       setUser({
@@ -91,17 +91,31 @@ export default function StationsCreate({
           </div>
           <div className="mb-2">
             <label htmlFor="senha" className="form-label">
-              Coordenadas:
+              Latitude:
             </label>
             <input
-              type="password"
-              id="password"
-              name="password"
-              value={user.password}
+              type="text"
+              id="latitude"
+              /* name="password"
+              value={user.password} */
               onChange={handleChange}
               className="form-control"
               required
-            />
+            />            
+          </div>
+          <div className="mb-2">
+            <label htmlFor="senha" className="form-label">
+              Longitude:
+            </label>
+            <input
+              type="text"
+              id="longitude"
+              /* name="password"
+              value={user.password} */
+              onChange={handleChange}
+              className="form-control"
+              required
+            />            
           </div>
           {/* <div className="mb-2">
             <label htmlFor="senha" className="form-label">
