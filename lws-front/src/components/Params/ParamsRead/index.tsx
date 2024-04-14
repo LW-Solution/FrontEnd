@@ -5,36 +5,83 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
 
+interface Params {
+  id: number;
+  name: string;
+  type: string;
+  unity: string;
+  factor: number;
+  offset: number;
+}
+
 // Dados fictícios
 const fakeData = [
   {
     id: 1,
-    name: "Estação 1",
-    location: "Localização 1",
-    coordenate: "coordenada 1",
+    name: "Bateria",
+    type: "Tipo 1",
+    unity: "V",
+    factor: 1.0,
+    offset: 0.0,
   },
   {
     id: 2,
-    name: "Estação 2",
-    location: "Localização 2",
-    coordenate: "coordenada 2",
+    name: "Direção do Vento",
+    type: "Tipo 2",
+    unity: "°",
+    factor: 1.0,
+    offset: 0.0,
   },
   {
     id: 3,
-    name: "Estação 3",
-    location: "Localização 3",
-    coordenate: "coordenada 3",
+    name: "Precipitação",
+    type: "Tipo 3",
+    unity: "mm",
+    factor: 1.0,
+    offset: 0.0,
   },
+  {
+    id: 4,
+    name: "Pressão",
+    type: "Tipo 4",
+    unity: "mm Hg",
+    factor: 1.0,
+    offset: 0.0,
+  },
+  {
+    id: 5,
+    name: "Temperatura",
+    type: "Tipo 5",
+    unity: "°C",
+    factor: 1.0,
+    offset: 0.0,
+  },
+  {
+    id: 6,
+    name: "Umidade",
+    type: "Tipo 6",
+    unity: "%",
+    factor: 1.0,
+    offset: 0.0,
+  },
+  {
+    id: 7,
+    name: "Velocidade do Vento",
+    type: "Tipo 7",
+    unity: "m/s",
+    factor: 1.0,
+    offset: 0.0,
+  },
+
   // Adicione mais dados conforme necessário
 ];
 
-export default function StationsRead({
-  userList,
-  onEditUser,
-}: {
-  userList: never[];
+interface ParamsReadProps {
+  userList: Params[];
   onEditUser: (id: SetStateAction<null>) => void;
-}) {
+}
+
+export default function ParamsRead({ userList, onEditUser }: ParamsReadProps) {
   const [toast, setToast] = useState(false);
   const [user, setUser] = useState(fakeData); // Usando dados fictícios
 
@@ -147,31 +194,30 @@ export default function StationsRead({
   return (
     <div>
       <Toast show={toast} toggle={setToast} children={undefined} />
-      <h2 className="my-3">Estações Cadastradas</h2>
+      <h2 className="my-3">Parâmetros Cadastrados</h2>
       <table className="table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Descrição</th>
-            <th>Local</th>
-            <th>Coordenadas</th>
+            <th > ID</th>
+            <th >Descrição</th>
+            <th >Tipo</th>
+            <th >Unid. Medida</th>
+            <th >Fator</th>
+            <th>Offset</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           {user.map(
-            (fakeData: {
-              id: number;
-              name: string;
-              location: string;
-              coordenate: string;
-            }) => (
+            (fakeData: Params) => (
               <tr key={fakeData.id}>
-                <td className="col-1">{fakeData.id}</td>
-                <td className="col-6">{fakeData.name}</td>
-                <td className="col-2">{fakeData.location}</td>
-                <td className="col-2">{fakeData.coordenate}</td>
-                <td className="col-4">
+                <td>{fakeData.id}</td>
+                <td>{fakeData.name}</td>
+                <td>{fakeData.type}</td>
+                <td>{fakeData.unity}</td>
+                <td>{fakeData.factor}</td>
+                <td>{fakeData.offset}</td>
+                <td>
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
@@ -179,13 +225,14 @@ export default function StationsRead({
                     onClick={() =>
                       handleEdit(usuario.id as unknown as SetStateAction<null>)
                     }
-                  />
+                  />                  
                   {/* Ícone de Excluir */}
                   <FontAwesomeIcon
                     icon={faTrash}
                     className="btn btn-danger"
-                    onClick={() =>
-                      handleDelete(usuario.id, usuario.user_name, usuario.email)
+                    onClick={
+                      () =>
+                        handleDelete(fakeData.id, fakeData.name, fakeData.type) // Substituído 'usuario' por 'fakeData' e 'user_name' e 'email' por 'name' e 'type'
                     }
                   />
                 </td>

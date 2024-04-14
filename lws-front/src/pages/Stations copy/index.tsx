@@ -1,8 +1,8 @@
 import BodyHeader from "../../components/BodyHeader";
 import { SetStateAction, useEffect, useState } from "react";
-import ParamsRead from "../../components/Params/ParamsRead";
-import ParamsCreate from "../../components/Params/ParamsCreate";
-import ParamsUpdate from "../../components/Params/ParamsUpdate";
+import StationsCreate from "../../components/Stations/StationsCreate";
+import StationsRead from "../../components/Stations/StationsRead";
+import StationsUpdate from "../../components/Stations/StationsUpdate";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
@@ -53,18 +53,18 @@ export default function Users() {
       <div className="my-3 tab-content">
         {/* Listagem de Usuários */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <ParamsRead userList={user} onEditUser={handleEditarUsuario}/>          
+          <StationsRead userList={user} onEditUser={handleEditarUsuario}/>          
         </div>       
 
         {/* Cadastro de Usuário */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <ParamsCreate updateUserList={updateUserList} />
+          <StationsCreate updateUserList={updateUserList} />
         </div>
 
         {/* Edição de Usuário */}
         
         <div className="tab-pane" id="editar" role="tabpanel">
-          <ParamsUpdate
+          <StationsUpdate
             usuarioId={userUpdateId}            
             updateUserList={updateUserList}
           />
