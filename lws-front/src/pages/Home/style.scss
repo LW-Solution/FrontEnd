@@ -1,8 +1,16 @@
-.teste{
-    background-color: yellow;
-    color: red;
-    padding: auto;
-    margin: auto;
-    text-align: center;
-    font-size: 2rem;    
-}
+.btn {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease;
+  
+    &:hover {
+      background-color: #0056b3;
+      text-decoration: none;
+      color: #fff;
+    }
+  
+    .fa-icon {
+      margin-right: 0.5rem;
+    }
+  }
