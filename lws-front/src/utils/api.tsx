@@ -1,4 +1,10 @@
 import axios, { AxiosInstance } from "axios";
+import dotenv from "dotenv";
+import path from "path";
+
+const envFile = process.env.NODE_ENV == 'production' ? '.env.prod' : '.env.dev';
+
+dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 
 declare global {
     interface Window {
@@ -8,9 +14,9 @@ declare global {
 }
 
 window.users3000 = axios.create({
-    baseURL: "http://localhost:3000"
+    baseURL: `http://${process.env.AUTENTICACAO}`
 });
 
 window.stations3001 = axios.create({
-    baseURL: "http://localhost:3001"
+    baseURL: `http://${process.env.ESTACOES}`
 });
