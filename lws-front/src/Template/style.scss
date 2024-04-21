@@ -1,0 +1,45 @@
+$primary-color: #3A415A;
+
+.app {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  z-index: 100;
+
+  display: grid;
+  background-color: #e4e4e4;
+
+  gap: 0.5px;
+  grid-auto-rows: min-content 1fr;
+  grid-template-columns: auto 1fr;
+
+  > * {
+    background-color: white;
+  }
+
+  .logo {
+    padding: 10px 30px;
+    background-color: $primary-color;
+    img {
+      width: 200px;
+      
+    }
+  }
+
+  .wrapper {
+    padding: 20px;
+    overflow-y: scroll;
+  }
+
+  .cadastrar {
+    color: rgb(255, 255, 255);
+    font-weight: 900;
+    transition: 0.3s all;
+    display: grid;
+    grid-template-columns: 30px 1fr;
+
+    &:hover {
+      background-color: $secondary-color;    
+    }
+  }
+}
