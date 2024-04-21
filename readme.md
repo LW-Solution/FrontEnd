@@ -1,1 +1,4 @@
-branch - develop
+- Clonar o Respositório
+- Instalar as Dependências
+- Executar o comando "npm start"
+- O projeto está rodando na porta 5000
