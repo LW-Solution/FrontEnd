@@ -1,10 +1,7 @@
 import axios, { AxiosInstance } from "axios";
-import dotenv from "dotenv";
-import path from "path";
 
-const envFile = process.env.NODE_ENV == 'production' ? '.env.prod' : '.env.dev';
-
-dotenv.config({ path: path.resolve(process.cwd(), envFile) });
+const baseURLUsers = `http://${process.env.VITE_AUTENTICACAO}`;
+const baseURLStations = `http://${process.env.VITE_ESTACOES}`;
 
 declare global {
     interface Window {
@@ -14,9 +11,9 @@ declare global {
 }
 
 window.users3000 = axios.create({
-    baseURL: `http://${process.env.AUTENTICACAO}`
+    baseURL: baseURLUsers
 });
 
 window.stations3001 = axios.create({
-    baseURL: `http://${process.env.ESTACOES}`
+    baseURL: baseURLStations
 });

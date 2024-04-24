@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "vite --port 5000",
+    "dev": "set NODE_ENV=development && vite --port 5000",
+    "prod": "set NODE_ENV=production && vite --port 5000",
     "start:dev": "cross-env NODE_ENV=development && vite --port 5000",
     "start:prod": "cross-env NODE_ENV=production && vite --port 5000",
     "build": "tsc && vite build",
