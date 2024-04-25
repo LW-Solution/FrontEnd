@@ -14,7 +14,7 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-  },
+  }, 
   css: {
     preprocessorOptions: {
       scss: {
@@ -23,10 +23,12 @@ export default defineConfig({
     },
   },
   define: {
-    // Injete as variáveis de ambiente no código para uso durante a compilação
     "process.env": Object.keys(env || {}).reduce((prev: Record<string, string>, key: string) => {
       prev[key] = JSON.stringify(env?.[key]);
       return prev;
     }, {}),
   },
+  server: {
+    host: true
+  }
 });
