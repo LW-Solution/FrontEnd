@@ -3,22 +3,26 @@ import { SetStateAction, useEffect, useState } from "react";
 import ParamsRead from "../../components/Params/ParamsRead";
 import ParamsCreate from "../../components/Params/ParamsCreate";
 import ParamsUpdate from "../../components/Params/ParamsUpdate";
+import ParamsUnidades from "../../components/Params/ParamsUnidades";
+import ParamsTipo from "../../components/Params/ParamsTipo";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
-  { link: "#cadastrar", title: "Cadastrar" },
+  { link: "#cadastrar", title: "Cadastrar Parâmetro" },
+  { link: "#unidades", title: "Unidades" },
+  { link: "#tipo", title: "Tipo de Parâmetro" },
   { link: "#editar", title: "Editar" },
 ];
 
-export default function Users() {
-  const [userUpdateId, setuserUpdateIdId] = useState(null);
-  const [user, setUser] = useState([]);
+export default function Params() {
+  const [paramsUpdateId, setParamsUpdateId] = useState(null);
+  const [stationParameter, setStationParameter] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await window.users3000.get("user");
-        setUser(response.data);
+        const response = await window.stations3001.get("stationParameter");
+        setStationParameter(response.data);
       } catch (error) {
         console.error("Erro na requisição:", error);
       }
@@ -28,7 +32,7 @@ export default function Users() {
 
   const handleEditarUsuario = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
-    setuserUpdateIdId(id);
+    setParamsUpdateId(id);
 
     // Ativa a aba de edição
     const element = document.getElementById("Editar");
@@ -37,11 +41,10 @@ export default function Users() {
     }    
   };
   
-
-  const updateUserList = async () => {
+  const updateParamsList = async () => {
     try {
-      const response = await window.users3000.get("user");
-      setUser(response.data);
+      const response = await window.stations3001.get("stationParameter");
+      setStationParameter(response.data);
     } catch (error) {
       console.error("Erro na requisição:", error);
     }
@@ -49,24 +52,34 @@ export default function Users() {
 
   return (
     <>
+
       <BodyHeader navigation={navigation}/>
       <div className="my-3 tab-content">
         {/* Listagem de Usuários */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <ParamsRead userList={user} onEditUser={handleEditarUsuario}/>          
+          <ParamsRead paramsList={stationParameter} onEditParams={handleEditarUsuario}/>          
         </div>       
 
         {/* Cadastro de Usuário */}
+        <div className="tab-pane" id="unidades" role="tabpanel">
+          <ParamsUnidades updateParamsList={updateParamsList} />
+        </div>
+
+        <div className="tab-pane" id="tipo" role="tabpanel">
+          <ParamsTipo updateParamsList={updateParamsList} />
+        </div>
+
+        {/* Cadastro de Usuário */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <ParamsCreate updateUserList={updateUserList} />
+          <ParamsCreate updateParamsList={updateParamsList} />
         </div>
 
         {/* Edição de Usuário */}
         
         <div className="tab-pane" id="editar" role="tabpanel">
           <ParamsUpdate
-            usuarioId={userUpdateId}            
-            updateUserList={updateUserList}
+            usuarioId={paramsUpdateId}            
+            updateParamsList={updateParamsList}
           />
         </div>        
       </div>
