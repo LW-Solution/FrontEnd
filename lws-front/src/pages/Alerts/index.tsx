@@ -5,24 +5,30 @@ export default function Alerts() {
     <>
       <div className="corpoAlerta">
         <div>
-          <h1>Criar Alerta</h1>
+          <h1>Crie um Alerta</h1>
         </div>
         <form className="corpoFormulario">
-          <div className="">
-            <label></label>
-            <input></input>
+          <div className="campoCondicao">
+            <label>Condição</label>
+            <select>
+              <option value="igual">igual</option>
+              <option value="maior que">maior que</option>
+              <option value="menor que">menor que</option>
+              <option value="maior ou igual">maior ou igual</option>
+              <option value="menor ou igual">menor ou igual</option>
+            </select>
           </div>
           <div>
-            <label></label>
-            <input></input>
+            <label>Tipo de parâmetro</label>
+            <input type="string"></input>
           </div>
           <div>
-            <label></label>
-            <input></input>
+            <label>Estação</label>
+            <input type="string"></input>
           </div>
           <div>
-            <label></label>
-            <input></input>
+            <label>Ocorrência</label>
+            <input type="string"></input>
           </div>
         </form>
       </div>
