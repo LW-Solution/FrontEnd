@@ -1,50 +1,91 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Toast from "../../Toast";
 
-
 export default function StationsCreate({
-  updateUserList,
+  updateStationList,
 }: {
-  updateUserList: () => Promise<void>;
+  updateStationList: () => Promise<void>;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const [locations, setLocations] = useState({
+    id_location: "",
+    location_name: "",
+    coordinate: "",
     permissionsId: [1],
-  });  
+  });
+  const [station, setStation] = useState({
+    station_description: "",
+    location: {
+      id_location: "",
+      location_name: "",
+      coordinate: "",
+    },
+  });
+
+  useEffect(() => {
+    window.stations3001
+      .get("locations")
+      .then((response) => {
+        setLocations(response.data);
+      })
+      .catch((error) => {
+        console.error("Ocorreu um erro!", error);
+      });
+  }, []);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
+    setStation((prevstation) => ({
+      ...prevstation,
       [name]: value,
     }));
+  };
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedLocation = locations.find(location => location.location_name === e.target.value);
+    
+    setStation({
+      ...station,
+      location: {
+        ...station.location,
+        id_location: selectedLocation ? selectedLocation.id_location : '',
+        location_name: e.target.value,
+        coordinate: selectedLocation ? selectedLocation.coordinate : '',
+      },
+    });
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await window.users3000.post("user", user);
-
+      console.log(station)
+      await window.stations3001.post("station", station);
       setToastMessage(`Estação cadastrada com sucesso!`);
       setToast(true);
 
-      setUser({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
+      setLocations({
+        id_location: "",
+        location_name: "",
+        coordinate: "",
         permissionsId: [1],
       });
-      updateUserList();
+
+      setStation({
+        station_description: "",
+        location: {
+          id_location: "",
+          location_name: "",
+          coordinate: "",
+        },
+        permissionsId: [1],
+      });
+
+      updateStationList();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);
-    }    
+    }
   };
 
   return (
@@ -59,80 +100,57 @@ export default function StationsCreate({
 
       <div className="card p-4">
         <h2 className="mb-3">Cadastro de Estações</h2>
-        <form >
+        <form>
           <div className="mb-2">
-            <label htmlFor="nome" className="form-label">
+            <label htmlFor="station_description" className="form-label">
               Descrição da Estação:
             </label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={user.name}
+              id="station_description"
+              name="station_description"
+              value={station.station_description}
               onChange={handleChange}
               className="form-control"
               required
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="email" className="form-label">
-              Local:
+            <label htmlFor="location_name" className="form-label">
+              Localização:
             </label>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              value={user.email}
-              onChange={handleChange}
+            <select
+              name="location_name"
+              value={station.location.location_name}
+              onChange={handleLocationChange}
               className="form-control"
-              inputMode="text"
-              required
-            />
+            >
+              {(Array.isArray(locations) ? locations : []).map((location) => (
+                <option key={location.id} value={location.location_name}>
+                  {location.location_name}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Latitude:
+            <label htmlFor="coordinate" className="form-label">
+              Coordenadas Geográficas:
             </label>
-            <input
-              type="text"
-              id="latitude"
-              /* name="password"
-              value={user.password} */
-              onChange={handleChange}
+            <select 
+              name="coordinate" 
+              value={station.location.coordinate} 
               className="form-control"
-              required
-            />            
+              disabled
+            >
+              {(Array.isArray(locations) ? locations : []).map((location) => (
+                <option key={location.id} value={location.coordinate}>
+                  {location.coordinate}
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Longitude:
-            </label>
-            <input
-              type="text"
-              id="longitude"
-              /* name="password"
-              value={user.password} */
-              onChange={handleChange}
-              className="form-control"
-              required
-            />            
-          </div>
-          {/* <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Confrimar Senha:
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={user.confirmPassword}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div> */}
 
-          <input type="hidden" name="role" value="user" />
+          <input type="hidden" name="role" value="station" />
 
           <button
             type="submit"

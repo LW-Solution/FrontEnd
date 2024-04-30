@@ -1,5 +1,10 @@
 import axios, { AxiosInstance } from "axios";
 
+const baseURLUsers = `http://${process.env.VITE_AUTENTICACAO}`.replace(/"/g, '');
+const baseURLStations = `http://${process.env.VITE_ESTACOES}`.replace(/"/g, '');
+
+console.log(baseURLUsers)
+
 declare global {
     interface Window {
         users3000: AxiosInstance;
@@ -8,9 +13,9 @@ declare global {
 }
 
 window.users3000 = axios.create({
-    baseURL: "http://localhost:3000"
+    baseURL: baseURLUsers
 });
 
 window.stations3001 = axios.create({
-    baseURL: "http://localhost:3001"
+    baseURL: baseURLStations
 });
