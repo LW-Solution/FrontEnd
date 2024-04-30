@@ -1,5 +1,12 @@
 import { useState } from "react"
 import "./style.scss"
+import BodyHeader from "../../components/BodyHeader";
+
+const navigation = [
+  { link: "#listar", title: "Listar" },
+  { link: "#cadastrar", title: "Cadastrar" },
+  { link: "#editar", title: "Editar" },
+];
 
 export default function Alerts() {
 
@@ -22,12 +29,20 @@ export default function Alerts() {
 
   return (
     <>
+    <BodyHeader navigation={navigation} />
       <div className="corpoAlerta">
         <div>
           <h1>Crie um Alerta</h1>
         </div>
         <form className="corpoFormulario" onSubmit={handleSubmit}>
           <div className="campoCondicao">
+          <div>
+            <label>Selecione a estação responsável</label>
+            <select>
+              <option>estação 1</option>
+              <option>estação 2</option>
+            </select>
+          </div>
             <label>Condição</label>
             <select value={dadosAlerta.condicao} onChange={handleChange}>
               <option value="igual">igual</option>
@@ -36,21 +51,6 @@ export default function Alerts() {
               <option value="maior ou igual">maior ou igual</option>
               <option value="menor ou igual">menor ou igual</option>
             </select>
-          </div>
-          <div>
-            <label>Tipo de parâmetro</label>
-            <input type="string"></input>
-          </div>
-          <div>
-            <label>Estação</label>
-            <select>
-              <option>estação 1</option>
-              <option>estação 2</option>
-            </select>
-          </div>
-          <div>
-            <label>Ocorrência</label>
-            <input type="string"></input>
           </div>
 
           <button type="submit">Criar</button>
