@@ -13,7 +13,15 @@ interface objetoEstacao {
   id_station: number;
   station_description: string;
   location: {};
-  station_parameter: [];
+  station_parameter: [
+    {
+      parameter_type: {
+        unit: {
+          unit: 'milimetros cubicos'
+        }
+      }
+    }
+  ];
   alerts: [];
 }
 
@@ -21,7 +29,15 @@ const objeto1: objetoEstacao = {
   id_station: 1,
   station_description: "descricao",
   location: {},
-  station_parameter: [],
+  station_parameter: [
+    {
+      parameter_type: {
+        unit: {
+          unit: 'milimetros cubicos'
+        }
+      }
+    }
+  ],
   alerts: []
 }
 
@@ -29,7 +45,15 @@ const objeto2: objetoEstacao = {
   id_station: 2,
   station_description: "descricao2",
   location: {},
-  station_parameter: [],
+  station_parameter: [
+    {
+      parameter_type: {
+        unit: {
+          unit: 'milimetros cubicos'
+        }
+      }
+    }
+  ],
   alerts: []
 }
 
@@ -103,31 +127,22 @@ export default function Alerts() {
               ))}
             </select>
           </div>
-            <label >Condição</label>
-            <select value={dadosAlerta.condicao} onChange={handleChange}>
+            <label className="form-label" >Condição</label>
+            <select value={dadosAlerta.condicao} className="form-control" onChange={handleChange}>
               <option value="igual">igual</option>
               <option value="maior que">maior que</option>
               <option value="menor que">menor que</option>
               <option value="maior ou igual">maior ou igual</option>
               <option value="menor ou igual">menor ou igual</option>
             </select>
+            <div style={{ alignItems:"center", marginBottom:"20px", marginTop: "15px"}}>
+              <label id="valorDoAlerta" style={{marginRight: "10px"}}>Valor: </label>
+              <input type="text" id="inputValorAlerta" style={{marginRight: "10px"}}></input>
+              <span id="tipoValorAlerta" style={{marginRight: "10px"}}>{objeto1.station_parameter[0]?.parameter_type?.unit?.unit}</span>
+            </div>
           </div>
 
-          <div className="mb-2">
-            <label htmlFor="nome" className="form-label">
-              Descrição da Estação:
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
-
-          <button type="submit">Criar</button>
+          <button type="submit" className="btn btn-secondary">Criar</button>
         </form>
       </div>
     </>
