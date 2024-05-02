@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Toast from "../../Toast";
 
-
 export default function UsersCreate({
   updateUserList,
 }: {

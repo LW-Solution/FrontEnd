@@ -11,7 +11,8 @@ export default function StationsCreate({
   const [locations, setLocations] = useState({
     id_location: "",
     location_name: "",
-    coordinate: "",
+    latitude: "",
+    longitude: "",
     permissionsId: [1],
   });
   const [station, setStation] = useState({
@@ -19,7 +20,8 @@ export default function StationsCreate({
     location: {
       id_location: "",
       location_name: "",
-      coordinate: "",
+      latitude: "",
+      longitude: "",
     },
   });
 
@@ -32,7 +34,7 @@ export default function StationsCreate({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
-  }, []);
+  }, [locations]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -43,15 +45,18 @@ export default function StationsCreate({
   };
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedLocation = locations.find(location => location.location_name === e.target.value);
-    
+    const selectedLocation = locations.find(
+      (location) => location.location_name === e.target.value
+    );
+
     setStation({
       ...station,
       location: {
         ...station.location,
-        id_location: selectedLocation ? selectedLocation.id_location : '',
+        id_location: selectedLocation ? selectedLocation.id_location : "",
         location_name: e.target.value,
-        coordinate: selectedLocation ? selectedLocation.coordinate : '',
+        latitude: selectedLocation ? selectedLocation.latitude : "",
+        longitude: selectedLocation ? selectedLocation.longitude : "",
       },
     });
   };
@@ -59,7 +64,6 @@ export default function StationsCreate({
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      console.log(station)
       await window.stations3001.post("station", station);
       setToastMessage(`Estação cadastrada com sucesso!`);
       setToast(true);
@@ -67,7 +71,8 @@ export default function StationsCreate({
       setLocations({
         id_location: "",
         location_name: "",
-        coordinate: "",
+        latitude: "",
+        longitude: "",
         permissionsId: [1],
       });
 
@@ -76,7 +81,8 @@ export default function StationsCreate({
         location: {
           id_location: "",
           location_name: "",
-          coordinate: "",
+          latitude: "",
+          longitude: "",
         },
         permissionsId: [1],
       });
@@ -125,6 +131,7 @@ export default function StationsCreate({
               onChange={handleLocationChange}
               className="form-control"
             >
+              <option value="">Selecione a localização</option>
               {(Array.isArray(locations) ? locations : []).map((location) => (
                 <option key={location.id} value={location.location_name}>
                   {location.location_name}
@@ -132,19 +139,40 @@ export default function StationsCreate({
               ))}
             </select>
           </div>
+
           <div className="mb-2">
-            <label htmlFor="coordinate" className="form-label">
-              Coordenadas Geográficas:
+            <label htmlFor="latitude" className="form-label">
+              Latitude:
             </label>
-            <select 
-              name="coordinate" 
-              value={station.location.coordinate} 
+            <select
+              name="latitude"
+              value={station.location.latitude}
               className="form-control"
               disabled
             >
+              <option value="">Latitude</option>
               {(Array.isArray(locations) ? locations : []).map((location) => (
-                <option key={location.id} value={location.coordinate}>
-                  {location.coordinate}
+                <option key={location.id} value={location.latitude}>
+                  {location.latitude}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-2">
+            <label htmlFor="longitude" className="form-label">
+              Longitude:
+            </label>
+            <select
+              name="longitude"
+              value={station.location.longitude}
+              className="form-control"
+              disabled
+            >
+              <option value="">Longitude</option>
+              {(Array.isArray(locations) ? locations : []).map((location) => (
+                <option key={location.id} value={location.longitude}>
+                  {location.longitude}
                 </option>
               ))}
             </select>

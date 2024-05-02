@@ -2,75 +2,100 @@ import { useState, useEffect } from "react";
 import Toast from "../../Toast";
 
 export default function StationsUpdate({
-  usuarioId,
-  updateUserList,
+  stationId,
+  updateStationList,
 }: {
-  usuarioId: null;
-  updateUserList: () => Promise<void>;
+  stationId: string | null;
+  updateStationList: () => Promise<void>;
 }) {
-  const [user, setUser] = useState({
-    user_name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    permissionsId: [1],
-  });
-
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [locations, setLocations] = useState({
+    id_location: "",
+    location_name: "",
+    latitude: "",
+    longitude: "",
+  });
+  const [station, setStation] = useState({
+    station_description: "",
+    location: {
+      id_location: "",
+      location_name: "",
+      latitude: "",
+      longitude: "",
+    },
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await window.users3000.get(
-          `user/byid/${usuarioId ? parseInt(usuarioId) : ""}`
-        );
-        setUser(response.data);
+        // Carregar os detalhes da estação a ser atualizada
+        const response = await window.stations3001.get(`station/${stationId}`);
+        const { station_description, location } = response.data;
+
+        setStation({
+          station_description,
+          location: {
+            ...location
+          },
+        });
       } catch (error) {
         console.error("Erro na requisição:", error);
       }
     };
 
-    fetchData();
-  }, [usuarioId]);
+    if (stationId) {
+      fetchData();
+    }
+  }, [stationId]);
 
-  const handleChange = (e: { target: { name: string; value: string } }) => {
+  useEffect(() => {
+    // Carregar as localizações disponíveis para seleção
+    const fetchLocations = async () => {
+      try {
+        const response = await window.stations3001.get("locations");
+        setLocations(response.data);
+      } catch (error) {
+        console.error("Erro ao carregar localizações:", error);
+      }
+    };
+
+    fetchLocations();
+  }, [locations]);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
+    setStation((prevStation) => ({
+      ...prevStation,
       [name]: value,
     }));
   };
 
-  const handleUpdate = async (e: { preventDefault: () => void }) => {
+  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedLocation = locations.find(location => location.location_name === e.target.value);
+
+    setStation({
+      ...station,
+      location: {
+        ...station.location,
+        id_location: selectedLocation ? selectedLocation.id_location : "",
+        location_name: e.target.value,
+        latitude: selectedLocation ? selectedLocation.latitude : "",
+        longitude: selectedLocation ? selectedLocation.longitude : "",
+      },
+    });
+  };
+
+  const handleUpdate = async (e) => {
     e.preventDefault();
-
-    const updateUser = {
-      name: user.user_name,
-      email: user.email,
-      password: user.password,
-      confirmPassword: user.confirmPassword,
-      permissionsId: [1],
-    };
-
     try {
-      await window.users3000.put(
-        `user/${usuarioId ? parseInt(usuarioId) : ""}`,
-        updateUser
-      );
-      updateUserList();
-      setToastMessage("Usuário atualizado com sucesso!");
+      const response = await window.stations3001.put(`station/${stationId}`, station);
+      setToastMessage("Estação atualizada com sucesso!");
       setToast(true);
-
-      /* const element = document.getElementById("Listagem");
-      if (element) {
-        element.click();
-        setToastMessage("Usuário atualizado com sucesso!");
-        setToast(true);
-      } */
+      updateStationList();
     } catch (error) {
-      console.error("Erro ao atualizar o Usuário:", error);
-      setToastMessage("Erro ao atualizar o usuário.");
+      console.error("Erro ao atualizar a estação:", error);
+      setToastMessage("Erro ao atualizar a estação.");
       setToast(true);
     }
   };
@@ -85,83 +110,76 @@ export default function StationsUpdate({
         {toastMessage}
       </Toast>
 
-      {usuarioId ? (
+      {stationId ? (
         <div className="card p-4">
-          <h2 className="mb-3">Editar Estações</h2>
-          <form>
-            {/* Nome */}
+          <h2 className="mb-3">Editar Estação</h2>
+          <form onSubmit={handleUpdate}>
             <div className="mb-2">
-              <label htmlFor="nome" className="form-label">
+              <label htmlFor="station_description" className="form-label">
                 Descrição da Estação:
               </label>
               <input
                 type="text"
-                id="user_name"
-                name="user_name"
-                value={user.user_name}
+                id="station_description"
+                name="station_description"
+                value={station.station_description}
                 onChange={handleChange}
                 className="form-control"
                 required
               />
             </div>
             <div className="mb-2">
-              <label htmlFor="email" className="form-label">
-                Local:
+              <label htmlFor="location_name" className="form-label">
+                Localização:
+              </label>
+              <select
+                name="location_name"
+                value={station.location.location_name}
+                onChange={handleLocationChange}
+                className="form-control"
+              >
+                <option value="">Selecione a localização</option>
+                {(Array.isArray(locations) ? locations : []).map((location) => (
+                <option key={location.id} value={location.location_name}>
+                  {location.location_name}
+                </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-2">
+              <label htmlFor="latitude" className="form-label">
+                Latitude:
               </label>
               <input
                 type="text"
-                id="email"
-                name="email"
-                value={user.email}
-                onChange={handleChange}
+                id="latitude"
+                name="latitude"
+                value={station.location.latitude}
                 className="form-control"
-                inputMode="text"
-                required
+                disabled
               />
             </div>
             <div className="mb-2">
-              <label htmlFor="senha" className="form-label">
-                Coordenadas:
+              <label htmlFor="longitude" className="form-label">
+                Longitude:
               </label>
               <input
-                type="password"
-                id="password"
-                name="password"
-                value={user.password}
-                onChange={handleChange}
+                type="text"
+                id="longitude"
+                name="longitude"
+                value={station.location.longitude}
                 className="form-control"
-                required
+                disabled
               />
             </div>
-            {/* <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Confrimar Senha:
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={user.confirmPassword}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>   */}
 
-            {/* Botão de Atualizar */}
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={handleUpdate}
-            >
+            <button type="submit" className="btn btn-secondary">
               Atualizar
             </button>
           </form>
         </div>
       ) : (
-        <p className="text-center">
-          Selecione a Estação que deseja Editar na aba Listar
-        </p>
+        <p className="text-center">Selecione a estação que deseja editar.</p>
       )}
     </div>
   );

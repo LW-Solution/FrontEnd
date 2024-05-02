@@ -5,162 +5,97 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
 
-interface Params {
-  id: number;
-  name: string;
-  type: string;
-  unity: string;
-  factor: number;
-  offset: number;
-}
-
-// Dados fictícios
-const fakeData = [
-  {
-    id: 1,
-    name: "Bateria",
-    type: "Tipo 1",
-    unity: "V",
-    factor: 1.0,
-    offset: 0.0,
-  },
-  {
-    id: 2,
-    name: "Direção do Vento",
-    type: "Tipo 2",
-    unity: "°",
-    factor: 1.0,
-    offset: 0.0,
-  },
-  {
-    id: 3,
-    name: "Precipitação",
-    type: "Tipo 3",
-    unity: "mm",
-    factor: 1.0,
-    offset: 0.0,
-  },
-  {
-    id: 4,
-    name: "Pressão",
-    type: "Tipo 4",
-    unity: "mm Hg",
-    factor: 1.0,
-    offset: 0.0,
-  },
-  {
-    id: 5,
-    name: "Temperatura",
-    type: "Tipo 5",
-    unity: "°C",
-    factor: 1.0,
-    offset: 0.0,
-  },
-  {
-    id: 6,
-    name: "Umidade",
-    type: "Tipo 6",
-    unity: "%",
-    factor: 1.0,
-    offset: 0.0,
-  },
-  {
-    id: 7,
-    name: "Velocidade do Vento",
-    type: "Tipo 7",
-    unity: "m/s",
-    factor: 1.0,
-    offset: 0.0,
-  },
-
-  // Adicione mais dados conforme necessário
-];
-
-interface ParamsReadProps {
-  userList: Params[];
-  onEditUser: (id: SetStateAction<null>) => void;
-}
-
-export default function ParamsRead({ userList, onEditUser }: ParamsReadProps) {
+export default function ParamsRead({
+  stationParameterList,
+  onEditStationParameter,
+}: {
+  stationParameterList: never[];
+  onEditStationParameter: (id_station_parameter: SetStateAction<null>) => void;
+}) {
   const [toast, setToast] = useState(false);
-  const [user, setUser] = useState(fakeData); // Usando dados fictícios
+  const [stationParameter, setStationParameter] = useState([]);
 
-  // Comente o useEffect até que o backend esteja conectado
-  // useEffect(() => {
-  //   if (Array.isArray(userList)) {
-  //     setUser(userList);
-  //   }
-  // }, [userList]);
+  useEffect(() => {
+    if (Array.isArray(stationParameterList)) {
+      setStationParameter(stationParameterList);
+    }
+  }, [stationParameterList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,
-    userIdToDelete: null,
-    userToDelete: null,
-    userEmailToDelete: null,
+    stationParameterIdToDelete: null,
+    stationParameterToDelete: null,
+    stationParameterEmailToDelete: null,
   });
   const [deleteStatus, setDeleteStatus] = useState(null);
 
-  const handleEdit = (id: SetStateAction<null>) => {
-    console.log(`Editar usuário com ID ${id}`);
-    onEditUser && onEditUser(id);
+  const handleEdit = (id_station_parameter: SetStateAction<null>) => {
+    onEditStationParameter && onEditStationParameter(id_station_parameter);
   };
   const cancelDelete = () => {
     setModalData({
       showModal: false,
-      userIdToDelete: null,
-      userToDelete: null,
-      userEmailToDelete: null,
+      stationParameterIdToDelete: null,
+      stationParameterToDelete: null,
+      stationParameterEmailToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
   };
 
-  const handleDelete = (id: number, nome: string, email: string) => {
+  const handleDelete = (id_station_parameter: number, nome: string, email: string) => {
     setModalData({
       showModal: true,
-      userIdToDelete: id,
-      userToDelete: nome,
-      userEmailToDelete: email,
+      stationParameterIdToDelete: id_station_parameter,
+      stationParameterToDelete: nome,
+      stationParameterEmailToDelete: email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
   };
 
-  // Comente a função confirmDelete até que o backend esteja conectado
-  // const confirmDelete = async (id: number) => {
-  //   try {
-  //     // Realizar a solicitação DELETE
-  //     const response = await window.users3000.delete(`user/${id ? String(id) : ""}`);
-  //     if (response.status === 200) {
-  //       setUser(user.filter((usuario: { id: number }) => usuario.id !== id));
-  //     }
+  const confirmDelete = async (id_station_parameter: number) => {
+    try {
+      // Realizar a solicitação DELETE
+      const response = await window.stations3001.delete(
+        `stationParameter/${id_station_parameter ? String(id_station_parameter) : ""}`
+      );
+      if (response.status === 200) {
+        setStationParameter(
+          stationParameter.filter(
+            (stationParameter: { id_station_parameter: number }) => stationParameter.id_station_parameter !== id_station_parameter
+          )
+        );
+      }
 
-  //     // Atualizar o status para sucesso
-  //     setDeleteStatus("success");
+      // Atualizar o status para sucesso
+      setDeleteStatus("success");
 
-  //     // Feche o modal após a exclusão ou faça outras ações necessárias
-  //     setModalData({
-  //       showModal: true,
-  //       userIdToDelete: null,
-  //       userToDelete: null,
-  //       userEmailToDelete: null,
-  //     });
+      // Feche o modal após a exclusão ou faça outras ações necessárias
+      setModalData({
+        showModal: true,
+        stationParameterIdToDelete: null,
+        stationParameterToDelete: null,
+        stationParameterEmailToDelete: null,
+      });
 
-  //     // Atualizar a lista de usuários após a exclusão, se necessário
-  //     const updatedUsers = user.filter((user) => user.id !== id);
-  //     setUser(updatedUsers);
-  //   } catch (error) {
-  //     console.error("Erro ao excluir o usuário:", error);
+      // Atualizar a lista de usuários após a exclusão, se necessário
+      const updatedParamss = stationParameter.filter(
+        (stationParameter) => stationParameter.id_station_parameter !== id_station_parameter
+      );
+      setStationParameter(updatedParamss);
+    } catch (error) {
+      console.error("Erro ao excluir o usuário:", error);
 
-  //     setModalData({
-  //       showModal: true,
-  //       userIdToDelete: null,
-  //       userToDelete: null,
-  //       userEmailToDelete: null,
-  //     });
+      setModalData({
+        showModal: true,
+        stationParameterIdToDelete: null,
+        stationParameterToDelete: null,
+        stationParameterEmailToDelete: null,
+      });
 
-  //     // Atualizar o status para falha
-  //     setDeleteStatus("fail");
-  //   }
-  // };
+      // Atualizar o status para falha
+      setDeleteStatus("fail");
+    }
+  };
 
   const modalContent =
     deleteStatus === "success" ? (
@@ -174,18 +109,18 @@ export default function ParamsRead({ userList, onEditUser }: ParamsReadProps) {
             Deseja realmente excluir a estação?
           </p>
         </div>
-        <div className="user-details">
+        <div className="stationParameter-details">
           <p>
             <b>ID: </b>
-            {modalData.userIdToDelete}
+            {modalData.stationParameterIdToDelete}
           </p>
           <p>
             <b>Descrição: </b>
-            {modalData.userToDelete}
+            {modalData.stationParameterToDelete}
           </p>
           <p>
             <b>Local: </b>
-            {modalData.userEmailToDelete}
+            {modalData.stationParameterEmailToDelete}
           </p>
         </div>
       </>
@@ -194,45 +129,67 @@ export default function ParamsRead({ userList, onEditUser }: ParamsReadProps) {
   return (
     <div>
       <Toast show={toast} toggle={setToast} children={undefined} />
-      <h2 className="my-3">Parâmetros Cadastrados</h2>
+      <h2 className="my-3">Parâmetros Cadastrados em Estações</h2>
       <table className="table">
         <thead>
           <tr>
-            <th > ID</th>
-            <th >Descrição</th>
-            <th >Tipo</th>
-            <th >Unid. Medida</th>
-            <th >Fator</th>
+            <th>Estação</th>
+            <th>Descrição</th>
+            <th>Unid. Medida</th>
+            <th>Fator</th>
             <th>Offset</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
-          {user.map(
-            (fakeData: Params) => (
-              <tr key={fakeData.id}>
-                <td>{fakeData.id}</td>
-                <td>{fakeData.name}</td>
-                <td>{fakeData.type}</td>
-                <td>{fakeData.unity}</td>
-                <td>{fakeData.factor}</td>
-                <td>{fakeData.offset}</td>
+          {stationParameter.map(
+            (stationParameter: {
+              station_parameter_id: number;
+              station: {
+                id_station: number;
+                station_description: string;
+                location: {
+                  id_location: number;
+                  location_name: string;
+                  latitude: string;
+                  longitude: string;
+                };
+              };
+              parameter_type: {
+                id_parameter_type: number;
+                description: string;
+                factor: number;
+                offset: number;
+                unit: {
+                  id_unit: number;
+                  unit: string;
+                };
+              };
+            }) => (
+              <tr key={stationParameter?.station_parameter_id}>
+                <td>{stationParameter?.station?.station_description}</td>
+                <td>{stationParameter?.parameter_type?.description}</td>
+                <td>{stationParameter?.parameter_type?.unit?.unit}</td>
+                <td>{stationParameter?.parameter_type?.factor}</td>
+                <td>{stationParameter?.parameter_type?.offset}</td>
                 <td>
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
                     className="btn btn-secondary me-1"
                     onClick={() =>
-                      handleEdit(usuario.id as unknown as SetStateAction<null>)
+                      handleEdit(
+                        stationParameter?.station_parameter_id as unknown as SetStateAction<null>
+                      )
                     }
-                  />                  
+                  />
                   {/* Ícone de Excluir */}
                   <FontAwesomeIcon
                     icon={faTrash}
                     className="btn btn-danger"
                     onClick={
                       () =>
-                        handleDelete(fakeData.id, fakeData.name, fakeData.type) // Substituído 'usuario' por 'fakeData' e 'user_name' e 'email' por 'name' e 'type'
+                        handleDelete(stationParameter?.station_parameter_id, stationParameter.station.station_description, stationParameter.parameter_type.description) // Substituído 'stationParameter' por 'fakeData' e 'stationParameter_name' e 'email' por 'name' e 'type'
                     }
                   />
                 </td>
@@ -251,8 +208,8 @@ export default function ParamsRead({ userList, onEditUser }: ParamsReadProps) {
                 <button
                   className="btn btn-danger"
                   onClick={() =>
-                    modalData.userIdToDelete !== null &&
-                    confirmDelete(modalData.userIdToDelete)
+                    modalData.stationParameterIdToDelete !== null &&
+                    confirmDelete(modalData.stationParameterIdToDelete)
                   }
                 >
                   Excluir
