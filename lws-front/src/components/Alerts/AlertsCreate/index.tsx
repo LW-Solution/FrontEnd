@@ -62,7 +62,8 @@ const lista: objetoEstacao[] = [objeto1,objeto2];
 export default function AlertsCreate() {
 
   const [stations, setStations] = useState<Array<objetoEstacao>>([])
-  
+  const [stationSelected, setStationSelected] = useState<objetoEstacao | undefined>()
+
   const [dadosAlerta, setDadosAlerta] = useState({
     condicao: "",
     station: {},
@@ -86,14 +87,17 @@ export default function AlertsCreate() {
     
     async function buscarEstacoes(){
       try {
-      //   console.log("Tentando buscar lista de estacoes")
-      //   const response = await fetch("http://localhost:3001/station/")
+        console.log("Tentando buscar lista de estacoes")
+        const response = await fetch("http://localhost:3001/station/")
+        if(!response.ok){
+          throw new Error("erro ao fazer busca de estacoes")
+        }
 
-      //   const data = await response.json();
+        const data = await response.json();
 
-      //   setStations(data);
+        setStations(data);
 
-      await setStations(lista);
+      // await setStations(lista);
 
       } catch (error) {
         console.error("falha ao tentar buscar lista de estacoes", error)
@@ -142,23 +146,23 @@ export default function AlertsCreate() {
   const handleSubmit = async (enviar: React.FormEvent<HTMLFormElement>) =>{
     enviar.preventDefault();
 
-    // try {
-    //     const response = await fetch("http://localhost:3001/station/", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content_type": "application/json"
-    //         },
-    //         body: JSON.stringify(dadosAlerta)
-    //     });
+    try {
+        const response = await fetch("http://localhost:3001/station/", {
+            method: "POST",
+            headers: {
+                "Content_type": "application/json"
+            },
+            body: JSON.stringify(dadosAlerta)
+        });
 
-    //     if(response.ok){
-    //         console.log("Alerta cadastrado")
-    //     }else{
-    //         console.error("Erro ao enviar dados para cadastro de alerta")
-    //     }
-    // } catch (error) {
-    //     console.error("Erro ao tentar cadastrar um alerta", error);
-    // }
+        if(response.ok){
+            console.log("Alerta cadastrado")
+        }else{
+            console.error("Erro ao enviar dados para cadastro de alerta")
+        }
+    } catch (error) {
+        console.error("Erro ao tentar cadastrar um alerta", error);
+    }
 
     console.log(dadosAlerta)
   }
@@ -174,7 +178,12 @@ export default function AlertsCreate() {
           <div >
           <div className="mb-2">
             <label htmlFor="nome" className="form-label">Selecione a estação responsável</label>
-            <select className="form-control">
+            <select className="form-control" onChange={(evento => {
+              const selectedStationId = evento.target.value;
+              const numberSelectedStationId = Number(selectedStationId)
+              const setarStationObject = stations.find(station => station.id_station === numberSelectedStationId);
+              setStationSelected(setarStationObject);
+            })}>
               {stations.map( station => (
                 <option key={station.id_station} value={station.id_station}>
                   {station.station_description}
@@ -193,7 +202,7 @@ export default function AlertsCreate() {
             <div style={{ alignItems:"center", marginBottom:"20px", marginTop: "15px"}}>
               <label style={{marginRight: "10px"}}>Valor: </label>
               <input name="value" type="number" style={{marginRight: "10px"}} onChange={handleChange}></input>
-              <span id="tipoValorAlerta" style={{marginRight: "10px"}}>{objeto1.station_parameter[0]?.parameter_type?.unit?.unit}</span>
+              <span id="tipoValorAlerta" style={{marginRight: "10px"}}>{stationSelected?.station_parameter[0]?.parameter_type?.unit?.unit}</span>
             </div>
           </div>
 
