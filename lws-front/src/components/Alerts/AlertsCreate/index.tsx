@@ -3,11 +3,10 @@ import BodyHeader from "../../BodyHeader";
 import axios from "axios";
 import { stringify } from "querystring";
 
-const navigation = [
-  { link: "#listar", title: "Listar" },
-  { link: "#cadastrar", title: "Cadastrar" },
-  { link: "#editar", title: "Editar" },
-];
+// MODELO DE REQUEST
+// APAGAR OBJETOS MOCKADOS
+// VERIFICAR ADAPTACOES
+// FAZER O PULL ANTES 
 
 interface objetoEstacao {
   id_station: number;
@@ -61,7 +60,16 @@ const lista: objetoEstacao[] = [objeto1,objeto2];
 
 export default function AlertsCreate() {
 
-  const [stations, setStations] = useState<Array<objetoEstacao>>([])
+  const [stations, setStations] = useState({
+    station_description: "",
+    location: {
+      id_location: "",
+      location_name: "",
+      latitude: "",
+      longitude: "",
+    },
+  });
+  
   const [stationSelected, setStationSelected] = useState<objetoEstacao | undefined>()
 
   const [dadosAlerta, setDadosAlerta] = useState({

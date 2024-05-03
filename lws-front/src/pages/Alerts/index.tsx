@@ -62,50 +62,6 @@ const lista: objetoEstacao[] = [objeto1,objeto2];
 
 export default function Alerts() {
 
-  const [stations, setStations] = useState<Array<objetoEstacao>>([])
-  
-  const [dadosAlerta, setDadosAlerta] = useState({
-    condicao: ""
-  })
-
-  
-
-  useEffect(() => {
-    
-    async function buscarEstacoes(){
-      try {
-      //   console.log("Tentando buscar lista de estacoes")
-      //   const response = await fetch("http://localhost:3001/station/")
-
-      //   const data = await response.json();
-
-      //   setStations(data);
-
-      await setStations(lista);
-
-      } catch (error) {
-        console.error("falha ao tentar buscar lista de estacoes", error)
-      }
-    }
-
-    buscarEstacoes();
-
-  }, [])
-
-
-
-  const handleChange = (enviar: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const {name, value} = enviar.target;
-    setDadosAlerta(prevState => (
-      {...prevState, 
-        [name]: value
-      }
-    ))
-  }
-
-  const handleSubmit = () =>{
-
-  }
 
   return (
     <>
@@ -115,6 +71,17 @@ export default function Alerts() {
         <div className="tab-pane" id="cadastrar" role="tabpanel">
           <AlertsCreate />
         </div>
+
+        {/* Listagem de alertas */}
+        <div className="tab-pane active" id="listar" role="tabpanel">
+          
+        </div>
+
+        {/* Update de alertas */}
+        <div className="tab-pane" id="editar" role="tabpanel">
+
+        </div>
+
       </div>
     </>
   )
