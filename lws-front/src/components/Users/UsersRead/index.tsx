@@ -4,6 +4,7 @@ import Modal from "../../Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
+import { User, ModalData, DeleteStatus } from "../../../types";
 
 export default function UsersRead({
   userList,
@@ -13,7 +14,7 @@ export default function UsersRead({
   onEditUser: (id: SetStateAction<null>) => void;
 }) {
   const [toast, setToast] = useState(false);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState<User[]>([]);
 
   useEffect(() => {
     if (Array.isArray(userList)) {
@@ -21,16 +22,16 @@ export default function UsersRead({
     }
   }, [userList]);
 
-  const [modalData, setModalData] = useState({
+  const [modalData, setModalData] = useState<ModalData>({
     showModal: false,
     userIdToDelete: null,
     userToDelete: null,
     userEmailToDelete: null,
   });
-  const [deleteStatus, setDeleteStatus] = useState(null);
+
+  const [deleteStatus, setDeleteStatus] = useState<DeleteStatus>(null);
 
   const handleEdit = (id: SetStateAction<null>) => {
-    console.log(`Editar usuário com ID ${id}`);
     onEditUser && onEditUser(id);
   };
   const cancelDelete = () => {
@@ -43,12 +44,12 @@ export default function UsersRead({
     setDeleteStatus(null); // Resetar o status ao cancelar
   };
 
-  const handleDelete = (id: number, nome: string, email: string) => {
+  const handleDelete = (user: User) => {
     setModalData({
       showModal: true,
-      userIdToDelete: id,
-      userToDelete: nome,
-      userEmailToDelete: email,
+      userIdToDelete: user.id,
+      userToDelete: user.user_name,
+      userEmailToDelete: user.email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
   };
@@ -56,7 +57,9 @@ export default function UsersRead({
   const confirmDelete = async (id: number) => {
     try {
       // Realizar a solicitação DELETE
-      const response = await window.users3000.delete(`user/${id ? String(id) : ""}`);
+      const response = await window.users3000.delete(
+        `user/${id ? String(id) : ""}`
+      );
       if (response.status === 200) {
         setUser(user.filter((usuario: { id: number }) => usuario.id !== id));
       }
@@ -92,7 +95,7 @@ export default function UsersRead({
 
   const modalContent =
     deleteStatus === "success" ? (
-      <p >Usuário excluído com sucesso!</p>
+      <p>Usuário excluído com sucesso!</p>
     ) : deleteStatus === "fail" ? (
       <p>Falha ao excluir o usuário. Tente novamente mais tarde.</p>
     ) : (
@@ -121,12 +124,11 @@ export default function UsersRead({
 
   return (
     <div>
-      <Toast show={toast} toggle={setToast} children={undefined} />
+      <Toast show={toast} toggle={setToast} children={""} type={""} />
       <h2 className="my-3">Usuários Cadastrados</h2>
       <table className="table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nome do Usuário</th>
             <th>E-mail</th>
             <th>Ações</th>
@@ -134,9 +136,8 @@ export default function UsersRead({
         </thead>
         <tbody>
           {user.map(
-            (usuario: { id: number; user_name: string; email: string }) => (
+            (usuario: User) => (
               <tr key={usuario.id}>
-                <td className="col-1">{usuario.id}</td>
                 <td className="col-4">{usuario.user_name}</td>
                 <td className="col-6">{usuario.email}</td>
                 <td className="col-6">
@@ -153,7 +154,7 @@ export default function UsersRead({
                     icon={faTrash}
                     className="btn btn-danger"
                     onClick={() =>
-                      handleDelete(usuario.id, usuario.user_name, usuario.email)
+                      handleDelete(usuario)
                     }
                   />
                 </td>
@@ -165,7 +166,6 @@ export default function UsersRead({
       <Modal
         showModal={modalData.showModal}
         handler={cancelDelete}
-        
         footer={() => (
           <>
             {deleteStatus !== "success" && deleteStatus !== "fail" && (

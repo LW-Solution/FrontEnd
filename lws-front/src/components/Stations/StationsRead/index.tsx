@@ -5,140 +5,118 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
 
-// Dados fictícios
-const fakeData = [
-  {
-    id: 1,
-    name: "Estação 1",
-    location: "Localização 1",
-    coordenate: "coordenada 1",
-  },
-  {
-    id: 2,
-    name: "Estação 2",
-    location: "Localização 2",
-    coordenate: "coordenada 2",
-  },
-  {
-    id: 3,
-    name: "Estação 3",
-    location: "Localização 3",
-    coordenate: "coordenada 3",
-  },
-  // Adicione mais dados conforme necessário
-];
-
 export default function StationsRead({
-  userList,
-  onEditUser,
+  stationList,
+  onEditStation,
 }: {
-  userList: never[];
-  onEditUser: (id: SetStateAction<null>) => void;
+  stationList: never[];
+  onEditStation: (id_station: SetStateAction<null>) => void;
 }) {
   const [toast, setToast] = useState(false);
-  const [user, setUser] = useState(fakeData); // Usando dados fictícios
+  const [station, setStation] = useState([]);
 
-  // Comente o useEffect até que o backend esteja conectado
-  // useEffect(() => {
-  //   if (Array.isArray(userList)) {
-  //     setUser(userList);
-  //   }
-  // }, [userList]);
+  useEffect(() => {
+    if (Array.isArray(stationList)) {
+      setStation(stationList);
+    }
+  }, [station, stationList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,
-    userIdToDelete: null,
-    userToDelete: null,
-    userEmailToDelete: null,
+    stationIdToDelete: null,
+    stationToDelete: null,
+    stationEmailToDelete: null,
   });
   const [deleteStatus, setDeleteStatus] = useState(null);
 
-  const handleEdit = (id: SetStateAction<null>) => {
-    console.log(`Editar usuário com ID ${id}`);
-    onEditUser && onEditUser(id);
+  const handleEdit = (id_station: SetStateAction<null>) => {
+    onEditStation && onEditStation(id_station);
   };
   const cancelDelete = () => {
     setModalData({
       showModal: false,
-      userIdToDelete: null,
-      userToDelete: null,
-      userEmailToDelete: null,
+      stationIdToDelete: null,
+      stationToDelete: null,
+      stationEmailToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
   };
 
-  const handleDelete = (id: number, nome: string, email: string) => {
+  const handleDelete = (id_station: number, nome: string, email: string) => {
     setModalData({
       showModal: true,
-      userIdToDelete: id,
-      userToDelete: nome,
-      userEmailToDelete: email,
+      stationIdToDelete: id_station,
+      stationToDelete: nome,
+      stationEmailToDelete: email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
   };
 
-  // Comente a função confirmDelete até que o backend esteja conectado
-  // const confirmDelete = async (id: number) => {
-  //   try {
-  //     // Realizar a solicitação DELETE
-  //     const response = await window.users3000.delete(`user/${id ? String(id) : ""}`);
-  //     if (response.status === 200) {
-  //       setUser(user.filter((usuario: { id: number }) => usuario.id !== id));
-  //     }
+  const confirmDelete = async (id_station: number) => {
+    try {
+      // Realizar a solicitação DELETE
+      const response = await window.stations3001.delete(
+        `station/${id_station ? String(id_station) : ""}`
+      );
+      if (response.status === 200) {
+        setStation(
+          station.filter((station: { id_station: number }) => station.id_station !== id_station)
+        );
+      }
 
-  //     // Atualizar o status para sucesso
-  //     setDeleteStatus("success");
+      // Atualizar o status para sucesso
+      setDeleteStatus("success");
 
-  //     // Feche o modal após a exclusão ou faça outras ações necessárias
-  //     setModalData({
-  //       showModal: true,
-  //       userIdToDelete: null,
-  //       userToDelete: null,
-  //       userEmailToDelete: null,
-  //     });
+      // Feche o modal após a exclusão ou faça outras ações necessárias
+      setModalData({
+        showModal: true,
+        stationIdToDelete: null,
+        stationToDelete: null,
+        stationEmailToDelete: null,
+      });
 
-  //     // Atualizar a lista de usuários após a exclusão, se necessário
-  //     const updatedUsers = user.filter((user) => user.id !== id);
-  //     setUser(updatedUsers);
-  //   } catch (error) {
-  //     console.error("Erro ao excluir o usuário:", error);
+      // Atualizar a lista de usuários após a exclusão, se necessário
+      const updatedStations = station.filter((station) => station.id_station !== id_station);
+      setStation(updatedStations);
+    } catch (error) {
+      console.error("Erro ao excluir o usuário:", error);
 
-  //     setModalData({
-  //       showModal: true,
-  //       userIdToDelete: null,
-  //       userToDelete: null,
-  //       userEmailToDelete: null,
-  //     });
+      setModalData({
+        showModal: true,
+        stationIdToDelete: null,
+        stationToDelete: null,
+        stationEmailToDelete: null,
+      });
 
-  //     // Atualizar o status para falha
-  //     setDeleteStatus("fail");
-  //   }
-  // };
+      // Atualizar o status para falha
+      setDeleteStatus("fail");
+    }
+  };
 
   const modalContent =
     deleteStatus === "success" ? (
-      <p>Estação excluída com sucesso!</p>
+      <p>Usuário excluído com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir a estação. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir o usuário. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir a estação?
+            Deseja realmente excluir este usuário?
           </p>
         </div>
-        <div className="user-details">
+        <div className="station-details">
           <p>
             <b>ID: </b>
-            {modalData.userIdToDelete}
+            {modalData.stationIdToDelete}
           </p>
           <p>
-            <b>Descrição: </b>
-            {modalData.userToDelete}
+            <b>Nome: </b>
+            {modalData.stationToDelete}
           </p>
           <p>
-            <b>Local: </b>
-            {modalData.userEmailToDelete}
+            <b>E-mail: </b>
+            {modalData.stationEmailToDelete}
           </p>
         </div>
       </>
@@ -151,33 +129,32 @@ export default function StationsRead({
       <table className="table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Descrição</th>
-            <th>Local</th>
-            <th>Coordenadas</th>
+            <th>Descrição da Estação</th>
+            <th>Localização</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
-          {user.map(
-            (fakeData: {
-              id: number;
-              name: string;
-              location: string;
-              coordenate: string;
+          {station.map(
+            (station: {
+              id_station: number;
+              station_description: string;
+              location: { location_name: string; latitude: string; longitude: string };
             }) => (
-              <tr key={fakeData.id}>
-                <td className="col-1">{fakeData.id}</td>
-                <td className="col-6">{fakeData.name}</td>
-                <td className="col-2">{fakeData.location}</td>
-                <td className="col-2">{fakeData.coordenate}</td>
-                <td className="col-4">
+              <tr key={station.id_station}>
+                <td className="col-4">{station.station_description}</td>
+                <td className="col-4">{station?.location?.location_name}</td>
+                <td className="col-6">{station?.location?.latitude}</td>
+                <td className="col-6">{station?.location?.longitude}</td>
+                <td className="col-6">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
                     className="btn btn-secondary me-1"
                     onClick={() =>
-                      handleEdit(usuario.id as unknown as SetStateAction<null>)
+                      handleEdit(station.id_station as unknown as SetStateAction<null>)
                     }
                   />
                   {/* Ícone de Excluir */}
@@ -185,7 +162,11 @@ export default function StationsRead({
                     icon={faTrash}
                     className="btn btn-danger"
                     onClick={() =>
-                      handleDelete(usuario.id, usuario.user_name, usuario.email)
+                      handleDelete(
+                        station.id_station,
+                        station.station_description,
+                        station.location.location_name
+                      )
                     }
                   />
                 </td>
@@ -204,8 +185,8 @@ export default function StationsRead({
                 <button
                   className="btn btn-danger"
                   onClick={() =>
-                    modalData.userIdToDelete !== null &&
-                    confirmDelete(modalData.userIdToDelete)
+                    modalData.stationIdToDelete !== null &&
+                    confirmDelete(modalData.stationIdToDelete)
                   }
                 >
                   Excluir

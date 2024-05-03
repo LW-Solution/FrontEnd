@@ -3,8 +3,6 @@ import axios, { AxiosInstance } from "axios";
 const baseURLUsers = `http://${process.env.VITE_AUTENTICACAO}`.replace(/"/g, '');
 const baseURLStations = `http://${process.env.VITE_ESTACOES}`.replace(/"/g, '');
 
-console.log(baseURLUsers)
-
 declare global {
     interface Window {
         users3000: AxiosInstance;

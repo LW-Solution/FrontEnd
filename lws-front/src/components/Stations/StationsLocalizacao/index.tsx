@@ -1,25 +1,25 @@
 import { useState } from "react";
 import Toast from "../../Toast";
 
-export default function UsersCreate({
-  updateUserList,
+
+export default function StationsLocalizacao({
+  updateStationList,
 }: {
-  updateUserList: () => Promise<void>;
+  updateStationList: () => Promise<void>;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const [locations, setLocations] = useState({
+    location_name: "",
+    latitude: "",
+    longitude: "",
     permissionsId: [1],
-  });  
+  });
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
+    setLocations((prevlocations) => ({
+      ...prevlocations,
       [name]: value,
     }));
   };
@@ -27,19 +27,19 @@ export default function UsersCreate({
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await window.users3000.post("user", user);
+        await window.stations3001.post("locations", locations);
+        setToastMessage(`Localização cadastrada com sucesso!`);
+        setToast(true);
 
-      setToastMessage(`Usuário cadastrado com sucesso!`);
-      setToast(true);
+        setLocations({
+            location_name: "",
+            latitude: "",
+            longitude: "",
+            permissionsId: [1],
+        });
+        
+        updateStationList();
 
-      setUser({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        permissionsId: [1],
-      });
-      updateUserList();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);
@@ -57,67 +57,53 @@ export default function UsersCreate({
       </Toast>
 
       <div className="card p-4">
-        <h2 className="mb-3">Cadastro de Usuário</h2>
+        <h2 className="mb-3">Cadastro de Localização</h2>
         <form >
           <div className="mb-2">
-            <label htmlFor="nome" className="form-label">
-              Nome:
+            <label htmlFor="location_name" className="form-label">
+              Nome da Localização:
             </label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={user.name}
+              id="location_name"
+              name="location_name"
+              value={locations.location_name}
               onChange={handleChange}
               className="form-control"
               required
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="email" className="form-label">
-              E-mail:
+            <label htmlFor="latitude" className="form-label">
+              Latitude:
             </label>
             <input
               type="text"
-              id="email"
-              name="email"
-              value={user.email}
+              id="latitude"
+              name="latitude"
+              value={locations.latitude}
               onChange={handleChange}
               className="form-control"
-              inputMode="text"
               required
-            />
+            />            
           </div>
-          <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Senha:
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={user.password}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
-          {/* <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Confrimar Senha:
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={user.confirmPassword}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div> */}
 
-          <input type="hidden" name="role" value="user" />
+          <div className="mb-2">
+            <label htmlFor="longitude" className="form-label">
+              Longitude:
+            </label>
+            <input
+              type="text"
+              id="longitude"
+              name="longitude"
+              value={locations.longitude}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />            
+          </div>
+
+          <input type="hidden" name="role" value="station" />
 
           <button
             type="submit"
