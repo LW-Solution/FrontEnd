@@ -8,6 +8,7 @@ import Login from "../pages/Login";
 import Home from "../pages/Home";
 import Users from "../pages/Users";
 import Dashboards from "../pages/Dashboards";
+import StationsDashboards from "../components/Stations/StationsDashboards";
 
 export default[    
         {
@@ -45,9 +46,9 @@ export default[
                     handle: { title: "ALERTAS" }
                 },
                 {
-                    path: "/admin/dashboards",
-                    element: <Dashboards />,
-                    handle: { title: "DASHBOARDS" }
+                    path: "/admin/dashboard/:id_station",
+                    element: <StationsDashboards />,
+                    handle: { title: "DASHBOARD" }
                 },
             ]
         },

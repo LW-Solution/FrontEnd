@@ -8,6 +8,7 @@ import {
   faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
+import { useNavigate } from "react-router-dom";
 
 export default function StationsRead({
   stationList,
@@ -102,6 +103,12 @@ export default function StationsRead({
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleChartClick = (id_station: number) => {
+    navigate(`/admin/dashboard/${id_station}`);
+  };
+
   const modalContent =
     deleteStatus === "success" ? (
       <p>Usuário excluído com sucesso!</p>
@@ -157,9 +164,7 @@ export default function StationsRead({
               };
             }) => (
               <tr key={station.id_station}>
-                <td className="col-3">
-                  {station.station_description}                  
-                </td>
+                <td className="col-3">{station.station_description}</td>
                 <td className="col-2">{station?.location?.location_name}</td>
                 <td className="col-2">{station?.location?.latitude}</td>
                 <td className="col-2">{station?.location?.longitude}</td>
@@ -178,7 +183,6 @@ export default function StationsRead({
                   <FontAwesomeIcon
                     icon={faTrash}
                     className="btn btn-sm btn-danger me-1"
-                    
                     onClick={() =>
                       handleDelete(
                         station.id_station,
@@ -190,13 +194,7 @@ export default function StationsRead({
                   <FontAwesomeIcon
                     icon={faChartLine}
                     className="btn btn-sm btn-primary"
-                    onClick={() =>
-                      handleDelete(
-                        station.id_station,
-                        station.station_description,
-                        station.location.location_name
-                      )
-                    }
+                    onClick={() => handleChartClick(station.id_station)}
                   />
                 </td>
               </tr>
