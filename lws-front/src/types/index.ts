@@ -19,3 +19,22 @@ export interface ModalData {
 }
 
 export type DeleteStatus = "success" | "error" | "loading" | "fail" | null;
+
+export interface ILocation {
+  id_location: number;
+  latitude: string;
+  location_name: string;
+  longitude: string;
+}
+
+export interface IStation {
+  id_station: number;
+  station_description: string;
+  uuid: string | null;
+  location: ILocation;
+}
+
+export interface IData {
+  id_estacao: IStation;
+  measurements: string[]; // Substitua 'any' pelo tipo correto se você souber
+}
