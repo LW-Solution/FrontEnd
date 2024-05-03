@@ -14,6 +14,7 @@ export default function ParamsTipo({
   });
   const [parameterType, setParameterType] = useState({
     description: "",
+    parameter_name: "",
     factor: "",
     offset: "",
     unit: {
@@ -69,6 +70,7 @@ export default function ParamsTipo({
 
       setParameterType({
         description: "",
+        parameter_name: "",
         factor: "",
         offset: "",
         unit: {
@@ -107,6 +109,20 @@ export default function ParamsTipo({
               id="description"
               name="description"
               value={parameterType.description}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+        <div className="mb-2">
+            <label htmlFor="description" className="form-label">
+              Nome do Parâmetro:
+            </label>
+            <input
+              type="text"
+              id="parameter_name"
+              name="parameter_name"
+              value={parameterType.parameter_name}
               onChange={handleChange}
               className="form-control"
               required

@@ -20,6 +20,7 @@ export default function ParamsCreate({
 
   const [parameterType, setParameterType] = useState({
     description: "",
+    parameter_name:'',
     factor: "",
     offset: "",
     unit: {
@@ -140,6 +141,7 @@ export default function ParamsCreate({
 
       setParameterType({
         description: "",
+        parameter_name: "",
         factor: "",
         offset: "",
         unit: {
