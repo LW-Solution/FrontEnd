@@ -142,7 +142,7 @@ export default function StationsRead({
             <th>Localização</th>
             <th>Latitude</th>
             <th>Longitude</th>
-            <th>Ações</th>
+            <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -157,13 +157,13 @@ export default function StationsRead({
               };
             }) => (
               <tr key={station.id_station}>
-                <td className="col-4">
+                <td className="col-3">
                   {station.station_description}                  
                 </td>
-                <td className="col-3">{station?.location?.location_name}</td>
+                <td className="col-2">{station?.location?.location_name}</td>
                 <td className="col-2">{station?.location?.latitude}</td>
                 <td className="col-2">{station?.location?.longitude}</td>
-                <td className="col-3">
+                <td className="col-1 text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}

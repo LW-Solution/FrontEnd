@@ -131,20 +131,20 @@ export default function UsersRead({
           <tr>
             <th>Nome do Usuário</th>
             <th>E-mail</th>
-            <th>Ações</th>
+            <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
           {user.map(
             (usuario: User) => (
               <tr key={usuario.id}>
-                <td className="col-4">{usuario.user_name}</td>
-                <td className="col-6">{usuario.email}</td>
-                <td className="col-6">
+                <td className="col-7">{usuario.user_name}</td>
+                <td className="col-4">{usuario.email}</td>
+                <td className="col-1 text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
-                    className="btn btn-secondary me-1"
+                    className="btn btn-sm btn-secondary me-1"
                     onClick={() =>
                       handleEdit(usuario.id as unknown as SetStateAction<null>)
                     }
@@ -152,7 +152,7 @@ export default function UsersRead({
                   {/* Ícone de Excluir */}
                   <FontAwesomeIcon
                     icon={faTrash}
-                    className="btn btn-danger"
+                    className="btn btn-sm btn-danger"
                     onClick={() =>
                       handleDelete(usuario)
                     }

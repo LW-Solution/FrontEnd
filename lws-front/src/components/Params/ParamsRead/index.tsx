@@ -138,7 +138,7 @@ export default function ParamsRead({
             <th>Unid. Medida</th>
             <th>Fator</th>
             <th>Offset</th>
-            <th>Ações</th>
+            <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -167,16 +167,16 @@ export default function ParamsRead({
               };
             }) => (
               <tr key={stationParameter?.station_parameter_id}>
-                <td>{stationParameter?.station?.station_description}</td>
-                <td>{stationParameter?.parameter_type?.description}</td>
-                <td>{stationParameter?.parameter_type?.unit?.unit}</td>
-                <td>{stationParameter?.parameter_type?.factor}</td>
-                <td>{stationParameter?.parameter_type?.offset}</td>
-                <td>
+                <td className="col-3">{stationParameter?.station?.station_description}</td>
+                <td className="col-2">{stationParameter?.parameter_type?.description}</td>
+                <td className="col-2">{stationParameter?.parameter_type?.unit?.unit}</td>
+                <td className="col-1">{stationParameter?.parameter_type?.factor}</td>
+                <td className="col-1">{stationParameter?.parameter_type?.offset}</td>
+                <td className="col-1 text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
-                    className="btn btn-secondary me-1"
+                    className="btn btn-sm btn-secondary me-1"
                     onClick={() =>
                       handleEdit(
                         stationParameter?.station_parameter_id as unknown as SetStateAction<null>
@@ -186,7 +186,7 @@ export default function ParamsRead({
                   {/* Ícone de Excluir */}
                   <FontAwesomeIcon
                     icon={faTrash}
-                    className="btn btn-danger"
+                    className="btn btn-sm btn-danger"
                     onClick={
                       () =>
                         handleDelete(stationParameter?.station_parameter_id, stationParameter.station.station_description, stationParameter.parameter_type.description) // Substituído 'stationParameter' por 'fakeData' e 'stationParameter_name' e 'email' por 'name' e 'type'
