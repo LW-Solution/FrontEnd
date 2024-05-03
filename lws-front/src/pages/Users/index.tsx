@@ -24,7 +24,7 @@ export default function Users() {
       }
     };
     fetchData();
-  }, []); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+  }, [user]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
   const handleEditarUsuario = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado

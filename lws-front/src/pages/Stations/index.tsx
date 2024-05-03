@@ -3,32 +3,34 @@ import { SetStateAction, useEffect, useState } from "react";
 import StationsCreate from "../../components/Stations/StationsCreate";
 import StationsRead from "../../components/Stations/StationsRead";
 import StationsUpdate from "../../components/Stations/StationsUpdate";
+import StationsLocalizacao from "../../components/Stations/StationsLocalizacao";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
-  { link: "#cadastrar", title: "Cadastrar" },
+  { link: "#cadastrar", title: "Estações" },
+  { link: "#localizacao", title: "Localização" },
   { link: "#editar", title: "Editar" },
 ];
 
-export default function Users() {
-  const [userUpdateId, setuserUpdateIdId] = useState(null);
-  const [user, setUser] = useState([]);
+export default function Stations() {
+  const [stationUpdateId, setstationUpdateIdId] = useState(null);
+  const [station, setStation] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await window.users3000.get("user");
-        setUser(response.data);
+        const response = await window.stations3001.get("station");
+        setStation(response.data);
       } catch (error) {
         console.error("Erro na requisição:", error);
       }
     };
     fetchData();
-  }, []); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+  }, [station]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
   const handleEditarUsuario = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
-    setuserUpdateIdId(id);
+    setstationUpdateIdId(id);
 
     // Ativa a aba de edição
     const element = document.getElementById("Editar");
@@ -38,10 +40,10 @@ export default function Users() {
   };
   
 
-  const updateUserList = async () => {
+  const updateStationList = async () => {
     try {
-      const response = await window.users3000.get("user");
-      setUser(response.data);
+      const response = await window.stations3001.get("station");
+      setStation(response.data);
     } catch (error) {
       console.error("Erro na requisição:", error);
     }
@@ -53,20 +55,25 @@ export default function Users() {
       <div className="my-3 tab-content">
         {/* Listagem de Usuários */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <StationsRead userList={user} onEditUser={handleEditarUsuario}/>          
-        </div>       
+          <StationsRead stationList={station} onEditStation={handleEditarUsuario}/>          
+        </div> 
+
+        {/* Cadastro de Usuário */}
+        <div className="tab-pane" id="localizacao" role="tabpanel">
+          <StationsLocalizacao updateStationList={updateStationList} />
+        </div>      
 
         {/* Cadastro de Usuário */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <StationsCreate updateUserList={updateUserList} />
+          <StationsCreate updateStationList={updateStationList} />
         </div>
 
         {/* Edição de Usuário */}
         
         <div className="tab-pane" id="editar" role="tabpanel">
           <StationsUpdate
-            usuarioId={userUpdateId}            
-            updateUserList={updateUserList}
+            stationId={stationUpdateId}            
+            updateStationList={updateStationList}
           />
         </div>        
       </div>

@@ -1,60 +1,175 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Toast from "../../Toast";
 
-interface Params {
-  id: number;
-  name: string;
-  type: string;
-  unity: string;
-  factor: number;
-  offset: number;
-}
-
-interface ParamsReadProps {
-  userList: Params[];
-  onEditUser: (id: SetStateAction<null>) => void;
-}
-
-const unitys = ["Selecione uma opção","V", "°", "mm", "mm Hg", "°C", "%", "m/s"];
-
 export default function ParamsCreate({
-  userList,
-  onEditUser,
-}: ParamsReadProps) {
+  updateStationParameterList,
+}: {
+  updateStationParameterList: () => Promise<void>;
+}) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    permissionsId: [1],
+
+  const [station, setStation] = useState({
+    station_description: "",
+    location: {
+      location_name: "",
+      latitude: "",
+      longitude: "",
+    }
   });
 
-  const handleChange = (e: { target: { name: string; value: string } }) => {
+  const [parameterType, setParameterType] = useState({
+    description: "",
+    factor: "",
+    offset: "",
+    unit: {
+      id_unit: "",
+    },
+  });
+
+  const[stationParameter, setStationParameter] = useState({
+  station: {
+    id_station: "",
+    station_description: "",
+    location: {
+      id_location: "",
+      location_name: "",
+      latitude: "",
+      longitude: "",
+    }
+  },
+  parameter_type: {
+    id_parameter_type: "",
+    description: "",
+    factor: "",
+    offset: "",
+    unit: {
+      id_unit: "",
+    }
+  }
+  });
+
+  useEffect(() => {
+    window.stations3001
+      .get("station")
+      .then((response) => {
+        setStation(response.data);
+      })
+      .catch((error) => {
+        console.error("Ocorreu um erro!", error);
+      });
+    window.stations3001
+      .get("parameterType")
+      .then((response) => {
+        setParameterType(response.data);
+      })
+      .catch((error) => {
+        console.error("Ocorreu um erro!", error);
+      });
+  }, [stationParameter]);
+
+  /* const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
+    setStation((prevStation) => ({
+      ...prevStation,
       [name]: value,
     }));
+  }; */
+
+  const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedStation = station.find(station => station.station_description === e.target.value);
+
+    setStationParameter({
+      ...stationParameter,
+      station: {
+        ...stationParameter.station,
+        id_station: selectedStation ? selectedStation.id_station : '',
+        station_description: e.target.value,
+        location: {
+          ...stationParameter.station.location,
+          id_location: selectedStation ? selectedStation.location.id_location : '',
+          location_name: selectedStation ? selectedStation.location.location_name : '',
+          latitude: selectedStation ? selectedStation.latitude : "",
+          longitude: selectedStation ? selectedStation.longitude : "",
+        }
+      },
+      parameter_type: {
+        ...stationParameter.parameter_type,
+      }
+    });
+  };
+
+  const handleParameterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedParameter = parameterType.find(parameter => parameter.description === e.target.value);
+
+    setStationParameter({
+      ...stationParameter,
+      station: {
+        ...stationParameter.station,
+      },
+      parameter_type: {
+        ...stationParameter.parameter_type,
+        id_parameter_type: selectedParameter ? selectedParameter.id_parameter_type : '',
+        description: e.target.value,
+        factor: selectedParameter ? selectedParameter.factor : '',
+        offset: selectedParameter ? selectedParameter.offset : '',
+        unit: {
+          ...stationParameter.parameter_type.unit,
+          id_unit: selectedParameter ? selectedParameter?.unitIdUnit : '',
+        }
+      }
+    });
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await window.users3000.post("user", user);
+      const resposta = await window.stations3001.post("stationParameter", stationParameter);
 
-      setToastMessage(`Parâmetro cadastrada com sucesso!`);
+      setToastMessage(`Parâmetro cadastrado na estação!`);
       setToast(true);
 
-      setUser({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        permissionsId: [1],
+      setStation({
+        station_description: "",
+        location: {
+          location_name: "",
+          latitude: "",
+          longitude: "",
+        }
       });
-      updateUserList();
+
+      setParameterType({
+        description: "",
+        factor: "",
+        offset: "",
+        unit: {
+          id_unit: "",
+        }
+      })
+
+      setStationParameter({
+        station: {
+          id_station: "",
+          station_description: "",
+          location: {
+            id_location: "",
+            location_name: "",
+            latitude: "",
+            longitude: "",
+          }
+        },
+        parameter_type: {
+          id_parameter_type: "",
+          description: "",
+          factor: "",
+          offset: "",
+          unit: {
+            id_unit: "",
+          }
+        }
+      });
+
+      updateStationParameterList();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);
@@ -72,126 +187,46 @@ export default function ParamsCreate({
       </Toast>
 
       <div className="card p-4">
-        <h2 className="mb-3">Cadastro de Parâmetros</h2>
+        <h2 className="mb-3">Cadastro de Parâmetros em Estação</h2>
         <form>
           <div className="mb-2">
             <label htmlFor="nome" className="form-label">
-              Descrição do Parâmetro:
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={user.name}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="email" className="form-label">
-              Tipo:
-            </label>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              value={user.email}
-              onChange={handleChange}
-              className="form-control"
-              inputMode="text"
-              required
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="unity" className="form-label">
-              Unidade de Medida:
+              Estação:
             </label>
             <select
-              id="unity"
-              onChange={handleChange}
+              name="location_name"
+              value={stationParameter.station.station_description}
+              onChange={handleStationChange}
               className="form-control"
-              required
             >
-              {unitys.map((unity, index) => (
-                <option key={index} value={unity}>
-                  {unity}
+              <option value="">Selecione uma estação</option>
+              {(Array.isArray(station) ? station : []).map((station) => (
+                <option key={station.id_station} value={station.station_description}>
+                  {station.station_description}
                 </option>
               ))}
             </select>
           </div>
           <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Fator:
+            <label htmlFor="email" className="form-label">
+              Tipo de Parâmetro:
             </label>
-            <input
-              type="text"
-              id="longitude"
-              /* name="password"
-              value={user.password} */
-              onChange={handleChange}
+            <select
+              name="location_name"
+              value={stationParameter.parameter_type.description}
+              onChange={handleParameterChange}
               className="form-control"
-              required
-            />
+            >
+              <option value="">Selecione um parâmetro de estação</option>
+              {(Array.isArray(parameterType) ? parameterType : []).map((parameterType) => (
+                <option key={parameterType.id_parameter_type} value={parameterType.description}>
+                  {parameterType.description}
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Offset:
-            </label>
-            <input
-              type="text"
-              id="longitude"
-              /* name="password"
-              value={user.password} */
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Fator:
-            </label>
-            <input
-              type="text"
-              id="longitude"
-              /* name="password"
-              value={user.password} */
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Offset:
-            </label>
-            <input
-              type="text"
-              id="longitude"
-              /* name="password"
-              value={user.password} */
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
-          {/* <div className="mb-2">
-            <label htmlFor="senha" className="form-label">
-              Confrimar Senha:
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={user.confirmPassword}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div> */}
 
-          <input type="hidden" name="role" value="user" />
+          <input type="hidden" name="role" value="station" />
 
           <button
             type="submit"

@@ -1,7 +1,7 @@
 import { useEffect, /* useState */ } from "react";
+import { ToastProps } from "../../types";
 
-const Toast = (props: { show: any; toggle: any; children: any; }) => {
-  const { show, toggle, children } = props;
+const Toast: React.FC<ToastProps> = ({ show, toggle, children }) => { 
   /* const [visible, setVisible] = useState(show); */
 
   useEffect(() => {

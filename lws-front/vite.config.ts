@@ -1,15 +1,20 @@
 import { defineConfig } from "vite";
-import { fileURLToPath, URL } from "url";
 import react from "@vitejs/plugin-react";
+import dotenv from "dotenv";
+import { fileURLToPath } from 'url';
 
-// https://vitejs.dev/config/
+// Carregue as variáveis de ambiente de acordo com o modo de execução
+const env = dotenv.config({
+  path: process.env.NODE_ENV === "production" ? ".env.prod" : ".env.dev",
+}).parsed;
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
-  },
+  }, 
   css: {
     preprocessorOptions: {
       scss: {
@@ -17,4 +22,13 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    "process.env": Object.keys(env || {}).reduce((prev: Record<string, string>, key: string) => {
+      prev[key] = JSON.stringify(env?.[key]);
+      return prev;
+    }, {}),
+  },
+  server: {
+    host: true
+  }
 });
