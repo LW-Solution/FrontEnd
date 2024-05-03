@@ -11,7 +11,8 @@ export default function StationsLocalizacao({
   const [toastMessage, setToastMessage] = useState("");
   const [locations, setLocations] = useState({
     location_name: "",
-    coordinate: "",
+    latitude: "",
+    longitude: "",
     permissionsId: [1],
   });
 
@@ -32,7 +33,8 @@ export default function StationsLocalizacao({
 
         setLocations({
             location_name: "",
-            coordinate: "",
+            latitude: "",
+            longitude: "",
             permissionsId: [1],
         });
         
@@ -72,14 +74,29 @@ export default function StationsLocalizacao({
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="coordinate" className="form-label">
-              Coordenadas Geográficas:
+            <label htmlFor="latitude" className="form-label">
+              Latitude:
             </label>
             <input
               type="text"
-              id="coordinate"
-              name="coordinate"
-              value={locations.coordinate}
+              id="latitude"
+              name="latitude"
+              value={locations.latitude}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />            
+          </div>
+
+          <div className="mb-2">
+            <label htmlFor="longitude" className="form-label">
+              Longitude:
+            </label>
+            <input
+              type="text"
+              id="longitude"
+              name="longitude"
+              value={locations.longitude}
               onChange={handleChange}
               className="form-control"
               required

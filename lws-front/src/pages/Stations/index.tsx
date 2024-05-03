@@ -26,7 +26,7 @@ export default function Stations() {
       }
     };
     fetchData();
-  }, []); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+  }, [station]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
   const handleEditarUsuario = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
@@ -72,7 +72,7 @@ export default function Stations() {
         
         <div className="tab-pane" id="editar" role="tabpanel">
           <StationsUpdate
-            usuarioId={stationUpdateId}            
+            stationId={stationUpdateId}            
             updateStationList={updateStationList}
           />
         </div>        

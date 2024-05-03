@@ -19,7 +19,6 @@ export default function StationsRead({
     if (Array.isArray(stationList)) {
       setStation(stationList);
     }
-    console.log(station);
   }, [station, stationList]);
 
   const [modalData, setModalData] = useState({
@@ -31,7 +30,6 @@ export default function StationsRead({
   const [deleteStatus, setDeleteStatus] = useState(null);
 
   const handleEdit = (id_station: SetStateAction<null>) => {
-    console.log(`Editar usuário com ID ${id_station}`);
     onEditStation && onEditStation(id_station);
   };
   const cancelDelete = () => {
@@ -131,10 +129,10 @@ export default function StationsRead({
       <table className="table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Descrição da Estação</th>
             <th>Localização</th>
-            <th>Coordenadas</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -143,13 +141,13 @@ export default function StationsRead({
             (station: {
               id_station: number;
               station_description: string;
-              location: { location_name: string; coordinate: string };
+              location: { location_name: string; latitude: string; longitude: string };
             }) => (
               <tr key={station.id_station}>
-                <td className="col-1">{station.id_station}</td>
                 <td className="col-4">{station.station_description}</td>
                 <td className="col-4">{station?.location?.location_name}</td>
-                <td className="col-6">{station?.location?.coordinate}</td>
+                <td className="col-6">{station?.location?.latitude}</td>
+                <td className="col-6">{station?.location?.longitude}</td>
                 <td className="col-6">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon

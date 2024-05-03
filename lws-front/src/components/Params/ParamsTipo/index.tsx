@@ -57,7 +57,6 @@ export default function ParamsTipo({
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      console.log(parameterType);
 
       await window.stations3001.post("parameterType", parameterType);
       setToastMessage(`Tipo de Parâmetro cadastrado com sucesso!`);
@@ -154,6 +153,7 @@ export default function ParamsTipo({
               onChange={handleUnitChange}
               className="form-control"
             >
+              <option value="">Selecione a unidade de medida</option>
               {(Array.isArray(unit) ? unit : []).map((unit) => (
                 <option key={unit.id} value={unit.unit}>
                   {unit.unit}

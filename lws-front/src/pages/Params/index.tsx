@@ -15,7 +15,7 @@ const navigation = [
 ];
 
 export default function Params() {
-  const [paramsUpdateId, setParamsUpdateId] = useState(null);
+  const [stationParameterUpdateId, setStationParameterUpdateId] = useState(null);
   const [stationParameter, setStationParameter] = useState([]);
 
   useEffect(() => {
@@ -30,10 +30,9 @@ export default function Params() {
     fetchData();
   }, []); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
-  const handleEditarUsuario = (id: SetStateAction<null>) => {
+  const handleEditarStationParameter = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
-    setParamsUpdateId(id);
-
+    setStationParameterUpdateId(id);
     // Ativa a aba de edição
     const element = document.getElementById("Editar");
     if (element) {
@@ -41,7 +40,7 @@ export default function Params() {
     }    
   };
   
-  const updateParamsList = async () => {
+  const updateStationParameterList = async () => {
     try {
       const response = await window.stations3001.get("stationParameter");
       setStationParameter(response.data);
@@ -57,29 +56,29 @@ export default function Params() {
       <div className="my-3 tab-content">
         {/* Listagem de Usuários */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <ParamsRead paramsList={stationParameter} onEditParams={handleEditarUsuario}/>          
+          <ParamsRead stationParameterList={stationParameter} onEditStationParameter={handleEditarStationParameter}/>          
         </div>       
 
         {/* Cadastro de Usuário */}
         <div className="tab-pane" id="unidades" role="tabpanel">
-          <ParamsUnidades updateParamsList={updateParamsList} />
+          <ParamsUnidades updateStationParameterList={updateStationParameterList} />
         </div>
 
         <div className="tab-pane" id="tipo" role="tabpanel">
-          <ParamsTipo updateParamsList={updateParamsList} />
+          <ParamsTipo updateStationParameterList={updateStationParameterList} />
         </div>
 
         {/* Cadastro de Usuário */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <ParamsCreate updateParamsList={updateParamsList} />
+          <ParamsCreate updateStationParameterList={updateStationParameterList} />
         </div>
 
         {/* Edição de Usuário */}
         
         <div className="tab-pane" id="editar" role="tabpanel">
           <ParamsUpdate
-            usuarioId={paramsUpdateId}            
-            updateParamsList={updateParamsList}
+            stationParameterId={stationParameterUpdateId}            
+            updateStationParameterList={updateStationParameterList}
           />
         </div>        
       </div>

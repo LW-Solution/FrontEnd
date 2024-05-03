@@ -32,7 +32,6 @@ export default function UsersRead({
   const [deleteStatus, setDeleteStatus] = useState<DeleteStatus>(null);
 
   const handleEdit = (id: SetStateAction<null>) => {
-    console.log(`Editar usuário com ID ${id}`);
     onEditUser && onEditUser(id);
   };
   const cancelDelete = () => {
@@ -130,7 +129,6 @@ export default function UsersRead({
       <table className="table">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Nome do Usuário</th>
             <th>E-mail</th>
             <th>Ações</th>
@@ -140,7 +138,6 @@ export default function UsersRead({
           {user.map(
             (usuario: User) => (
               <tr key={usuario.id}>
-                <td className="col-1">{usuario.id}</td>
                 <td className="col-4">{usuario.user_name}</td>
                 <td className="col-6">{usuario.email}</td>
                 <td className="col-6">
