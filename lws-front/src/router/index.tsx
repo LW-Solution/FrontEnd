@@ -7,6 +7,7 @@ import Template from "../Template";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
 import Users from "../pages/Users";
+import Dashboards from "../pages/Dashboards";
 
 export default[    
         {
@@ -42,6 +43,11 @@ export default[
                     path: "/admin/alerts",
                     element: <Alerts />,
                     handle: { title: "ALERTAS" }
+                },
+                {
+                    path: "/admin/dashboards",
+                    element: <Dashboards />,
+                    handle: { title: "DASHBOARDS" }
                 },
             ]
         },

@@ -2,7 +2,11 @@ import { useState, useEffect, SetStateAction } from "react";
 import "./style.scss";
 import Modal from "../../Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTrash,
+  faChartLine,
+} from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
 
 export default function StationsRead({
@@ -60,7 +64,10 @@ export default function StationsRead({
       );
       if (response.status === 200) {
         setStation(
-          station.filter((station: { id_station: number }) => station.id_station !== id_station)
+          station.filter(
+            (station: { id_station: number }) =>
+              station.id_station !== id_station
+          )
         );
       }
 
@@ -76,7 +83,9 @@ export default function StationsRead({
       });
 
       // Atualizar a lista de usuários após a exclusão, se necessário
-      const updatedStations = station.filter((station) => station.id_station !== id_station);
+      const updatedStations = station.filter(
+        (station) => station.id_station !== id_station
+      );
       setStation(updatedStations);
     } catch (error) {
       console.error("Erro ao excluir o usuário:", error);
@@ -141,26 +150,46 @@ export default function StationsRead({
             (station: {
               id_station: number;
               station_description: string;
-              location: { location_name: string; latitude: string; longitude: string };
+              location: {
+                location_name: string;
+                latitude: string;
+                longitude: string;
+              };
             }) => (
               <tr key={station.id_station}>
-                <td className="col-4">{station.station_description}</td>
-                <td className="col-4">{station?.location?.location_name}</td>
-                <td className="col-6">{station?.location?.latitude}</td>
-                <td className="col-6">{station?.location?.longitude}</td>
-                <td className="col-6">
+                <td className="col-4">
+                  {station.station_description}                  
+                </td>
+                <td className="col-3">{station?.location?.location_name}</td>
+                <td className="col-2">{station?.location?.latitude}</td>
+                <td className="col-2">{station?.location?.longitude}</td>
+                <td className="col-3">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
-                    className="btn btn-secondary me-1"
+                    className="btn btn-sm btn-secondary me-1"
                     onClick={() =>
-                      handleEdit(station.id_station as unknown as SetStateAction<null>)
+                      handleEdit(
+                        station.id_station as unknown as SetStateAction<null>
+                      )
                     }
                   />
                   {/* Ícone de Excluir */}
                   <FontAwesomeIcon
                     icon={faTrash}
-                    className="btn btn-danger"
+                    className="btn btn-sm btn-danger me-1"
+                    
+                    onClick={() =>
+                      handleDelete(
+                        station.id_station,
+                        station.station_description,
+                        station.location.location_name
+                      )
+                    }
+                  />
+                  <FontAwesomeIcon
+                    icon={faChartLine}
+                    className="btn btn-sm btn-primary"
                     onClick={() =>
                       handleDelete(
                         station.id_station,
