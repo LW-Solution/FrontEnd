@@ -25,6 +25,7 @@ export default function ParamsCreate({
     offset: "",
     unit: {
       id_unit: "",
+      unit: "",
     },
   });
 
@@ -46,6 +47,7 @@ export default function ParamsCreate({
     offset: "",
     unit: {
       id_unit: "",
+      unit: "",
     }
   }
   });
@@ -117,6 +119,7 @@ export default function ParamsCreate({
         unit: {
           ...stationParameter.parameter_type.unit,
           id_unit: selectedParameter ? selectedParameter?.unitIdUnit : '',
+          unit: selectedParameter ? selectedParameter?.unit : '',
         }
       }
     });
@@ -146,6 +149,7 @@ export default function ParamsCreate({
         offset: "",
         unit: {
           id_unit: "",
+          unit: "",
         }
       })
 
