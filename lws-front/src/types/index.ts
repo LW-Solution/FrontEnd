@@ -34,7 +34,12 @@ export interface IStation {
   location: ILocation;
 }
 
+export interface IMeasurement {
+  data: string;
+  value: number;
+}
+
 export interface IData {
   id_estacao: IStation;
-  measurements: string[]; // Substitua 'any' pelo tipo correto se você souber
+  measurements: IMeasurement[];
 }
