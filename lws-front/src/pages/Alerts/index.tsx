@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
-import "./style.scss"
 import BodyHeader from "../../components/BodyHeader";
-import axios from "axios";
+import { SetStateAction, useEffect, useState } from "react";
 import AlertsCreate from "../../components/Alerts/AlertsCreate";
+import AlertsRead from "../../components/Alerts/AlertsRead";
+import AlertsUpdate from "../../components/Alerts/AlertsUpdate";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
@@ -10,58 +10,40 @@ const navigation = [
   { link: "#editar", title: "Editar" },
 ];
 
-interface objetoEstacao {
-  id_station: number;
-  station_description: string;
-  location: {};
-  station_parameter: [
-    {
-      parameter_type: {
-        unit: {
-          unit: 'milimetros cubicos'
-        }
-      }
-    }
-  ];
-  alerts: [];
-}
-
-const objeto1: objetoEstacao = {
-  id_station: 1,
-  station_description: "descricao",
-  location: {},
-  station_parameter: [
-    {
-      parameter_type: {
-        unit: {
-          unit: 'milimetros cubicos'
-        }
-      }
-    }
-  ],
-  alerts: []
-}
-
-const objeto2: objetoEstacao = {
-  id_station: 2,
-  station_description: "descricao2",
-  location: {},
-  station_parameter: [
-    {
-      parameter_type: {
-        unit: {
-          unit: 'milimetros cubicos'
-        }
-      }
-    }
-  ],
-  alerts: []
-}
-
-const lista: objetoEstacao[] = [objeto1,objeto2];
-
 export default function Alerts() {
+  const [alertUpdateId, setAlertUpdateId] = useState(null);
+  const [alert, setAlert] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await window.stations3001.get("alert");
+        setAlert(response.data);
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    };
+    fetchData();
+  }, []); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+
+  const handleEditarAlert = (id: SetStateAction<null>) => {
+    // Define o ID do usuário que está sendo editado
+    setAlertUpdateId(id);
+    // Ativa a aba de edição
+    const element = document.getElementById("Editar");
+    if (element) {
+      element.click();
+    }
+  };
+
+  const updateAlertList = async () => {
+    try {
+      const response = await window.stations3001.get("alert");
+      setAlert(response.data);
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+  };
 
   return (
     <>
@@ -69,21 +51,22 @@ export default function Alerts() {
       <div className="my-3 tab-content">
         {/* Cadastro de alertas */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <AlertsCreate />
+          <AlertsCreate updateAlertList={updateAlertList} />
         </div>
 
         {/* Listagem de alertas */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          
+          <AlertsRead alertList={alert} onEditAlert={handleEditarAlert} />
         </div>
 
         {/* Update de alertas */}
         <div className="tab-pane" id="editar" role="tabpanel">
-
+          <AlertsUpdate
+            alertId={alertUpdateId}
+            updateAlertList={updateAlertList}
+          />
         </div>
-
       </div>
     </>
-  )
+  );
 }
-

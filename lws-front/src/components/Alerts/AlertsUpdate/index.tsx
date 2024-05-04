@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Toast from "../../Toast";
 
-export default function AlertsCreate({
+export default function AlertsUpdate({
+  alertId,
   updateAlertList,
 }: {
+  alertId: string | null;
   updateAlertList: () => Promise<void>;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-
   const [station, setStation] = useState({
     station_description: "",
     location: {
@@ -72,6 +73,36 @@ export default function AlertsCreate({
         console.error("Ocorreu um erro!", error);
       });
   }, [alert]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Carregar os detalhes do parâmetro da estação
+        const response = await window.stations3001.get(`alert/${alertId}`);
+        const { description, value, condition, station, parameter_type } =
+          response.data;
+
+        setAlert({
+          ...alert,
+          condition: condition,
+          description: description,
+          value: value,
+          station: {
+            ...station,
+          },
+          parameter_type: {
+            ...parameter_type,
+          },
+        });
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    };
+
+    if (alertId) {
+      fetchData();
+    }
+  }, [alertId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -137,64 +168,17 @@ export default function AlertsCreate({
     });
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     try {
       console.log(alert);
-      const resposta = await window.stations3001.post("alert", alert);
-      console.log(resposta);
-
-      setToastMessage(`Parâmetro cadastrado na estação!`);
+      await window.stations3001.put(`alert/${alertId}`, alert);
+      setToastMessage("Parâmetro da estação atualizado com sucesso!");
       setToast(true);
-
-      setStation({
-        station_description: "",
-        location: {
-          location_name: "",
-          latitude: "",
-          longitude: "",
-        },
-      });
-
-      setParameterType({
-        description: "",
-        factor: "",
-        offset: "",
-        unit: {
-          id_unit: "",
-          unit: "",
-        },
-      });
-
-      setAlert({
-        description: "",
-        condition: "",
-        value: "",
-        station: {
-          id_station: "",
-          station_description: "",
-          location: {
-            id_location: "",
-            location_name: "",
-            latitude: "",
-            longitude: "",
-          },
-        },
-        parameter_type: {
-          id_parameter_type: "",
-          description: "",
-          factor: "",
-          offset: "",
-          unit: {
-            id_unit: "",
-            unit: "",
-          },
-        },
-      });
-
       updateAlertList();
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      console.error("Erro ao atualizar o parâmetro da estação:", error);
+      setToastMessage("Erro ao atualizar o parâmetro da estação.");
       setToast(true);
     }
   };
@@ -210,7 +194,7 @@ export default function AlertsCreate({
       </Toast>
 
       <div className="card p-4">
-        <h2 className="mb-3">Cadastro de Alerta</h2>
+        <h2 className="mb-3">Atualização de Alerta</h2>
         <form>
           <div className="mb-2">
             <label htmlFor="description" className="form-label">
@@ -333,9 +317,9 @@ export default function AlertsCreate({
           <button
             type="submit"
             className="btn btn-secondary"
-            onClick={handleSubmit}
+            onClick={handleUpdate}
           >
-            Cadastrar
+            Atualizar
           </button>
         </form>
       </div>
