@@ -53,23 +53,22 @@ export default function Stations() {
     <>
       <BodyHeader navigation={navigation}/>
       <div className="my-3 tab-content">
-        {/* Listagem de Usuários */}
+        {/* Listagem de Estações */}
         <div className="tab-pane active" id="listar" role="tabpanel">
           <StationsRead stationList={station} onEditStation={handleEditarUsuario}/>          
         </div> 
 
-        {/* Cadastro de Usuário */}
+        {/* Cadastro de Estações */}
         <div className="tab-pane" id="localizacao" role="tabpanel">
           <StationsLocalizacao updateStationList={updateStationList} />
         </div>      
 
-        {/* Cadastro de Usuário */}
+        {/* Cadastro de Estações */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
           <StationsCreate updateStationList={updateStationList} />
         </div>
 
-        {/* Edição de Usuário */}
-        
+        {/* Edição de Estações */}        
         <div className="tab-pane" id="editar" role="tabpanel">
           <StationsUpdate
             stationId={stationUpdateId}            
