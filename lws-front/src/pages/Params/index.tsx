@@ -28,7 +28,7 @@ export default function Params() {
       }
     };
     fetchData();
-  }, []); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+  }, [stationParameter]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
   const handleEditarStationParameter = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
