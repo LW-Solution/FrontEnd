@@ -1,70 +1,66 @@
 import { useState, useEffect, SetStateAction } from "react";
-import "./style.scss";
 import Modal from "../../Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
 
-export default function ParamsRead({
-  stationParameterList,
-  onEditStationParameter,
-  reload,
+export default function AlertsRead({
+  alertList,
+  onEditAlert,
 }: {
-  stationParameterList: never[];
-    onEditStationParameter: (id_station_parameter: SetStateAction<null>) => void;
-  reload: () => void;
+  alertList: never[];
+  onEditAlert: (id_alert: SetStateAction<null>) => void;
 }) {
   const [toast, setToast] = useState(false);
-  const [stationParameter, setStationParameter] = useState([]);
-  console.log(stationParameterList)
+  const [alert, setAlert] = useState([]);
+
   useEffect(() => {
-    if (Array.isArray(stationParameterList)) {
-      setStationParameter(stationParameterList);
-      reload();
+    if (Array.isArray(alertList)) {
+      setAlert(alertList);
     }
-  }, [reload, stationParameterList]);
+  }, [alertList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,
-    stationParameterIdToDelete: null,
-    stationParameterToDelete: null,
-    stationParameterEmailToDelete: null,
+    alertIdToDelete: null,
+    alertToDelete: null,
+    alertEmailToDelete: null,
   });
   const [deleteStatus, setDeleteStatus] = useState(null);
 
-  const handleEdit = (id_station_parameter: SetStateAction<null>) => {
-    onEditStationParameter && onEditStationParameter(id_station_parameter);
+  const handleEdit = (id_alert: SetStateAction<null>) => {
+    onEditAlert && onEditAlert(id_alert);
   };
   const cancelDelete = () => {
     setModalData({
       showModal: false,
-      stationParameterIdToDelete: null,
-      stationParameterToDelete: null,
-      stationParameterEmailToDelete: null,
+      alertIdToDelete: null,
+      alertToDelete: null,
+      alertEmailToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
   };
 
-  const handleDelete = (id_station_parameter: number, nome: string, email: string) => {
+  const handleDelete = (id_alert: number, nome: string, email: string) => {
     setModalData({
       showModal: true,
-      stationParameterIdToDelete: id_station_parameter,
-      stationParameterToDelete: nome,
-      stationParameterEmailToDelete: email,
+      alertIdToDelete: id_alert,
+      alertToDelete: nome,
+      alertEmailToDelete: email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
   };
 
-  const confirmDelete = async (id_station_parameter: number) => {
+  const confirmDelete = async (id_alert: number) => {
     try {
       // Realizar a solicitação DELETE
       const response = await window.stations3001.delete(
-        `stationParameter/${id_station_parameter ? String(id_station_parameter) : ""}`
+        `alert/${id_alert ? String(id_alert) : ""}`
       );
       if (response.status === 200) {
-        setStationParameter(
-          stationParameter.filter(
-            (stationParameter: { id_station_parameter: number }) => stationParameter.id_station_parameter !== id_station_parameter
+        setAlert(
+          alert.filter(
+            (alert: { id_alert: number }) => alert.id_alert !== id_alert
           )
         );
       }
@@ -75,24 +71,24 @@ export default function ParamsRead({
       // Feche o modal após a exclusão ou faça outras ações necessárias
       setModalData({
         showModal: true,
-        stationParameterIdToDelete: null,
-        stationParameterToDelete: null,
-        stationParameterEmailToDelete: null,
+        alertIdToDelete: null,
+        alertToDelete: null,
+        alertEmailToDelete: null,
       });
 
       // Atualizar a lista de usuários após a exclusão, se necessário
-      const updatedParamss = stationParameter.filter(
-        (stationParameter) => stationParameter.id_station_parameter !== id_station_parameter
+      const updatedParamss = alert.filter(
+        (alert) => alert.id_alert !== id_alert
       );
-      setStationParameter(updatedParamss);
+      setAlert(updatedParamss);
     } catch (error) {
       console.error("Erro ao excluir o usuário:", error);
 
       setModalData({
         showModal: true,
-        stationParameterIdToDelete: null,
-        stationParameterToDelete: null,
-        stationParameterEmailToDelete: null,
+        alertIdToDelete: null,
+        alertToDelete: null,
+        alertEmailToDelete: null,
       });
 
       // Atualizar o status para falha
@@ -104,26 +100,26 @@ export default function ParamsRead({
     deleteStatus === "success" ? (
       <p>Estação excluída com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir a estação. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir o alerta. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir a estação?
+            Deseja realmente excluir o alerta?
           </p>
         </div>
-        <div className="stationParameter-details">
+        <div className="alert-details">
           <p>
             <b>ID: </b>
-            {modalData.stationParameterIdToDelete}
+            {modalData.alertIdToDelete}
           </p>
           <p>
             <b>Descrição: </b>
-            {modalData.stationParameterToDelete}
+            {modalData.alertToDelete}
           </p>
           <p>
             <b>Local: </b>
-            {modalData.stationParameterEmailToDelete}
+            {modalData.alertEmailToDelete}
           </p>
         </div>
       </>
@@ -132,22 +128,25 @@ export default function ParamsRead({
   return (
     <div>
       <Toast show={toast} toggle={setToast} children={undefined} />
-      <h2 className="my-3">Parâmetros Cadastrados em Estações</h2>
+      <h2 className="my-3">Alertas Cadastrados</h2>
       <table className="table">
         <thead>
           <tr>
             <th>Estação</th>
             <th>Descrição</th>
-            <th>Unid. Medida</th>
-            <th>Fator</th>
-            <th>Offset</th>
+            <th>Condição</th>
+            <th>Valor</th>
+            <th>Unidade</th>
             <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {stationParameter.map(
-            (stationParameter: {
-              station_parameter_id: number;
+          {alert.map(
+            (alert: {
+              id_alert: number;
+              condition: string;
+              description: string;
+              value: number;
               station: {
                 id_station: number;
                 station_description: string;
@@ -169,12 +168,12 @@ export default function ParamsRead({
                 };
               };
             }) => (
-              <tr key={stationParameter?.station_parameter_id}>
-                <td className="col-3">{stationParameter?.station?.station_description}</td>
-                <td className="col-2">{stationParameter?.parameter_type?.description}</td>
-                <td className="col-2">{stationParameter?.parameter_type?.unit?.unit}</td>
-                <td className="col-1">{stationParameter?.parameter_type?.factor}</td>
-                <td className="col-1">{stationParameter?.parameter_type?.offset}</td>
+              <tr key={alert?.id_alert}>
+                <td className="col-3">{alert?.station?.station_description}</td>
+                <td className="col-2">{alert?.description}</td>
+                <td className="col-2">{alert?.condition}</td>
+                <td className="col-1">{alert?.value}</td>
+                <td className="col-1">{alert?.parameter_type?.unit?.unit}</td>
                 <td className="col-1 text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
@@ -182,7 +181,7 @@ export default function ParamsRead({
                     className="btn btn-sm btn-secondary me-1"
                     onClick={() =>
                       handleEdit(
-                        stationParameter?.station_parameter_id as unknown as SetStateAction<null>
+                        alert?.id_alert as unknown as SetStateAction<null>
                       )
                     }
                   />
@@ -192,7 +191,7 @@ export default function ParamsRead({
                     className="btn btn-sm btn-danger"
                     onClick={
                       () =>
-                        handleDelete(stationParameter?.station_parameter_id, stationParameter.station.station_description, stationParameter.parameter_type.description) // Substituído 'stationParameter' por 'fakeData' e 'stationParameter_name' e 'email' por 'name' e 'type'
+                        handleDelete(alert?.id_alert, alert?.station?.station_description, alert?.description) // Substituído 'alert' por 'fakeData' e 'alert_name' e 'email' por 'name' e 'type'
                     }
                   />
                 </td>
@@ -211,8 +210,8 @@ export default function ParamsRead({
                 <button
                   className="btn btn-danger"
                   onClick={() =>
-                    modalData.stationParameterIdToDelete !== null &&
-                    confirmDelete(modalData.stationParameterIdToDelete)
+                    modalData.alertIdToDelete !== null &&
+                    confirmDelete(modalData.alertIdToDelete)
                   }
                 >
                   Excluir

@@ -3,8 +3,10 @@ import Toast from "../../Toast";
 
 export default function StationsCreate({
   updateStationList,
+  reload,
 }: {
   updateStationList: () => Promise<void>;
+  reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -34,7 +36,7 @@ export default function StationsCreate({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
-  }, [locations]);
+  }, [reload]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -88,6 +90,7 @@ export default function StationsCreate({
       });
 
       updateStationList();
+      //reload();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);

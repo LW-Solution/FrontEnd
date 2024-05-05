@@ -3,17 +3,22 @@ import Toast from "../../Toast";
 
 export default function ParamsTipo({
   updateParamsList,
+  reload,
 }: {
-  updateParamsList: () => Promise<void>;
-}) {
+    updateParamsList: () => Promise<void>;
+    reload: () => void;
+  }) {
+  
+  interface Unit {
+    id_unit: string,
+    unit: string;
+  }
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [unit, setUnit] = useState({
-    unit: "",
-    permissionsId: [1],
-  });
+  const [unit, setUnit] = useState<Unit[]>([]);
   const [parameterType, setParameterType] = useState({
     description: "",
+    parameter_name: "",
     factor: "",
     offset: "",
     unit: {
@@ -31,7 +36,7 @@ export default function ParamsTipo({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
-  }, []);
+  }, [reload]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -62,23 +67,21 @@ export default function ParamsTipo({
       setToastMessage(`Tipo de Parâmetro cadastrado com sucesso!`);
       setToast(true);
 
-      setUnit({
-        unit: "",
-        permissionsId: [1],
-      })
+      setUnit([])
 
       setParameterType({
         description: "",
+        parameter_name: "",
         factor: "",
         offset: "",
         unit: {
           id_unit: "",
           unit: "",
         },
-        permissionsId: [1],
       });
 
       updateParamsList();
+      reload();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);
@@ -107,6 +110,20 @@ export default function ParamsTipo({
               id="description"
               name="description"
               value={parameterType.description}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+        <div className="mb-2">
+            <label htmlFor="description" className="form-label">
+              Nome do Parâmetro:
+            </label>
+            <input
+              type="text"
+              id="parameter_name"
+              name="parameter_name"
+              value={parameterType.parameter_name}
               onChange={handleChange}
               className="form-control"
               required
@@ -155,7 +172,7 @@ export default function ParamsTipo({
             >
               <option value="">Selecione a unidade de medida</option>
               {(Array.isArray(unit) ? unit : []).map((unit) => (
-                <option key={unit.id} value={unit.unit}>
+                <option key={unit.id_unit} value={unit.unit}>
                   {unit.unit}
                 </option>
               ))}

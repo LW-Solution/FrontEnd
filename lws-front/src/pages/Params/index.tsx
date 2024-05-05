@@ -17,18 +17,27 @@ const navigation = [
 export default function Params() {
   const [stationParameterUpdateId, setStationParameterUpdateId] = useState(null);
   const [stationParameter, setStationParameter] = useState([]);
-
+  const [reload, setReload] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await window.stations3001.get("stationParameter");
-        setStationParameter(response.data);
+        if (reload) {
+          const response = await window.stations3001.get("stationParameter");
+          setStationParameter(response.data);
+          setReload(false);
+        }
+       
       } catch (error) {
         console.error("Erro na requisição:", error);
       }
     };
     fetchData();
-  }, []); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+  }, [reload]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+
+
+  const handleReload = () => {
+    setReload(true);
+  }
 
   const handleEditarStationParameter = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
@@ -56,21 +65,21 @@ export default function Params() {
       <div className="my-3 tab-content">
         {/* Listagem de Usuários */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <ParamsRead stationParameterList={stationParameter} onEditStationParameter={handleEditarStationParameter}/>          
+          <ParamsRead stationParameterList={stationParameter} onEditStationParameter={handleEditarStationParameter} reload={handleReload}/>          
         </div>       
 
         {/* Cadastro de Usuário */}
         <div className="tab-pane" id="unidades" role="tabpanel">
-          <ParamsUnidades updateStationParameterList={updateStationParameterList} />
+          <ParamsUnidades updateParamsList={updateStationParameterList} reload={handleReload} />
         </div>
 
         <div className="tab-pane" id="tipo" role="tabpanel">
-          <ParamsTipo updateStationParameterList={updateStationParameterList} />
+          <ParamsTipo updateParamsList={updateStationParameterList} reload={handleReload}/>
         </div>
 
         {/* Cadastro de Usuário */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <ParamsCreate updateStationParameterList={updateStationParameterList} />
+          <ParamsCreate updateStationParameterList={updateStationParameterList} reload={handleReload} />
         </div>
 
         {/* Edição de Usuário */}
@@ -79,6 +88,7 @@ export default function Params() {
           <ParamsUpdate
             stationParameterId={stationParameterUpdateId}            
             updateStationParameterList={updateStationParameterList}
+            reload={handleReload}
           />
         </div>        
       </div>

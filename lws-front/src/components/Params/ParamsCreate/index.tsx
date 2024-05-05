@@ -3,8 +3,10 @@ import Toast from "../../Toast";
 
 export default function ParamsCreate({
   updateStationParameterList,
+  reload,
 }: {
-  updateStationParameterList: () => Promise<void>;
+    updateStationParameterList: () => Promise<void>;
+    reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -20,10 +22,12 @@ export default function ParamsCreate({
 
   const [parameterType, setParameterType] = useState({
     description: "",
+    parameter_name:'',
     factor: "",
     offset: "",
     unit: {
       id_unit: "",
+      unit: "",
     },
   });
 
@@ -45,6 +49,7 @@ export default function ParamsCreate({
     offset: "",
     unit: {
       id_unit: "",
+      unit: "",
     }
   }
   });
@@ -66,7 +71,7 @@ export default function ParamsCreate({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
-  }, [stationParameter]);
+  }, [reload]);
 
   /* const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -116,6 +121,7 @@ export default function ParamsCreate({
         unit: {
           ...stationParameter.parameter_type.unit,
           id_unit: selectedParameter ? selectedParameter?.unitIdUnit : '',
+          unit: selectedParameter ? selectedParameter?.unit : '',
         }
       }
     });
@@ -140,10 +146,12 @@ export default function ParamsCreate({
 
       setParameterType({
         description: "",
+        parameter_name: "",
         factor: "",
         offset: "",
         unit: {
           id_unit: "",
+          unit: "",
         }
       })
 
@@ -170,6 +178,7 @@ export default function ParamsCreate({
       });
 
       updateStationParameterList();
+      reload();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);

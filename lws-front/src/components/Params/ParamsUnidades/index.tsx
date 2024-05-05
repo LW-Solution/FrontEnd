@@ -4,8 +4,10 @@ import Toast from "../../Toast";
 
 export default function ParamsUnidades({
   updateParamsList,
+  reload,
 }: {
-  updateParamsList: () => Promise<void>;
+    updateParamsList: () => Promise<void>;
+    reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -34,7 +36,8 @@ export default function ParamsUnidades({
             permissionsId: [1],
         });
         
-        updateParamsList();
+      updateParamsList();
+      reload();
 
     } catch (error) {
       console.error("Erro na requisição:", error);
