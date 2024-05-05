@@ -15,6 +15,11 @@ const navigation = [
 export default function Stations() {
   const [stationUpdateId, setstationUpdateIdId] = useState(null);
   const [station, setStation] = useState([]);
+  const [reload, setReload] = useState(false);
+
+  const handleReload = () => {
+    setReload(true);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +31,7 @@ export default function Stations() {
       }
     };
     fetchData();
-  }, [station]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+  }, [reload]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
   const handleEditarUsuario = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
@@ -36,9 +41,9 @@ export default function Stations() {
     const element = document.getElementById("Editar");
     if (element) {
       element.click();
-    }    
+    }
   };
-  
+
 
   const updateStationList = async () => {
     try {
@@ -51,30 +56,31 @@ export default function Stations() {
 
   return (
     <>
-      <BodyHeader navigation={navigation}/>
+      <BodyHeader navigation={navigation} />
       <div className="my-3 tab-content">
         {/* Listagem de Estações */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <StationsRead stationList={station} onEditStation={handleEditarUsuario}/>          
-        </div> 
+          <StationsRead stationList={station} onEditStation={handleEditarUsuario} reload={handleReload} />
+        </div>
 
         {/* Cadastro de Estações */}
         <div className="tab-pane" id="localizacao" role="tabpanel">
-          <StationsLocalizacao updateStationList={updateStationList} />
-        </div>      
+          <StationsLocalizacao updateStationList={updateStationList}  reload={handleReload}/>
+        </div>
 
         {/* Cadastro de Estações */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <StationsCreate updateStationList={updateStationList} />
+          <StationsCreate updateStationList={updateStationList}  reload={handleReload} />
         </div>
 
-        {/* Edição de Estações */}        
+        {/* Edição de Estações */}
         <div className="tab-pane" id="editar" role="tabpanel">
           <StationsUpdate
-            stationId={stationUpdateId}            
+            stationId={stationUpdateId}
             updateStationList={updateStationList}
+            reload={handleReload}
           />
-        </div>        
+        </div>
       </div>
     </>
   );

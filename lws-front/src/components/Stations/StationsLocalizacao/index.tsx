@@ -4,8 +4,10 @@ import Toast from "../../Toast";
 
 export default function StationsLocalizacao({
   updateStationList,
+  reload,
 }: {
   updateStationList: () => Promise<void>;
+  reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -27,23 +29,24 @@ export default function StationsLocalizacao({
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-        await window.stations3001.post("locations", locations);
-        setToastMessage(`Localização cadastrada com sucesso!`);
-        setToast(true);
+      await window.stations3001.post("locations", locations);
+      setToastMessage(`Localização cadastrada com sucesso!`);
+      setToast(true);
 
-        setLocations({
-            location_name: "",
-            latitude: "",
-            longitude: "",
-            permissionsId: [1],
-        });
-        
-        updateStationList();
+      setLocations({
+        location_name: "",
+        latitude: "",
+        longitude: "",
+        permissionsId: [1],
+      });
+
+      updateStationList();
+      reload();
 
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);
-    }    
+    }
   };
 
   return (
@@ -85,7 +88,7 @@ export default function StationsLocalizacao({
               onChange={handleChange}
               className="form-control"
               required
-            />            
+            />
           </div>
 
           <div className="mb-2">
@@ -100,7 +103,7 @@ export default function StationsLocalizacao({
               onChange={handleChange}
               className="form-control"
               required
-            />            
+            />
           </div>
 
           <input type="hidden" name="role" value="station" />

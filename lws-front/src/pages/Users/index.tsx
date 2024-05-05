@@ -13,7 +13,7 @@ const navigation = [
 export default function Users() {
   const [userUpdateId, setuserUpdateIdId] = useState(null);
   const [user, setUser] = useState([]);
-
+  const [reload, setReload] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,7 +24,11 @@ export default function Users() {
       }
     };
     fetchData();
-  }, [user]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+  }, [reload]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
+
+  const handleReload = () => {
+    setReload(true);
+  }
 
   const handleEditarUsuario = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
@@ -53,12 +57,12 @@ export default function Users() {
       <div className="my-3 tab-content">
         {/* Listagem de Usuários */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <UsersRead userList={user} onEditUser={handleEditarUsuario}/>          
+          <UsersRead userList={user} onEditUser={handleEditarUsuario} reload={handleReload} />          
         </div>       
 
         {/* Cadastro de Usuário */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <UsersCreate updateUserList={updateUserList} />
+          <UsersCreate updateUserList={updateUserList} reload={handleReload} />
         </div>
 
         {/* Edição de Usuário */}
@@ -67,6 +71,7 @@ export default function Users() {
           <UsersUpdate
             usuarioId={userUpdateId}            
             updateUserList={updateUserList}
+            reload={handleReload}
           />
         </div>        
       </div>

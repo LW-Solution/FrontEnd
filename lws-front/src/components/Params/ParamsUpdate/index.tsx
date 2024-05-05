@@ -4,9 +4,11 @@ import Toast from "../../Toast";
 export default function ParamsUpdate({
   stationParameterId,
   updateStationParameterList,
+  reload,
 }: {
   stationParameterId: string | null;
-  updateStationParameterList: () => Promise<void>;
+    updateStationParameterList: () => Promise<void>;
+    reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -66,7 +68,7 @@ export default function ParamsUpdate({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
-  }, [stationParameter]);
+  }, [stationParameter, reload]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +94,7 @@ export default function ParamsUpdate({
     if (stationParameterId) {
       fetchData();
     }
-  }, [stationParameterId]);
+  }, [reload, stationParameter, stationParameterId]);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedStation = station.find(station => station.station_description === e.target.value);
@@ -146,6 +148,7 @@ export default function ParamsUpdate({
       setToastMessage("Parâmetro da estação atualizado com sucesso!");
       setToast(true);
       updateStationParameterList();
+      reload();
     } catch (error) {
       console.error("Erro ao atualizar o parâmetro da estação:", error);
       setToastMessage("Erro ao atualizar o parâmetro da estação.");

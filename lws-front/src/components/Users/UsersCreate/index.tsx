@@ -3,8 +3,10 @@ import Toast from "../../Toast";
 
 export default function UsersCreate({
   updateUserList,
+  reload,
 }: {
-  updateUserList: () => Promise<void>;
+    updateUserList: () => Promise<void>;
+  reload: () => void; 
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -40,6 +42,7 @@ export default function UsersCreate({
         permissionsId: [1],
       });
       updateUserList();
+      reload();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);

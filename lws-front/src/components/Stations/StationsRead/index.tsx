@@ -13,9 +13,11 @@ import { useNavigate } from "react-router-dom";
 export default function StationsRead({
   stationList,
   onEditStation,
+  reload,
 }: {
   stationList: never[];
-  onEditStation: (id_station: SetStateAction<null>) => void;
+    onEditStation: (id_station: SetStateAction<null>) => void;
+    reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [station, setStation] = useState([]);
@@ -24,7 +26,7 @@ export default function StationsRead({
     if (Array.isArray(stationList)) {
       setStation(stationList);
     }
-  }, [station, stationList]);
+  }, [reload, stationList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,
@@ -55,6 +57,7 @@ export default function StationsRead({
       stationEmailToDelete: email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
+    reload();
   };
 
   const confirmDelete = async (id_station: number) => {
@@ -88,6 +91,7 @@ export default function StationsRead({
         (station) => station.id_station !== id_station
       );
       setStation(updatedStations);
+      reload();
     } catch (error) {
       console.error("Erro ao excluir o usuário:", error);
 

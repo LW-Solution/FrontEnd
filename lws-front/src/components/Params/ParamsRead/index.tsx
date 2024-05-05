@@ -8,18 +8,21 @@ import Toast from "../../Toast";
 export default function ParamsRead({
   stationParameterList,
   onEditStationParameter,
+  reload,
 }: {
   stationParameterList: never[];
-  onEditStationParameter: (id_station_parameter: SetStateAction<null>) => void;
+    onEditStationParameter: (id_station_parameter: SetStateAction<null>) => void;
+  reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [stationParameter, setStationParameter] = useState([]);
-
+  console.log(stationParameterList)
   useEffect(() => {
     if (Array.isArray(stationParameterList)) {
       setStationParameter(stationParameterList);
+      reload();
     }
-  }, [stationParameterList]);
+  }, [reload, stationParameterList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,

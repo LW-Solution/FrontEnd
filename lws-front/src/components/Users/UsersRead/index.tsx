@@ -9,9 +9,11 @@ import { User, ModalData, DeleteStatus } from "../../../types";
 export default function UsersRead({
   userList,
   onEditUser,
+  reload,
 }: {
   userList: never[];
-  onEditUser: (id: SetStateAction<null>) => void;
+    onEditUser: (id: SetStateAction<null>) => void;
+  reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [user, setUser] = useState<User[]>([]);
@@ -20,7 +22,7 @@ export default function UsersRead({
     if (Array.isArray(userList)) {
       setUser(userList);
     }
-  }, [userList]);
+  }, [userList, reload]);
 
   const [modalData, setModalData] = useState<ModalData>({
     showModal: false,

@@ -4,9 +4,11 @@ import Toast from "../../Toast";
 export default function UsersUpdate({
   usuarioId,
   updateUserList,
+  reload,
 }: {
   usuarioId: null;
   updateUserList: () => Promise<void>;
+  reload: () => void;
 }) {
   const [user, setUser] = useState({
     user_name: "",
@@ -61,7 +63,7 @@ export default function UsersUpdate({
       updateUserList();
       setToastMessage("Usuário atualizado com sucesso!");
       setToast(true);
-
+      reload();
       /* const element = document.getElementById("Listagem");
       if (element) {
         element.click();

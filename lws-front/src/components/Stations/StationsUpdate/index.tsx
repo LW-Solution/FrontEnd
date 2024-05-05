@@ -4,9 +4,11 @@ import Toast from "../../Toast";
 export default function StationsUpdate({
   stationId,
   updateStationList,
+  reload,
 }: {
   stationId: string | null;
   updateStationList: () => Promise<void>;
+  reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -61,7 +63,7 @@ export default function StationsUpdate({
     };
 
     fetchLocations();
-  }, [locations]);
+  }, [reload]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,6 +95,7 @@ export default function StationsUpdate({
       setToastMessage("Estação atualizada com sucesso!");
       setToast(true);
       updateStationList();
+      reload();
     } catch (error) {
       console.error("Erro ao atualizar a estação:", error);
       setToastMessage("Erro ao atualizar a estação.");
@@ -140,9 +143,9 @@ export default function StationsUpdate({
               >
                 <option value="">Selecione a localização</option>
                 {(Array.isArray(locations) ? locations : []).map((location) => (
-                <option key={location.id} value={location.location_name}>
-                  {location.location_name}
-                </option>
+                  <option key={location.id} value={location.location_name}>
+                    {location.location_name}
+                  </option>
                 ))}
               </select>
             </div>

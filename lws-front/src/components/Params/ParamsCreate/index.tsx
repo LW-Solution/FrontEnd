@@ -3,8 +3,10 @@ import Toast from "../../Toast";
 
 export default function ParamsCreate({
   updateStationParameterList,
+  reload,
 }: {
-  updateStationParameterList: () => Promise<void>;
+    updateStationParameterList: () => Promise<void>;
+    reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -69,7 +71,7 @@ export default function ParamsCreate({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
-  }, [stationParameter]);
+  }, [reload]);
 
   /* const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -176,6 +178,7 @@ export default function ParamsCreate({
       });
 
       updateStationParameterList();
+      reload();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);

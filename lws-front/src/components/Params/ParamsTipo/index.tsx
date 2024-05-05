@@ -3,15 +3,19 @@ import Toast from "../../Toast";
 
 export default function ParamsTipo({
   updateParamsList,
+  reload,
 }: {
-  updateParamsList: () => Promise<void>;
-}) {
+    updateParamsList: () => Promise<void>;
+    reload: () => void;
+  }) {
+  
+  interface Unit {
+    id_unit: string,
+    unit: string;
+  }
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [unit, setUnit] = useState({
-    unit: "",
-    permissionsId: [1],
-  });
+  const [unit, setUnit] = useState<Unit[]>([]);
   const [parameterType, setParameterType] = useState({
     description: "",
     parameter_name: "",
@@ -32,7 +36,7 @@ export default function ParamsTipo({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
-  }, []);
+  }, [reload]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
@@ -63,10 +67,7 @@ export default function ParamsTipo({
       setToastMessage(`Tipo de Parâmetro cadastrado com sucesso!`);
       setToast(true);
 
-      setUnit({
-        unit: "",
-        permissionsId: [1],
-      })
+      setUnit([])
 
       setParameterType({
         description: "",
@@ -77,10 +78,10 @@ export default function ParamsTipo({
           id_unit: "",
           unit: "",
         },
-        permissionsId: [1],
       });
 
       updateParamsList();
+      reload();
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);
@@ -171,7 +172,7 @@ export default function ParamsTipo({
             >
               <option value="">Selecione a unidade de medida</option>
               {(Array.isArray(unit) ? unit : []).map((unit) => (
-                <option key={unit.id} value={unit.unit}>
+                <option key={unit.id_unit} value={unit.unit}>
                   {unit.unit}
                 </option>
               ))}
