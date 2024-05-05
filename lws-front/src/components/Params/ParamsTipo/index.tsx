@@ -36,7 +36,11 @@ export default function ParamsTipo({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
+<<<<<<< HEAD
   }, [reload]);
+=======
+  }, [unit]);
+>>>>>>> feature/dashboard_visualizacao
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
