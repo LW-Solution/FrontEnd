@@ -37,9 +37,14 @@ export interface IStation {
 export interface IMeasurement {
   data: string;
   value: number;
+  parameter_type: {
+    parameter_name: string;
+  };
 }
 
 export interface IData {
   id_estacao: IStation;
-  measurements: IMeasurement[];
+  dailyData?: {
+    measurements: IMeasurement[];
+  }[];
 }

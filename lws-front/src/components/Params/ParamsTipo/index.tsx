@@ -32,7 +32,7 @@ export default function ParamsTipo({
       .catch((error) => {
         console.error("Ocorreu um erro!", error);
       });
-  }, []);
+  }, [unit]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;

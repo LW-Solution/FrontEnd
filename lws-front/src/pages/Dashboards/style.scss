@@ -1,0 +1,49 @@
+.paddingall {
+    padding: 10px;
+  }
+  
+  .pricetitle {
+    font-weight: 600;
+  }
+  .pricesubtitle {
+    font-size: 14px;
+  }
+  
+  .iconstyle {
+    margin-top: 20px !important;
+    margin-left: 20px !important;
+    color: aliceblue;
+  }
+  .iconstyleblack {
+    margin-top: 20px !important;
+    margin-left: 20px !important;
+  }
+  
+  /* .gradient {
+    background: rgb(40, 34, 70);
+    background: linear-gradient(
+      158deg,
+      rgba(40, 34, 70, 1) 0%,
+      rgba(30, 47, 141, 1) 100%
+    );
+  } */
+  
+  .gradientlight {
+    background: rgb(53, 198, 148);
+    background: linear-gradient(
+      158deg,
+      rgba(53, 138, 148, 1) 0%,
+      rgba(91, 180, 96, 1) 100%
+    );
+  }
+  
+  .bgcolor {
+    min-height: 100vh;
+    background: #eceff1;
+    background: linear-gradient(
+      158deg,
+      rgb(224, 224, 224) 0%,
+      rrgb(233, 237, 254) 100%
+    );
+  }
+  

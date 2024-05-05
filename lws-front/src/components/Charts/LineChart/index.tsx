@@ -6,10 +6,19 @@ interface LineChartProps {
 }
 
 export function LineChart({ data, title }: LineChartProps) {
+  const formattedData = data.map(row => {
+    const date = new Date(row[0] as string);
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    return [formattedDate, ...row.slice(1)];
+  });
+
   const options = {
     title,
     curveType: "function",
     legend: { position: "bottom" },
+    hAxis: {
+      format: 'dd/MM/yyyy',
+    },
   };
 
   return (
@@ -17,7 +26,7 @@ export function LineChart({ data, title }: LineChartProps) {
       chartType="LineChart"
       width="100%"
       height="400px"
-      data={data}
+      data={formattedData}
       options={options}
     />
   );
