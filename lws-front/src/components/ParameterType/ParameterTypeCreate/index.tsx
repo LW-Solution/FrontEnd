@@ -1,43 +1,87 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Toast from "../../Toast";
 
 export default function ParameterTypeCreate({
   updateParamsList,
   reload,
 }: {
-  updateParamsList: () => Promise<void>;
-  reload: () => void;
-}) {
+    updateParamsList: () => Promise<void>;
+    reload: () => void;
+  }) {
+  
+  interface Unit {
+    id_unit: string,
+    unit: string;
+  }
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [unit, setUnit] = useState({
-    unit: "",
-    permissionsId: [1],
+  const [unit, setUnit] = useState<Unit[]>([]);
+  const [parameterType, setParameterType] = useState({
+    description: "",
+    parameter_name: "",
+    factor: "",
+    offset: "",
+    unit: {
+      id_unit: "",
+      unit: "",
+    },
   });
+
+  useEffect(() => {
+    window.stations3001
+      .get("unit")
+      .then((response) => {
+        setUnit(response.data);
+      })
+      .catch((error) => {
+        console.error("Ocorreu um erro!", error);
+      });
+  }, [reload]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
-    setUnit((prevunit) => ({
-      ...prevunit,
+    setParameterType((prevparameterType) => ({
+      ...prevparameterType,
       [name]: value,
     }));
+  };
+
+  const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedUnit = unit.find(unit => unit.unit === e.target.value);
+    
+    setParameterType({
+      ...parameterType,
+      unit: {
+        ...parameterType.unit,
+        id_unit: selectedUnit ? selectedUnit.id_unit : '',
+        unit: e.target.value,
+      },
+    });
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      await window.stations3001.post("unit", unit);
-      setToastMessage(`Unidade cadastrada com sucesso!`);
+
+      await window.stations3001.post("parameterType", parameterType);
+      setToastMessage(`Tipo de Parâmetro cadastrado com sucesso!`);
       setToast(true);
 
-      setUnit({
-        unit: "",
-        permissionsId: [1],
+      setUnit([])
+
+      setParameterType({
+        description: "",
+        parameter_name: "",
+        factor: "",
+        offset: "",
+        unit: {
+          id_unit: "",
+          unit: "",
+        },
       });
 
       updateParamsList();
       reload();
-
     } catch (error) {
       console.error("Erro na requisição:", error);
       setToast(true);
@@ -55,24 +99,87 @@ export default function ParameterTypeCreate({
       </Toast>
 
       <div className="card p-4">
-        <h2 className="mb-3">Cadastro de Unidade de Medida</h2>
-        <form >
-          <div className="mb-2">
-            <label htmlFor="unit_name" className="form-label">
-              Sigla da Unidade:
+        <h2 className="mb-3">Cadastro de Tipo de Parâmetro</h2>
+        <form>
+        <div className="mb-2">
+            <label htmlFor="description" className="form-label">
+              Descrição:
             </label>
             <input
               type="text"
-              id="unit"
-              name="unit"
-              value={unit.unit}
+              id="description"
+              name="description"
+              value={parameterType.description}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+        <div className="mb-2">
+            <label htmlFor="description" className="form-label">
+              Nome do Parâmetro:
+            </label>
+            <input
+              type="text"
+              id="parameter_name"
+              name="parameter_name"
+              value={parameterType.parameter_name}
               onChange={handleChange}
               className="form-control"
               required
             />
           </div>
 
-          <input type="hidden" name="role" value="station" />
+          <div className="mb-2">
+            <label htmlFor="factor" className="form-label">
+              Fator:
+            </label>
+            <input
+              type="number"
+              id="factor"
+              name="factor"
+              value={parameterType.factor}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+
+          <div className="mb-2">
+            <label htmlFor="offset" className="form-label">
+              Offset:
+            </label>
+            <input
+              type="number"
+              id="offset"
+              name="offset"
+              value={parameterType.offset}
+              onChange={handleChange}
+              className="form-control"
+              required
+            />
+          </div>
+
+          <div className="mb-2">
+            <label htmlFor="unit" className="form-label">
+              Unidade de Medida:
+            </label>
+            <select
+              name="unit"
+              value={parameterType.unit.unit}
+              onChange={handleUnitChange}
+              className="form-control"
+            >
+              <option value="">Selecione a unidade de medida</option>
+              {(Array.isArray(unit) ? unit : []).map((unit) => (
+                <option key={unit.id_unit} value={unit.unit}>
+                  {unit.unit}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <input type="hidden" name="role" value="parameterType" />
 
           <button
             type="submit"

@@ -2,11 +2,11 @@ import BodyHeader from "../../components/BodyHeader";
 import { SetStateAction, useEffect, useState } from "react";
 import ParameterTypeCreate from "../../components/ParameterType/ParameterTypeCreate";
 import ParameterTypeRead from "../../components/ParameterType/ParameterTypeRead";
-import ParameterTypeUpdate from "../../components/ParameterType/ParameterTypeUpdate";
+/* import ParameterTypeUpdate from "../../components/ParameterType/ParameterTypeUpdate"; */
 
 const navigation = [
   { link: "#listar", title: "Listar" },
-  { link: "#cadastrar", title: "Estações" },
+  { link: "#cadastrar", title: "Cadastrar" },
   { link: "#editar", title: "Editar" },
 ];
 
@@ -31,7 +31,7 @@ export default function ParameterType() {
     fetchData();
   }, [reload]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
-  const handleEditarUsuario = (id: SetStateAction<null>) => {
+  const handleEditarParameterType = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
     setParameterTypeUpdateIdId(id);
 
@@ -58,7 +58,7 @@ export default function ParameterType() {
       <div className="my-3 tab-content">
         {/* Listagem de Estações */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <ParameterTypeRead stationList={parameterType} onEditParameterType={handleEditarUsuario} reload={handleReload} />
+          <ParameterTypeRead parameterTypeList={parameterType} onEditParameterType={handleEditarParameterType} reload={handleReload} />
         </div>
 
         {/* Cadastro de Estações */}
@@ -67,13 +67,13 @@ export default function ParameterType() {
         </div>
 
         {/* Edição de Estações */}
-        <div className="tab-pane" id="editar" role="tabpanel">
+        {/* <div className="tab-pane" id="editar" role="tabpanel">
           <ParameterTypeUpdate
             stationId={parameterTypeUpdateId}
             updateParameterTypeList={updateParameterTypeList}
             reload={handleReload}
           />
-        </div>
+        </div> */}
       </div>
     </>
   );
