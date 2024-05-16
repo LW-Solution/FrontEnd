@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import Alerts from "../pages/Alerts";
+import Unit from "../pages/Unit";
 import ParameterType from "../pages/ParameterType";
 import Params from "../pages/Params";
 import Reports from "../pages/Reports";
@@ -37,9 +38,9 @@ export default[
                     handle: { title: "ESTAÇÕES" }
                 },
                 {
-                    /* path: "/admin/unit",
+                    path: "/admin/unit",
                     element: <Unit />,
-                    handle: { title: "UNIDADES" } */
+                    handle: { title: "UNIDADES" }
                 },
                 {
                     path: "/admin/parameter-type",

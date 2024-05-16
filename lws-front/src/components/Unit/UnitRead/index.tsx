@@ -5,74 +5,72 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faTrash,
+  faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
+import { useNavigate } from "react-router-dom";
 
-export default function ParameterTypesRead({
-  parameterTypeList,
-  onEditParameterType,
+export default function UnitRead({
+  unitList,
+  onEditUnit,
   reload,
 }: {
-  parameterTypeList: never[];
-  onEditParameterType: (id_parameter_type: SetStateAction<null>) => void;
-  reload: () => void;
+  unitList: never[];
+    onEditUnit: (id_unit: SetStateAction<null>) => void;
+    reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
-  const [parameterType, setParameterType] = useState([]);
+  const [unit, setUnit] = useState([]);
 
   useEffect(() => {
-    if (Array.isArray(parameterTypeList)) {
-      setParameterType(parameterTypeList);
+    if (Array.isArray(unitList)) {
+      setUnit(unitList);
     }
-  }, [reload, parameterTypeList]);
+  }, [reload, unitList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,
-    parameterTypeIdToDelete: null,
-    parameterTypeToDelete: null,
-    parameterTypeEmailToDelete: null,
+    unitIdToDelete: null,
+    unitToDelete: null,
+    unitEmailToDelete: null,
   });
   const [deleteStatus, setDeleteStatus] = useState(null);
 
-  const handleEdit = (id_parameter_type: SetStateAction<null>) => {
-    onEditParameterType && onEditParameterType(id_parameter_type);
+  const handleEdit = (id_unit: SetStateAction<null>) => {
+    onEditUnit && onEditUnit(id_unit);
   };
   const cancelDelete = () => {
     setModalData({
       showModal: false,
-      parameterTypeIdToDelete: null,
-      parameterTypeToDelete: null,
-      parameterTypeEmailToDelete: null,
+      unitIdToDelete: null,
+      unitToDelete: null,
+      unitEmailToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
   };
 
-  const handleDelete = (
-    id_parameter_type: number,
-    nome: string,
-    email: string
-  ) => {
+  const handleDelete = (id_unit: number, nome: string, email: string) => {
     setModalData({
       showModal: true,
-      parameterTypeIdToDelete: id_parameter_type,
-      parameterTypeToDelete: nome,
-      parameterTypeEmailToDelete: email,
+      unitIdToDelete: id_unit,
+      unitToDelete: nome,
+      unitEmailToDelete: email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
     reload();
   };
 
-  const confirmDelete = async (id_parameter_type: number) => {
+  const confirmDelete = async (id_unit: number) => {
     try {
       // Realizar a solicitação DELETE
       const response = await window.stations3001.delete(
-        `parameterType/${id_parameter_type ? String(id_parameter_type) : ""}`
+        `unit/${id_unit ? String(id_unit) : ""}`
       );
       if (response.status === 200) {
-        setParameterType(
-          parameterType.filter(
-            (parameterType: { id_parameter_type: number }) =>
-              parameterType.id_parameter_type !== id_parameter_type
+        setUnit(
+          unit.filter(
+            (unit: { id_unit: number }) =>
+              unit.id_unit !== id_unit
           )
         );
       }
@@ -83,26 +81,25 @@ export default function ParameterTypesRead({
       // Feche o modal após a exclusão ou faça outras ações necessárias
       setModalData({
         showModal: true,
-        parameterTypeIdToDelete: null,
-        parameterTypeToDelete: null,
-        parameterTypeEmailToDelete: null,
+        unitIdToDelete: null,
+        unitToDelete: null,
+        unitEmailToDelete: null,
       });
 
       // Atualizar a lista de usuários após a exclusão, se necessário
-      const updatedParameterTypes = parameterType.filter(
-        (parameterType) =>
-          parameterType?.id_parameter_type !== id_parameter_type
+      const updatedUnit = unit.filter(
+        (unit) => unit.id_unit !== id_unit
       );
-      setParameterType(updatedParameterTypes);
+      setUnit(updatedUnit);
       reload();
     } catch (error) {
       console.error("Erro ao excluir o usuário:", error);
 
       setModalData({
         showModal: true,
-        parameterTypeIdToDelete: null,
-        parameterTypeToDelete: null,
-        parameterTypeEmailToDelete: null,
+        unitIdToDelete: null,
+        unitToDelete: null,
+        unitEmailToDelete: null,
       });
 
       // Atualizar o status para falha
@@ -112,28 +109,28 @@ export default function ParameterTypesRead({
 
   const modalContent =
     deleteStatus === "success" ? (
-      <p>Tipo de Parâmetro excluído com sucesso!</p>
+      <p>Usuário excluído com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir o Tipo de Parâmetro. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir o usuário. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir este Tipo de Parâmetro?
+            Deseja realmente excluir este usuário?
           </p>
         </div>
-        <div className="parameterType-details">
+        <div className="unit-details">
           <p>
             <b>ID: </b>
-            {modalData.parameterTypeIdToDelete}
-          </p>
-          <p>
-            <b>Descrição: </b>
-            {modalData.parameterTypeToDelete}
+            {modalData.unitIdToDelete}
           </p>
           <p>
             <b>Nome: </b>
-            {modalData.parameterTypeEmailToDelete}
+            {modalData.unitToDelete}
+          </p>
+          <p>
+            <b>E-mail: </b>
+            {modalData.unitEmailToDelete}
           </p>
         </div>
       </>
@@ -142,35 +139,23 @@ export default function ParameterTypesRead({
   return (
     <div>
       <Toast show={toast} toggle={setToast} children={undefined} />
-      <h2 className="my-3">Tipos de Parâmetros Cadastrados</h2>
+      <h2 className="my-3">Estações Cadastradas</h2>
       <table className="table">
         <thead>
           <tr>
-            <th>Descrição da Parâmetro</th>
-            <th>Nome do Parâmetro</th>
-            <th>Fator</th>
-            <th>Offset</th>
-            <th>Unid. Medida</th>
+            <th>Unidade de Medida</th>
             <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {parameterType.map(
-            (parameterType: {
-              id_parameter_type: number;
-              parameter_name: string;
-              description: string;
-              factor: number;
-              offset: number;
-              unitIdUnit: number;
+          {unit.map(
+            ({
+              id_unit: number;
               unit: string;
+              };
             }) => (
-              <tr key={parameterType.id_parameter_type}>
-                <td className="col-3">{parameterType?.description}</td>
-                <td className="col-2">{parameterType?.parameter_name}</td>
-                <td className="col-2">{parameterType?.factor}</td>
-                <td className="col-2">{parameterType?.offset}</td>
-                <td className="col-2">{parameterType?.unit}</td>
+              <tr key={unit.id_unit}>
+                <td className="col-3">{unit.unit}</td>
                 <td className="col-1 text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
@@ -178,7 +163,7 @@ export default function ParameterTypesRead({
                     className="btn btn-sm btn-secondary me-1"
                     onClick={() =>
                       handleEdit(
-                        parameterType.id_parameter_type as unknown as SetStateAction<null>
+                        unit.id_unit as unknown as SetStateAction<null>
                       )
                     }
                   />
@@ -188,17 +173,17 @@ export default function ParameterTypesRead({
                     className="btn btn-sm btn-danger me-1"
                     onClick={() =>
                       handleDelete(
-                        parameterType.id_parameter_type,
-                        parameterType.description,
-                        parameterType.parameter_name
+                        unit.id_unit,
+                        unit.unit,
+                        unit.unit
                       )
                     }
                   />
-                  {/* <FontAwesomeIcon
+                  <FontAwesomeIcon
                     icon={faChartLine}
                     className="btn btn-sm btn-primary"
-                    onClick={() => handleChartClick(parameterType.id_parameter_type)}
-                  /> */}
+                    onClick={() => handleChartClick(unit.id_unit)}
+                  />
                 </td>
               </tr>
             )
@@ -215,8 +200,8 @@ export default function ParameterTypesRead({
                 <button
                   className="btn btn-danger"
                   onClick={() =>
-                    modalData.parameterTypeIdToDelete !== null &&
-                    confirmDelete(modalData.parameterTypeIdToDelete)
+                    modalData.unitIdToDelete !== null &&
+                    confirmDelete(modalData.unitIdToDelete)
                   }
                 >
                   Excluir
