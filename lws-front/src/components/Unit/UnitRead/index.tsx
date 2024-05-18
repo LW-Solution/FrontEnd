@@ -2,68 +2,78 @@ import { useState, useEffect, SetStateAction } from "react";
 import "./style.scss";
 import Modal from "../../Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTrash,
+  faChartLine,
+} from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
-import { User, ModalData, DeleteStatus } from "../../../types";
 
-export default function UsersRead({
-  userList,
-  onEditUser,
+export default function UnitRead({
+  unitList,
+  onEditUnit,
   reload,
 }: {
-  userList: never[];
-    onEditUser: (id: SetStateAction<null>) => void;
-  reload: () => void;
+  unitList: never[];
+    onEditUnit: (id_unit: SetStateAction<null>) => void;
+    reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
-  const [user, setUser] = useState<User[]>([]);
+  const [unit, setUnit] = useState([]);
 
   useEffect(() => {
-    if (Array.isArray(userList)) {
-      setUser(userList);
+    if (Array.isArray(unitList)) {
+      setUnit(unitList);
     }
-  }, [userList, reload]);
+  }, [reload, unitList]);
 
-  const [modalData, setModalData] = useState<ModalData>({
+  console.log(unit)
+
+  const [modalData, setModalData] = useState({
     showModal: false,
-    userIdToDelete: null,
-    userToDelete: null,
-    userEmailToDelete: null,
+    unitIdToDelete: null,
+    unitToDelete: null,
+    unitEmailToDelete: null,
   });
+  const [deleteStatus, setDeleteStatus] = useState(null);
 
-  const [deleteStatus, setDeleteStatus] = useState<DeleteStatus>(null);
-
-  const handleEdit = (id: SetStateAction<null>) => {
-    onEditUser && onEditUser(id);
+  const handleEdit = (id_unit: SetStateAction<null>) => {
+    onEditUnit && onEditUnit(id_unit);
   };
   const cancelDelete = () => {
     setModalData({
       showModal: false,
-      userIdToDelete: null,
-      userToDelete: null,
-      userEmailToDelete: null,
+      unitIdToDelete: null,
+      unitToDelete: null,
+      unitEmailToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
   };
 
-  const handleDelete = (user: User) => {
+  const handleDelete = (id_unit: number, nome: string, email: string) => {
     setModalData({
       showModal: true,
-      userIdToDelete: user.id,
-      userToDelete: user.user_name,
-      userEmailToDelete: user.email,
+      unitIdToDelete: id_unit,
+      unitToDelete: nome,
+      unitEmailToDelete: email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
+    reload();
   };
 
-  const confirmDelete = async (id: number) => {
+  const confirmDelete = async (id_unit: number) => {
     try {
       // Realizar a solicitação DELETE
-      const response = await window.users3000.delete(
-        `user/${id ? String(id) : ""}`
+      const response = await window.stations3001.delete(
+        `unit/${id_unit ? String(id_unit) : ""}`
       );
       if (response.status === 200) {
-        setUser(user.filter((usuario: { id: number }) => usuario.id !== id));
+        setUnit(
+          unit.filter(
+            (unit: { id_unit: number }) =>
+              unit.id_unit !== id_unit
+          )
+        );
       }
 
       // Atualizar o status para sucesso
@@ -72,22 +82,25 @@ export default function UsersRead({
       // Feche o modal após a exclusão ou faça outras ações necessárias
       setModalData({
         showModal: true,
-        userIdToDelete: null,
-        userToDelete: null,
-        userEmailToDelete: null,
+        unitIdToDelete: null,
+        unitToDelete: null,
+        unitEmailToDelete: null,
       });
 
       // Atualizar a lista de usuários após a exclusão, se necessário
-      const updatedUsers = user.filter((user) => user.id !== id);
-      setUser(updatedUsers);
+      const updatedUnit = unit.filter(
+        (unit) => unit.id_unit !== id_unit
+      );
+      setUnit(updatedUnit);
+      reload();
     } catch (error) {
-      console.error("Erro ao excluir o usuário:", error);
+      console.error("Erro ao excluir a unidade:", error);
 
       setModalData({
         showModal: true,
-        userIdToDelete: null,
-        userToDelete: null,
-        userEmailToDelete: null,
+        unitIdToDelete: null,
+        unitToDelete: null,
+        unitEmailToDelete: null,
       });
 
       // Atualizar o status para falha
@@ -97,28 +110,24 @@ export default function UsersRead({
 
   const modalContent =
     deleteStatus === "success" ? (
-      <p>Usuário excluído com sucesso!</p>
+      <p>Unidade excluída com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir o Usuário. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir a Unidade. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir este Usuário?
+            Deseja realmente excluir esta Unidade?
           </p>
         </div>
-        <div className="user-details">
+        <div className="unit-details">
           <p>
             <b>ID: </b>
-            {modalData.userIdToDelete}
+            {modalData.unitIdToDelete}
           </p>
           <p>
             <b>Nome: </b>
-            {modalData.userToDelete}
-          </p>
-          <p>
-            <b>E-mail: </b>
-            {modalData.userEmailToDelete}
+            {modalData.unitToDelete}
           </p>
         </div>
       </>
@@ -126,37 +135,44 @@ export default function UsersRead({
 
   return (
     <div>
-      <Toast show={toast} toggle={setToast} children={""} type={""} />
-      <h2 className="my-3">Usuários Cadastrados</h2>
+      <Toast show={toast} toggle={setToast} children={undefined} />
+      <h2 className="my-3">Estações Cadastradas</h2>
       <table className="table">
         <thead>
           <tr>
-            <th>Nome do Usuário</th>
-            <th>E-mail</th>
+            <th>Unidade de Medida</th>
             <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {user.map(
-            (usuario: User) => (
-              <tr key={usuario.id}>
-                <td className="col-7">{usuario.user_name}</td>
-                <td className="col-4">{usuario.email}</td>
+          {unit.map(
+            (unit: {
+              id_unit: number;
+              unit: string;
+            }) => (
+              <tr key={unit.id_unit}>
+                <td className="col-3">{unit.unit}</td>
                 <td className="col-1 text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
                     className="btn btn-sm btn-secondary me-1"
                     onClick={() =>
-                      handleEdit(usuario.id as unknown as SetStateAction<null>)
+                      handleEdit(
+                        unit.id_unit as unknown as SetStateAction<null>
+                      )
                     }
                   />
                   {/* Ícone de Excluir */}
                   <FontAwesomeIcon
                     icon={faTrash}
-                    className="btn btn-sm btn-danger"
+                    className="btn btn-sm btn-danger me-1"
                     onClick={() =>
-                      handleDelete(usuario)
+                      handleDelete(
+                        unit.id_unit,
+                        unit.unit,
+                        unit.unit
+                      )
                     }
                   />
                 </td>
@@ -175,8 +191,8 @@ export default function UsersRead({
                 <button
                   className="btn btn-danger"
                   onClick={() =>
-                    modalData.userIdToDelete !== null &&
-                    confirmDelete(modalData.userIdToDelete)
+                    modalData.unitIdToDelete !== null &&
+                    confirmDelete(modalData.unitIdToDelete)
                   }
                 >
                   Excluir

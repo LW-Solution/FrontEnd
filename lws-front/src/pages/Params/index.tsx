@@ -3,14 +3,10 @@ import { SetStateAction, useEffect, useState } from "react";
 import ParamsRead from "../../components/Params/ParamsRead";
 import ParamsCreate from "../../components/Params/ParamsCreate";
 import ParamsUpdate from "../../components/Params/ParamsUpdate";
-import ParamsUnidades from "../../components/Params/ParamsUnidades";
-import ParamsTipo from "../../components/Params/ParamsTipo";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
   { link: "#cadastrar", title: "Cadastrar Parâmetro" },
-  { link: "#unidades", title: "Unidades" },
-  { link: "#tipo", title: "Tipo de Parâmetro" },
   { link: "#editar", title: "Editar" },
 ];
 
@@ -67,15 +63,6 @@ export default function Params() {
         <div className="tab-pane active" id="listar" role="tabpanel">
           <ParamsRead stationParameterList={stationParameter} onEditStationParameter={handleEditarStationParameter} reload={handleReload}/>          
         </div>       
-
-        {/* Cadastro de Usuário */}
-        <div className="tab-pane" id="unidades" role="tabpanel">
-          <ParamsUnidades updateParamsList={updateStationParameterList} reload={handleReload} />
-        </div>
-
-        <div className="tab-pane" id="tipo" role="tabpanel">
-          <ParamsTipo updateParamsList={updateStationParameterList} reload={handleReload}/>
-        </div>
 
         {/* Cadastro de Usuário */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">

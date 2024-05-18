@@ -1,5 +1,8 @@
 import { Navigate } from "react-router-dom";
 import Alerts from "../pages/Alerts";
+import Unit from "../pages/Units";
+import Location from "../pages/Locations";
+import ParameterType from "../pages/ParameterType";
 import Params from "../pages/Params";
 import Reports from "../pages/Reports";
 import Stations from "../pages/Stations";
@@ -8,6 +11,7 @@ import Login from "../pages/Login";
 import Home from "../pages/Home";
 import Users from "../pages/Users";
 import StationsDashboards from "../pages/Dashboards";
+import path from "path";
 
 export default[    
         {
@@ -23,11 +27,26 @@ export default[
                     path: "/admin/users",
                     element: <Users />,
                     handle: { title: "USUÁRIOS" }
+                },
+                {
+                    path: "/admin/location",
+                    element: <Location />,
+                    handle: { title: "LOCALIZAÇÃO" }
                 },               
                 {
                     path: "/admin/stations",
                     element: <Stations />,
                     handle: { title: "ESTAÇÕES" }
+                },
+                {
+                    path: "/admin/unit",
+                    element: <Unit />,
+                    handle: { title: "UNIDADES" }
+                },
+                {
+                    path: "/admin/parameter-type",
+                    element: <ParameterType />,
+                    handle: { title: "TIPOS DE PARÂMETROS" }
                 },
                 {
                     path: "/admin/params",
