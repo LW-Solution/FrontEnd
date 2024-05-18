@@ -5,73 +5,77 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faTrash,
-  faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
 
-export default function UnitRead({
-  unitList,
-  onEditUnit,
+export default function LocationsRead({
+  locationList,
+  onEditLocation,
   reload,
 }: {
-  unitList: never[];
-    onEditUnit: (id_unit: SetStateAction<null>) => void;
-    reload: () => void;
+  locationList: never[];
+  onEditLocation: (id_location: SetStateAction<null>) => void;
+  reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
-  const [unit, setUnit] = useState([]);
+  const [location, setLocation] = useState([]);
 
   useEffect(() => {
-    if (Array.isArray(unitList)) {
-      setUnit(unitList);
+    if (Array.isArray(locationList)) {
+      setLocation(locationList);
     }
-  }, [reload, unitList]);
-
-  console.log(unit)
+  }, [reload, locationList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,
-    unitIdToDelete: null,
-    unitToDelete: null,
-    unitEmailToDelete: null,
+    locationIdToDelete: null,
+    locationToDelete: null,
+    locationLatitudeToDelete: null,
+    locationLongitudeToDelete: null,
   });
   const [deleteStatus, setDeleteStatus] = useState(null);
 
-  const handleEdit = (id_unit: SetStateAction<null>) => {
-    onEditUnit && onEditUnit(id_unit);
+  const handleEdit = (id_location: SetStateAction<null>) => {
+    onEditLocation && onEditLocation(id_location);
   };
   const cancelDelete = () => {
     setModalData({
       showModal: false,
-      unitIdToDelete: null,
-      unitToDelete: null,
-      unitEmailToDelete: null,
+      locationIdToDelete: null,
+      locationToDelete: null,
+      locationLatitudeToDelete: null,
+      locationLongitudeToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
   };
 
-  const handleDelete = (id_unit: number, nome: string, email: string) => {
+  const handleDelete = (
+    id_location: number,
+    nome: string,
+    email: string
+  ) => {
     setModalData({
       showModal: true,
-      unitIdToDelete: id_unit,
-      unitToDelete: nome,
-      unitEmailToDelete: email,
+      locationIdToDelete: id_location,
+      locationToDelete: nome,
+      locationLatitudeToDelete: email,
+      locationLongitudeToDelete: email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
     reload();
   };
 
-  const confirmDelete = async (id_unit: number) => {
+  const confirmDelete = async (id_location: number) => {
     try {
       // Realizar a solicitação DELETE
       const response = await window.stations3001.delete(
-        `unit/${id_unit ? String(id_unit) : ""}`
+        `locations/${id_location ? String(id_location) : ""}`
       );
       if (response.status === 200) {
-        setUnit(
-          unit.filter(
-            (unit: { id_unit: number }) =>
-              unit.id_unit !== id_unit
+        setLocation(
+          location.filter(
+            (location: { id_location: number }) =>
+              location.id_location !== id_location
           )
         );
       }
@@ -82,25 +86,28 @@ export default function UnitRead({
       // Feche o modal após a exclusão ou faça outras ações necessárias
       setModalData({
         showModal: true,
-        unitIdToDelete: null,
-        unitToDelete: null,
-        unitEmailToDelete: null,
+        locationIdToDelete: null,
+        locationToDelete: null,
+        locationLatitudeToDelete: null,
+        locationLongitudeToDelete: null,
       });
 
       // Atualizar a lista de usuários após a exclusão, se necessário
-      const updatedUnit = unit.filter(
-        (unit) => unit.id_unit !== id_unit
+      const updatedLocations = location.filter(
+        (location) =>
+          location?.id_location !== id_location
       );
-      setUnit(updatedUnit);
+      setLocation(updatedLocations);
       reload();
     } catch (error) {
-      console.error("Erro ao excluir a unidade:", error);
+      console.error("Erro ao excluir o usuário:", error);
 
       setModalData({
         showModal: true,
-        unitIdToDelete: null,
-        unitToDelete: null,
-        unitEmailToDelete: null,
+        locationIdToDelete: null,
+        locationToDelete: null,
+        locationLatitudeToDelete: null,
+        locationLongitudeToDelete: null,
       });
 
       // Atualizar o status para falha
@@ -110,24 +117,32 @@ export default function UnitRead({
 
   const modalContent =
     deleteStatus === "success" ? (
-      <p>Unidade excluída com sucesso!</p>
+      <p>Localização excluída com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir a Unidade. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir a Localização. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir esta Unidade?
+            Deseja realmente excluir esta Localização?
           </p>
         </div>
-        <div className="unit-details">
+        <div className="location-details">
           <p>
             <b>ID: </b>
-            {modalData.unitIdToDelete}
+            {modalData.locationIdToDelete}
           </p>
           <p>
             <b>Nome: </b>
-            {modalData.unitToDelete}
+            {modalData.locationToDelete}
+          </p>
+          <p>
+            <b>Latitude: </b>
+            {modalData.locationLatitudeToDelete}
+          </p>
+          <p>
+            <b>Longitude: </b>
+            {modalData.locationLongitudeToDelete}
           </p>
         </div>
       </>
@@ -136,22 +151,28 @@ export default function UnitRead({
   return (
     <div>
       <Toast show={toast} toggle={setToast} children={undefined} />
-      <h2 className="my-3">Estações Cadastradas</h2>
+      <h2 className="my-3">Localização Cadastradas</h2>
       <table className="table">
         <thead>
           <tr>
-            <th>Unidade de Medida</th>
+            <th>Nome</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
             <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {unit.map(
-            (unit: {
-              id_unit: number;
-              unit: string;
+          {location.map(
+            (location: {
+              id_location: number;
+              location_name: string;
+              latitude: string;
+              longitude: string;
             }) => (
-              <tr key={unit.id_unit}>
-                <td className="col-3">{unit.unit}</td>
+              <tr key={location.id_location}>
+                <td className="col-2">{location?.location_name}</td>
+                <td className="col-2">{location?.latitude}</td>
+                <td className="col-2">{location?.longitude}</td>
                 <td className="col-1 text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
@@ -159,7 +180,7 @@ export default function UnitRead({
                     className="btn btn-sm btn-secondary me-1"
                     onClick={() =>
                       handleEdit(
-                        unit.id_unit as unknown as SetStateAction<null>
+                        location.id_location as unknown as SetStateAction<null>
                       )
                     }
                   />
@@ -169,9 +190,9 @@ export default function UnitRead({
                     className="btn btn-sm btn-danger me-1"
                     onClick={() =>
                       handleDelete(
-                        unit.id_unit,
-                        unit.unit,
-                        unit.unit
+                        location.id_location,
+                        location.location_name,
+                        location.latitude,
                       )
                     }
                   />
@@ -191,8 +212,8 @@ export default function UnitRead({
                 <button
                   className="btn btn-danger"
                   onClick={() =>
-                    modalData.unitIdToDelete !== null &&
-                    confirmDelete(modalData.unitIdToDelete)
+                    modalData.locationIdToDelete !== null &&
+                    confirmDelete(modalData.locationIdToDelete)
                   }
                 >
                   Excluir

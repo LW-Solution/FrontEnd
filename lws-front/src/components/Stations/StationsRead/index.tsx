@@ -115,14 +115,14 @@ export default function StationsRead({
 
   const modalContent =
     deleteStatus === "success" ? (
-      <p>Usuário excluído com sucesso!</p>
+      <p>Estação excluída com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir o usuário. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir a Estação. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir este usuário?
+            Deseja realmente excluir esta Estação?
           </p>
         </div>
         <div className="station-details">

@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom";
 import Alerts from "../pages/Alerts";
-import Unit from "../pages/Unit";
+import Unit from "../pages/Units";
+import Location from "../pages/Locations";
 import ParameterType from "../pages/ParameterType";
 import Params from "../pages/Params";
 import Reports from "../pages/Reports";
@@ -28,9 +29,9 @@ export default[
                     handle: { title: "USUÁRIOS" }
                 },
                 {
-                    /* path: "/admin/location",
+                    path: "/admin/location",
                     element: <Location />,
-                    handle: { title: "LOCALIZAÇÃO" } */
+                    handle: { title: "LOCALIZAÇÃO" }
                 },               
                 {
                     path: "/admin/stations",

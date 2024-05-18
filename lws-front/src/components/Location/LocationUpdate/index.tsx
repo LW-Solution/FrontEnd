@@ -1,50 +1,69 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Toast from "../../Toast";
 
-
-export default function StationsLocalizacao({
-  updateStationList,
+export default function LocationUpdate({
+  locationId,
+  updateLocationList,
   reload,
 }: {
-  updateStationList: () => Promise<void>;
+  locationId: string | null;
+  updateLocationList: () => Promise<void>;
   reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [locations, setLocations] = useState({
+  const [location, setLocation] = useState({
     location_name: "",
     latitude: "",
     longitude: "",
-    permissionsId: [1],
   });
 
-  const handleChange = (e: { target: { name: string; value: string } }) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Carregar os detalhes da estação a ser atualizada
+        const response = await window.stations3001.get(
+          `locations/${locationId}`
+        );
+        const { location_name, latitude, longitude } = response.data;
+
+        setLocation({
+          location_name: location_name,
+          latitude: latitude,
+          longitude: longitude,
+        });
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    };
+
+    if (locationId) {
+      fetchData();
+    }
+  }, [locationId]);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setLocations((prevlocations) => ({
-      ...prevlocations,
+    setLocation((prevLocation) => ({
+      ...prevLocation,
       [name]: value,
     }));
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await window.stations3001.post("locations", locations);
-      setToastMessage(`Localização cadastrada com sucesso!`);
+      const response = await window.stations3001.put(
+        `locations/${locationId}`,
+        location
+      );
+      setToastMessage("Estação atualizada com sucesso!");
       setToast(true);
-
-      setLocations({
-        location_name: "",
-        latitude: "",
-        longitude: "",
-        permissionsId: [1],
-      });
-
-      updateStationList();
+      updateLocationList();
       reload();
-
     } catch (error) {
-      console.error("Erro na requisição:", error);
+      console.error("Erro ao atualizar a estação:", error);
+      setToastMessage("Erro ao atualizar a estação.");
       setToast(true);
     }
   };
@@ -60,17 +79,17 @@ export default function StationsLocalizacao({
       </Toast>
 
       <div className="card p-4">
-        <h2 className="mb-3">Cadastro de Localização</h2>
-        <form >
+        <h2 className="mb-3">Editar Localização</h2>
+        <form>
           <div className="mb-2">
             <label htmlFor="location_name" className="form-label">
-              Nome da Localização:
+              Nome:
             </label>
             <input
               type="text"
               id="location_name"
               name="location_name"
-              value={locations.location_name}
+              value={location.location_name}
               onChange={handleChange}
               className="form-control"
               required
@@ -84,7 +103,7 @@ export default function StationsLocalizacao({
               type="text"
               id="latitude"
               name="latitude"
-              value={locations.latitude}
+              value={location.latitude}
               onChange={handleChange}
               className="form-control"
               required
@@ -99,7 +118,7 @@ export default function StationsLocalizacao({
               type="text"
               id="longitude"
               name="longitude"
-              value={locations.longitude}
+              value={location.longitude}
               onChange={handleChange}
               className="form-control"
               required
@@ -111,9 +130,9 @@ export default function StationsLocalizacao({
           <button
             type="submit"
             className="btn btn-secondary"
-            onClick={handleSubmit}
+            onClick={handleUpdate}
           >
-            Cadastrar
+            Atualizar
           </button>
         </form>
       </div>

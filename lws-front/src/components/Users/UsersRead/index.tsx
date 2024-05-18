@@ -99,12 +99,12 @@ export default function UsersRead({
     deleteStatus === "success" ? (
       <p>Usuário excluído com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir o usuário. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir o Usuário. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir este usuário?
+            Deseja realmente excluir este Usuário?
           </p>
         </div>
         <div className="user-details">
