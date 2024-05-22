@@ -98,14 +98,14 @@ export default function AlertsRead({
 
   const modalContent =
     deleteStatus === "success" ? (
-      <p>Estação excluída com sucesso!</p>
+      <p>Alerta excluído com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir o alerta. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir o Alerta. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir o alerta?
+            Deseja realmente excluir este Alerta?
           </p>
         </div>
         <div className="alert-details">
