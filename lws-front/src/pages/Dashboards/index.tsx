@@ -2,18 +2,16 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import DashCard from "../../components/DashCard";
-//import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-//import { faCloudRain } from "@fortawesome/free-solid-svg-icons";
 import { Box, Stack, TextField, Typography } from "@mui/material";
-import { GridDataType /* DailyData */ } from "../../types/dashTypes";
+import { GridDataType } from "../../types/dashTypes";
 import { LineChart } from "../../components/Charts/LineChart";
 import "./style.scss";
 
 const StationsDashboards = () => {
   const { id_station } = useParams();
   const [gridData, setGridData] = useState<GridDataType | null>(null);
-  /* const [filteredData, setFilteredData] = useState<DailyData | null>(null); */
   const [chartData, setChartData] = useState<(string | number)[][]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const currentDate = new Date();
   const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
@@ -22,6 +20,7 @@ const StationsDashboards = () => {
   const [endDate, setEndDate] = useState(formattedDate);
 
   const sendDate = async () => {
+    setError(null); // Reset error before new request
     if (window.stations3001) {
       try {
         const response = await window.stations3001.get(
@@ -29,34 +28,17 @@ const StationsDashboards = () => {
         );
         setGridData(response.data);
       } catch (error) {
-        console.error("Erro da requisição:", error);
+        console.error("Error fetching data:", error);
+        setError("Failed to fetch data. Please try again later.");
       }
     } else {
-      console.error("stations3001 não está definido em window");
+      console.error("stations3001 is not defined on window");
+      setError("Configuration error. Please contact support.");
     }
   };
 
-  /*    function handleClick(parameterName: string) {
-    if (gridData && gridData.dailyData) {
-      const dailyData = gridData.dailyData[0];
-      const avgParameterValues = {
-        [parameterName]: dailyData.avgParameterValues[parameterName],
-      };
-      const measurements = dailyData.measurements.filter(
-        (measurement) =>
-          measurement.parameter_type.parameter_name === parameterName
-      );
-      const newFilteredData = {
-        ...dailyData,
-        avgParameterValues,
-        measurements,
-      };
-      setFilteredData(newFilteredData);
-    }
-  }  */
-
   useEffect(() => {
-    if (gridData && gridData.dailyData && gridData.dailyData[0]) {
+    if (gridData && gridData.dailyData && gridData.dailyData.length > 0) {
       const parameterNames = Object.keys(
         gridData.dailyData[0].avgParameterValues
       );
@@ -67,7 +49,7 @@ const StationsDashboards = () => {
         );
         return [date, ...parameterValues];
       });
-      setChartData([["Data", ...parameterNames], ...newChartData]);
+      setChartData([["Date", ...parameterNames], ...newChartData]);
     } else {
       setChartData([]);
     }
@@ -75,53 +57,46 @@ const StationsDashboards = () => {
 
   useEffect(() => {
     sendDate();
-  }, [endDate, id_station, startDate]);
+  }, [startDate, endDate, id_station]);
 
-  const hasParameters = gridData && gridData.dailyData && gridData.dailyData[0] && Object.keys(gridData.dailyData[0].avgParameterValues).length > 0;
-
+  const hasParameters =
+    gridData?.dailyData?.[0]?.avgParameterValues &&
+    Object.keys(gridData.dailyData[0].avgParameterValues).length > 0;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Stack spacing={1}>
         <Grid container spacing={1}>
-        <Grid item xs={4}>
-            {gridData && gridData.id_estacao ? (
+          <Grid item xs={4}>
+            {gridData?.id_estacao ? (
               <>
                 <p>ID: {gridData.id_estacao.id_station}</p>
                 <p>Nome: {gridData.id_estacao.station_description}</p>
                 <p>
-                  Localização: {gridData.id_estacao.location.location_name} - (
-                  {gridData.id_estacao.location.latitude},{" "}
-                  {gridData.id_estacao.location.longitude})
+                  Local: {gridData.id_estacao.location.location_name}
                 </p>
                 <p>
                   Aferições:{" "}
                   {gridData.dailyData.reduce(
-                    (sum: number, data: { quantityMeasurements: number }) =>
-                      sum + data.quantityMeasurements,
+                    (sum, data) => sum + data.quantityMeasurements,
                     0
                   )}
                 </p>
               </>
             ) : (
               <Typography variant="h6" align="center">
-                Nenhuma estação selecionada.
+                No station selected.
               </Typography>
             )}
           </Grid>
           <Grid item xs={8}>
             <Grid
               container
-              direction="row"
               justifyContent="center"
               alignItems="center"
               spacing={2}
             >
-              {gridData &&
-              gridData.dailyData &&
-              gridData.dailyData[0] &&
-              Object.keys(gridData.dailyData[0].avgParameterValues).length >
-                0 ? (
+              {hasParameters ? (
                 Object.keys(gridData.dailyData[0].avgParameterValues).map(
                   (parameterName) => (
                     <Grid item key={parameterName}>
@@ -143,75 +118,71 @@ const StationsDashboards = () => {
                           ].maxValue
                         }
                         onClick={() => {}}
-                        /* onClick={() => handleClick(parameterName)} */
                       />
                     </Grid>
                   )
                 )
               ) : (
                 <Typography variant="h6" align="center">
-                  Não há registros de dados para este dia.
+                  Não há dados para exibir no período selecionado.
                 </Typography>
               )}
             </Grid>
-          </Grid>          
+          </Grid>
         </Grid>
-        {hasParameters && (
-        <Grid container >
-          <Grid container item xs={2} justifyContent="center" alignItems="center">
+        <Grid container>
+          <Grid container item xs={2} justifyContent="center">
             <Stack spacing={3}>
               <Grid item>
-                <Typography variant="body2" align="center">
-                  Selecione o intervalo de datas:
-                </Typography>
+                <Typography variant="body2">Selecione o período:</Typography>
               </Grid>
-
               <Grid item>
                 <TextField
                   id="date-start"
-                  label="Data de início"
+                  label="Start Date"
                   type="date"
                   InputLabelProps={{
                     shrink: true,
                   }}
                   value={startDate}
-                  onChange={(e) => {
-                    setStartDate(e.target.value);
-                    /* setFilteredData(null); */
-                  }}
+                  onChange={(e) => setStartDate(e.target.value)}
                 />
               </Grid>
               <Grid item>
                 <TextField
                   id="date-end"
-                  label="Data final"
+                  label="End Date"
                   type="date"
                   InputLabelProps={{
                     shrink: true,
                   }}
                   value={endDate}
-                  onChange={(e) => {
-                    setEndDate(e.target.value);
-                    /* setFilteredData(null); */
-                  }}
+                  onChange={(e) => setEndDate(e.target.value)}
                 />
               </Grid>
             </Stack>
           </Grid>
-          
           <Grid item xs={10}>
-            {gridData ? (
-              <LineChart data={chartData} title="Título" />
+            {chartData.length > 1 ? (
+              <LineChart
+                data={chartData}
+                title={`Gráfico do Período: ${startDate} - ${endDate}`}
+              />
             ) : (
               <Typography variant="h6" align="center">
-                Nenhuma estação selecionada.
+                Não há dados para exibir no período selecionado.
               </Typography>
             )}
           </Grid>
         </Grid>
+        {error && (
+          <Typography variant="h6" color="error" align="center">
+            {error}
+          </Typography>
         )}
       </Stack>
     </Box>
   );
 };
+
 export default StationsDashboards;

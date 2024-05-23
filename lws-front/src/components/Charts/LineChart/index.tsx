@@ -25,7 +25,7 @@ export function LineChart({ data, title }: LineChartProps) {
     <Chart
       chartType="LineChart"
       width="100%"
-      height="400px"
+      height="300px"
       data={formattedData}
       options={options}
     />
