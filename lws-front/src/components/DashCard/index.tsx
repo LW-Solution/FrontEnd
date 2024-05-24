@@ -11,6 +11,7 @@ export default function DashCard({
   min,
   max,
   title,
+  unit,
   onClick,
 }: DashCardProps) {
   return (
@@ -25,7 +26,7 @@ export default function DashCard({
               sx={{ color: "#fff" }}
               className="title"
             >
-              {title}
+              {title} ({unit})
             </Typography>
           </Grid>
           <Grid
