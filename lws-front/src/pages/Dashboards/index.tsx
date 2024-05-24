@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import DashCard from "../../components/DashCard";
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { GridDataType } from "../../types/dashTypes";
 import { LineChart } from "../../components/Charts/LineChart";
 import "./style.scss";
@@ -18,6 +18,8 @@ const StationsDashboards = () => {
 
   const [startDate, setStartDate] = useState(formattedDate);
   const [endDate, setEndDate] = useState(formattedDate);
+  const [displayStartDate, setDisplayStartDate] = useState("");
+  const [displayEndDate, setDisplayEndDate] = useState("");
 
   const sendDate = async () => {
     setError(null); // Reset error before new request
@@ -27,6 +29,8 @@ const StationsDashboards = () => {
           `dashboard/bydate/${startDate}/${endDate}/${id_station}`
         );
         setGridData(response.data);
+        setDisplayStartDate(new Date(startDate).toLocaleDateString());
+        setDisplayEndDate(new Date(endDate).toLocaleDateString());
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to fetch data. Please try again later.");
@@ -57,7 +61,7 @@ const StationsDashboards = () => {
 
   useEffect(() => {
     sendDate();
-  }, [startDate, endDate, id_station]);
+  }, []);
 
   const hasParameters =
     gridData?.dailyData?.[0]?.avgParameterValues &&
@@ -72,9 +76,7 @@ const StationsDashboards = () => {
               <>
                 <p>ID: {gridData.id_estacao.id_station}</p>
                 <p>Nome: {gridData.id_estacao.station_description}</p>
-                <p>
-                  Local: {gridData.id_estacao.location.location_name}
-                </p>
+                <p>Local: {gridData.id_estacao.location.location_name}</p>
                 <p>
                   Aferições:{" "}
                   {gridData.dailyData.reduce(
@@ -117,9 +119,7 @@ const StationsDashboards = () => {
                             parameterName
                           ].maxValue
                         }
-                        unit={
-                          gridData.parameter_types[index].unit.unit
-                        }
+                        unit={gridData.parameter_types[index].unit.unit}
                         onClick={() => {}}
                       />
                     </Grid>
@@ -163,13 +163,18 @@ const StationsDashboards = () => {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </Grid>
+              <Grid item container justifyContent="center" >
+                <Button variant="contained" onClick={sendDate}>
+                  Exibir
+                </Button>
+              </Grid>
             </Stack>
           </Grid>
           <Grid item xs={10}>
             {chartData.length > 1 ? (
               <LineChart
                 data={chartData}
-                title={`Gráfico do Período: ${startDate} - ${endDate}`}
+                title={`Gráfico do Período: ${displayStartDate} - ${displayEndDate}`}
               />
             ) : (
               <Typography variant="h6" align="center">
