@@ -85,7 +85,7 @@ const StationsDashboards = () => {
               </>
             ) : (
               <Typography variant="h6" align="center">
-                No station selected.
+                Nenhuma Estação Selecionada
               </Typography>
             )}
           </Grid>
@@ -98,7 +98,7 @@ const StationsDashboards = () => {
             >
               {hasParameters ? (
                 Object.keys(gridData.dailyData[0].avgParameterValues).map(
-                  (parameterName) => (
+                  (parameterName, index) => (
                     <Grid item key={parameterName}>
                       <DashCard
                         title={parameterName}
@@ -116,6 +116,9 @@ const StationsDashboards = () => {
                           gridData.dailyData[0].avgParameterValues[
                             parameterName
                           ].maxValue
+                        }
+                        unit={
+                          gridData.parameter_types[index].unit.unit
                         }
                         onClick={() => {}}
                       />
