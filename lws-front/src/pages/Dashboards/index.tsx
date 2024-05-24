@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import DashCard from "../../components/DashCard";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { GridDataType } from "../../types/dashTypes";
-import { LineChart } from "../../components/Charts/LineChart";
+import { BarChart } from "../../components/Charts/BarChart";
 import "./style.scss";
 
 const StationsDashboards = () => {
@@ -164,7 +164,7 @@ const StationsDashboards = () => {
                 />
               </Grid>
               <Grid item container justifyContent="center" >
-                <Button variant="contained" onClick={sendDate}>
+                <Button className="btnExibir" variant="contained" onClick={sendDate}>
                   Exibir
                 </Button>
               </Grid>
@@ -172,7 +172,7 @@ const StationsDashboards = () => {
           </Grid>
           <Grid item xs={10}>
             {chartData.length > 1 ? (
-              <LineChart
+              <BarChart
                 data={chartData}
                 title={`Gráfico do Período: ${displayStartDate} - ${displayEndDate}`}
               />

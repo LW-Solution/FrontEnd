@@ -56,16 +56,6 @@ export default function DashCard({
               </div>
             </Grid>
           </Grid>
-          {/* <Grid item>
-       <Typography
-        gutterBottom
-        variant="body2"
-        component="div"
-        sx={{ color: "#ccd1d1" }}
-      >
-        {subtitle}
-      </Typography> 
-    </Grid> */}
         </Grid>
       </CardContent>
     </Card>
