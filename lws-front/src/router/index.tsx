@@ -11,7 +11,6 @@ import Login from "../pages/Login";
 import Home from "../pages/Home";
 import Users from "../pages/Users";
 import StationsDashboards from "../pages/Dashboards";
-import path from "path";
 import TablesPage from "../pages/Tables";
 
 export default[    
@@ -56,7 +55,7 @@ export default[
                 },
                 {
                     path: "/admin/reports",
-                    element: <Reports />,
+                    element: <TablesPage />,
                     handle: { title: "RELATÓRIOS" }
                 },
                 {
@@ -68,12 +67,7 @@ export default[
                     path: "/admin/dashboard/:id_station",
                     element: <StationsDashboards />,
                     handle: { title: "DASHBOARD" }
-                },
-                {
-                    path: "/admin/table",
-                    element: <TablesPage />,
-                    handle: { title: "TABELAS" }
-                },
+                }
             ]
         },
         {

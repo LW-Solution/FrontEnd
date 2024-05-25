@@ -12,8 +12,8 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
+import { GridDataType } from "../../types/dashTypes"; // Certifique-se de que o caminho está correto
 
-import { GridDataType } from "../../types/dashTypes";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -55,7 +55,17 @@ export default function TablesPage() {
         const response = await window.stations3001.get(
           `dashboard/bydate/${startDate}/${endDate}/${id_station}`
         );
-        setGridData(response.data);
+        // Mapeia as descrições dos parâmetros para suas respectivas unidades
+        const parameterUnits: { [key: string]: string } = {};
+        response.data.parameter_types.forEach((parameter) => {
+          parameterUnits[parameter.description] = parameter.unit.unit;
+        });
+        // Adiciona as unidades aos dados antes de atualizar o estado
+        const dataWithUnits = {
+          ...response.data,
+          parameterUnits,
+        };
+        setGridData(dataWithUnits);
         setDisplayStartDate(new Date(startDate).toLocaleDateString());
         setDisplayEndDate(new Date(endDate).toLocaleDateString());
       } catch (error) {
@@ -83,6 +93,7 @@ export default function TablesPage() {
   const handleChange = (event: SelectChangeEvent) => {
     setIdStation(String(event.target.value));
   };
+
   return (
     <>
       <Grid container spacing={2}>
@@ -96,7 +107,7 @@ export default function TablesPage() {
                   id="demo-simple-select-standard"
                   value={id_station || ""}
                   onChange={handleChange}
-                  label="Estacoes"
+                  label="Estações"
                 >
                   <MenuItem value="">
                     <em>None</em>
@@ -141,7 +152,13 @@ export default function TablesPage() {
               />
             </Item>
           </Grid>
-          <Grid item xs={3} container alignItems="center" justifyContent="center">
+          <Grid
+            item
+            xs={3}
+            container
+            alignItems="center"
+            justifyContent="center"
+          >
             <Button
               className="btnExibir"
               variant="contained"
