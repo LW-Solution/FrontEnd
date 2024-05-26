@@ -9,7 +9,11 @@ import {
   faFileLines,
   faTriangleExclamation,
   faRightToBracket,
+  faSatelliteDish,
+  faRuler,
+  faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 export default function Sidebar() {
   const buttons = () => {
@@ -25,9 +29,24 @@ export default function Sidebar() {
         icon: <FontAwesomeIcon icon={faUserGroup} />,
       },
       {
+        link: "/admin/location",
+        name: "LOCALIZAÇÃO",
+        icon: <FontAwesomeIcon icon={faLocationDot} />,
+      },
+      {
         link: "/admin/stations",
         name: "ESTAÇÕES",
         icon: <FontAwesomeIcon icon={faSatellite} />,
+      },
+      {
+        link: "/admin/unit",
+        name: "UNIDADES",
+        icon: <FontAwesomeIcon icon={faRuler} />,
+      },
+      {
+        link: "/admin/parameter-type",
+        name: "TIPOS DE PARÂMETROS",
+        icon : <FontAwesomeIcon icon={faSatelliteDish} />,
       },
       {
         link: "/admin/params",

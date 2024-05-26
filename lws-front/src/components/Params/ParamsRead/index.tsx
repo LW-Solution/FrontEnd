@@ -102,14 +102,14 @@ export default function ParamsRead({
 
   const modalContent =
     deleteStatus === "success" ? (
-      <p>Estação excluída com sucesso!</p>
+      <p>Parâmetro excluído com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir a estação. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir o Parâmetro. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir a estação?
+            Deseja realmente excluir este Parâmetro?
           </p>
         </div>
         <div className="stationParameter-details">

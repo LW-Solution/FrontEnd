@@ -5,72 +5,77 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
   faTrash,
-  faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 import Toast from "../../Toast";
-import { useNavigate } from "react-router-dom";
 
-export default function StationsRead({
-  stationList,
-  onEditStation,
+export default function LocationsRead({
+  locationList,
+  onEditLocation,
   reload,
 }: {
-  stationList: never[];
-    onEditStation: (id_station: SetStateAction<null>) => void;
-    reload: () => void;
+  locationList: never[];
+  onEditLocation: (id_location: SetStateAction<null>) => void;
+  reload: () => void;
 }) {
   const [toast, setToast] = useState(false);
-  const [station, setStation] = useState([]);
+  const [location, setLocation] = useState([]);
 
   useEffect(() => {
-    if (Array.isArray(stationList)) {
-      setStation(stationList);
+    if (Array.isArray(locationList)) {
+      setLocation(locationList);
     }
-  }, [reload, stationList]);
+  }, [reload, locationList]);
 
   const [modalData, setModalData] = useState({
     showModal: false,
-    stationIdToDelete: null,
-    stationToDelete: null,
-    stationEmailToDelete: null,
+    locationIdToDelete: null,
+    locationToDelete: null,
+    locationLatitudeToDelete: null,
+    locationLongitudeToDelete: null,
   });
   const [deleteStatus, setDeleteStatus] = useState(null);
 
-  const handleEdit = (id_station: SetStateAction<null>) => {
-    onEditStation && onEditStation(id_station);
+  const handleEdit = (id_location: SetStateAction<null>) => {
+    onEditLocation && onEditLocation(id_location);
   };
   const cancelDelete = () => {
     setModalData({
       showModal: false,
-      stationIdToDelete: null,
-      stationToDelete: null,
-      stationEmailToDelete: null,
+      locationIdToDelete: null,
+      locationToDelete: null,
+      locationLatitudeToDelete: null,
+      locationLongitudeToDelete: null,
     });
     setDeleteStatus(null); // Resetar o status ao cancelar
   };
 
-  const handleDelete = (id_station: number, nome: string, email: string) => {
+  const handleDelete = (
+    id_location: number,
+    nome: string,
+    email: string
+  ) => {
     setModalData({
       showModal: true,
-      stationIdToDelete: id_station,
-      stationToDelete: nome,
-      stationEmailToDelete: email,
+      locationIdToDelete: id_location,
+      locationToDelete: nome,
+      locationLatitudeToDelete: email,
+      locationLongitudeToDelete: email,
     });
     setDeleteStatus(null); // Resetar o status ao abrir o modal
     reload();
   };
 
-  const confirmDelete = async (id_station: number) => {
+  const confirmDelete = async (id_location: number) => {
     try {
       // Realizar a solicitação DELETE
       const response = await window.stations3001.delete(
-        `station/${id_station ? String(id_station) : ""}`
+        `locations/${id_location ? String(id_location) : ""}`
       );
       if (response.status === 200) {
-        setStation(
-          station.filter(
-            (station: { id_station: number }) =>
-              station.id_station !== id_station
+        setLocation(
+          location.filter(
+            (location: { id_location: number }) =>
+              location.id_location !== id_location
           )
         );
       }
@@ -81,25 +86,28 @@ export default function StationsRead({
       // Feche o modal após a exclusão ou faça outras ações necessárias
       setModalData({
         showModal: true,
-        stationIdToDelete: null,
-        stationToDelete: null,
-        stationEmailToDelete: null,
+        locationIdToDelete: null,
+        locationToDelete: null,
+        locationLatitudeToDelete: null,
+        locationLongitudeToDelete: null,
       });
 
       // Atualizar a lista de usuários após a exclusão, se necessário
-      const updatedStations = station.filter(
-        (station) => station.id_station !== id_station
+      const updatedLocations = location.filter(
+        (location) =>
+          location?.id_location !== id_location
       );
-      setStation(updatedStations);
+      setLocation(updatedLocations);
       reload();
     } catch (error) {
       console.error("Erro ao excluir o usuário:", error);
 
       setModalData({
         showModal: true,
-        stationIdToDelete: null,
-        stationToDelete: null,
-        stationEmailToDelete: null,
+        locationIdToDelete: null,
+        locationToDelete: null,
+        locationLatitudeToDelete: null,
+        locationLongitudeToDelete: null,
       });
 
       // Atualizar o status para falha
@@ -107,36 +115,34 @@ export default function StationsRead({
     }
   };
 
-  const navigate = useNavigate();
-
-  const handleChartClick = (id_station: number) => {
-    navigate(`/admin/dashboard/${id_station}`);
-  };
-
   const modalContent =
     deleteStatus === "success" ? (
-      <p>Estação excluída com sucesso!</p>
+      <p>Localização excluída com sucesso!</p>
     ) : deleteStatus === "fail" ? (
-      <p>Falha ao excluir a Estação. Tente novamente mais tarde.</p>
+      <p>Falha ao excluir a Localização. Tente novamente mais tarde.</p>
     ) : (
       <>
         <div className="text-center">
           <p className="confirmation-message">
-            Deseja realmente excluir esta Estação?
+            Deseja realmente excluir esta Localização?
           </p>
         </div>
-        <div className="station-details">
+        <div className="location-details">
           <p>
             <b>ID: </b>
-            {modalData.stationIdToDelete}
+            {modalData.locationIdToDelete}
           </p>
           <p>
             <b>Nome: </b>
-            {modalData.stationToDelete}
+            {modalData.locationToDelete}
           </p>
           <p>
-            <b>E-mail: </b>
-            {modalData.stationEmailToDelete}
+            <b>Latitude: </b>
+            {modalData.locationLatitudeToDelete}
+          </p>
+          <p>
+            <b>Longitude: </b>
+            {modalData.locationLongitudeToDelete}
           </p>
         </div>
       </>
@@ -145,33 +151,28 @@ export default function StationsRead({
   return (
     <div>
       <Toast show={toast} toggle={setToast} children={undefined} />
-      <h2 className="my-3">Estações Cadastradas</h2>
+      <h2 className="my-3">Localização Cadastradas</h2>
       <table className="table">
         <thead>
           <tr>
-            <th>Descrição da Estação</th>
-            <th>Localização</th>
+            <th>Nome</th>
             <th>Latitude</th>
             <th>Longitude</th>
             <th className="text-center">Ações</th>
           </tr>
         </thead>
         <tbody>
-          {station.map(
-            (station: {
-              id_station: number;
-              station_description: string;
-              location: {
-                location_name: string;
-                latitude: string;
-                longitude: string;
-              };
+          {location.map(
+            (location: {
+              id_location: number;
+              location_name: string;
+              latitude: string;
+              longitude: string;
             }) => (
-              <tr key={station.id_station}>
-                <td className="col-3">{station.station_description}</td>
-                <td className="col-2">{station?.location?.location_name}</td>
-                <td className="col-2">{station?.location?.latitude}</td>
-                <td className="col-2">{station?.location?.longitude}</td>
+              <tr key={location.id_location}>
+                <td className="col-2">{location?.location_name}</td>
+                <td className="col-2">{location?.latitude}</td>
+                <td className="col-2">{location?.longitude}</td>
                 <td className="col-1 text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
@@ -179,7 +180,7 @@ export default function StationsRead({
                     className="btn btn-sm btn-secondary me-1"
                     onClick={() =>
                       handleEdit(
-                        station.id_station as unknown as SetStateAction<null>
+                        location.id_location as unknown as SetStateAction<null>
                       )
                     }
                   />
@@ -189,16 +190,11 @@ export default function StationsRead({
                     className="btn btn-sm btn-danger me-1"
                     onClick={() =>
                       handleDelete(
-                        station.id_station,
-                        station.station_description,
-                        station.location.location_name
+                        location.id_location,
+                        location.location_name,
+                        location.latitude,
                       )
                     }
-                  />
-                  <FontAwesomeIcon
-                    icon={faChartLine}
-                    className="btn btn-sm btn-primary"
-                    onClick={() => handleChartClick(station.id_station)}
                   />
                 </td>
               </tr>
@@ -216,8 +212,8 @@ export default function StationsRead({
                 <button
                   className="btn btn-danger"
                   onClick={() =>
-                    modalData.stationIdToDelete !== null &&
-                    confirmDelete(modalData.stationIdToDelete)
+                    modalData.locationIdToDelete !== null &&
+                    confirmDelete(modalData.locationIdToDelete)
                   }
                 >
                   Excluir

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd lws-front
+          npm install
+
+      - name: Merge to prod
+        if: success() && github.ref == 'refs/heads/staging'
+        env:
+          GHUB_TOKEN: ${{ secrets.GHUB_TOKEN }}
+        run: |
+          git config user.name "jonasrsribeiro"
+          git config user.email "jonas.ribeiro01@fatec.sp.gov.br"
+          git fetch origin
+          git checkout staging
+          git pull origin staging
+          git checkout prod
+          git merge --allow-unrelated-histories --strategy-option=theirs staging
+          git push origin prod

@@ -20,6 +20,7 @@ export default function StationsUpdate({
   });
   const [station, setStation] = useState({
     station_description: "",
+    station_mac_address: "",
     location: {
       id_location: "",
       location_name: "",
@@ -33,10 +34,11 @@ export default function StationsUpdate({
       try {
         // Carregar os detalhes da estação a ser atualizada
         const response = await window.stations3001.get(`station/${stationId}`);
-        const { station_description, location } = response.data;
+        const { station_description, station_mac_address, location } = response.data;
 
         setStation({
           station_description,
+          station_mac_address,
           location: {
             ...location
           },
@@ -126,6 +128,20 @@ export default function StationsUpdate({
                 id="station_description"
                 name="station_description"
                 value={station.station_description}
+                onChange={handleChange}
+                className="form-control"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label htmlFor="station_description" className="form-label">
+                UID:
+              </label>
+              <input
+                type="text"
+                id="station_mac_address"
+                name="station_mac_address"
+                value={station.station_mac_address}
                 onChange={handleChange}
                 className="form-control"
                 required

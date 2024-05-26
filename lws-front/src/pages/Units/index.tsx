@@ -1,18 +1,18 @@
 import BodyHeader from "../../components/BodyHeader";
 import { SetStateAction, useEffect, useState } from "react";
-import StationsCreate from "../../components/Stations/StationsCreate";
-import StationsRead from "../../components/Stations/StationsRead";
-import StationsUpdate from "../../components/Stations/StationsUpdate";
+import UnitCreate from "../../components/Unit/UnitCreate";
+import UnitRead from "../../components/Unit/UnitRead";
+import UnitUpdate from "../../components/Unit/UnitUpdate";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
-  { link: "#cadastrar", title: "Estações" },
+  { link: "#cadastrar", title: "Cadastrar" },
   { link: "#editar", title: "Editar" },
 ];
 
-export default function Stations() {
-  const [stationUpdateId, setstationUpdateIdId] = useState(null);
-  const [station, setStation] = useState([]);
+export default function Unit() {
+  const [unitUpdateId, setUnitUpdateIdId] = useState(null);
+  const [unit, setUnit] = useState([]);
   const [reload, setReload] = useState(false);
 
   const handleReload = () => {
@@ -22,8 +22,8 @@ export default function Stations() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await window.stations3001.get("station");
-        setStation(response.data);
+        const response = await window.stations3001.get("unit");
+        setUnit(response.data);
       } catch (error) {
         console.error("Erro na requisição:", error);
       }
@@ -31,9 +31,9 @@ export default function Stations() {
     fetchData();
   }, [reload]); // Este efeito será executado apenas uma vez, no momento da montagem do componente
 
-  const handleEditarUsuario = (id: SetStateAction<null>) => {
+  const handleEditarUnit = (id: SetStateAction<null>) => {
     // Define o ID do usuário que está sendo editado
-    setstationUpdateIdId(id);
+    setUnitUpdateIdId(id);
 
     // Ativa a aba de edição
     const element = document.getElementById("Editar");
@@ -43,10 +43,10 @@ export default function Stations() {
   };
 
 
-  const updateStationList = async () => {
+  const updateUnitList = async () => {
     try {
-      const response = await window.stations3001.get("station");
-      setStation(response.data);
+      const response = await window.stations3001.get("unit");
+      setUnit(response.data);
     } catch (error) {
       console.error("Erro na requisição:", error);
     }
@@ -58,19 +58,19 @@ export default function Stations() {
       <div className="my-3 tab-content">
         {/* Listagem de Estações */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <StationsRead stationList={station} onEditStation={handleEditarUsuario} reload={handleReload} />
+          <UnitRead unitList={unit} onEditUnit={handleEditarUnit} reload={handleReload} />
         </div>
 
         {/* Cadastro de Estações */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <StationsCreate updateStationList={updateStationList}  reload={handleReload} />
+          <UnitCreate updateUnitList={updateUnitList}  reload={handleReload} />
         </div>
 
         {/* Edição de Estações */}
         <div className="tab-pane" id="editar" role="tabpanel">
-          <StationsUpdate
-            stationId={stationUpdateId}
-            updateStationList={updateStationList}
+          <UnitUpdate
+            unitId={unitUpdateId}
+            updateUnitList={updateUnitList}
             reload={handleReload}
           />
         </div>
