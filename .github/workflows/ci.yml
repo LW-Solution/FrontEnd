@@ -19,11 +19,12 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd lws-front
+          npm install
 
       - name: Build and tag Docker image for Development
         run: |
-          cd lws-front
           docker build -t jonasrsribeiro/lw-frontend -f Dockerfile.dev .
           docker tag jonasrsribeiro/lw-frontend:latest jonasrsribeiro/lw-frontend:develop
 
