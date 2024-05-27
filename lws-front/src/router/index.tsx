@@ -4,7 +4,6 @@ import Unit from "../pages/Units";
 import Location from "../pages/Locations";
 import ParameterType from "../pages/ParameterType";
 import Params from "../pages/Params";
-import Reports from "../pages/Reports";
 import Stations from "../pages/Stations";
 import Template from "../Template";
 import Login from "../pages/Login";
