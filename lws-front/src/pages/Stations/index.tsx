@@ -3,6 +3,8 @@ import { SetStateAction, useEffect, useState } from "react";
 import StationsCreate from "../../components/Stations/StationsCreate";
 import StationsRead from "../../components/Stations/StationsRead";
 import StationsUpdate from "../../components/Stations/StationsUpdate";
+import Maps from "../../components/Maps";
+import "./style.scss";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
@@ -17,7 +19,7 @@ export default function Stations() {
 
   const handleReload = () => {
     setReload(true);
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +44,6 @@ export default function Stations() {
     }
   };
 
-
   const updateStationList = async () => {
     try {
       const response = await window.stations3001.get("station");
@@ -58,12 +59,26 @@ export default function Stations() {
       <div className="my-3 tab-content">
         {/* Listagem de Estações */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <StationsRead stationList={station} onEditStation={handleEditarUsuario} reload={handleReload} />
+          <div style={{ display: "flex" }}>
+            <div style={{ flex: 1 }}>
+              <StationsRead
+                stationList={station}
+                onEditStation={handleEditarUsuario}
+                reload={handleReload}
+              />
+            </div>
+            <div className="maps">
+              <Maps station={station} />
+            </div>
+          </div>
         </div>
 
         {/* Cadastro de Estações */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <StationsCreate updateStationList={updateStationList}  reload={handleReload} />
+          <StationsCreate
+            updateStationList={updateStationList}
+            reload={handleReload}
+          />
         </div>
 
         {/* Edição de Estações */}
