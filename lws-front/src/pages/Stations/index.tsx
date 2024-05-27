@@ -68,7 +68,22 @@ export default function Stations() {
               />
             </div>
             <div className="maps">
-              <Maps station={station} />
+              <Maps
+                data={station}
+                getCoordinates={(item) => {
+                  if ("location" in item) {
+                    return {
+                      latitude: item.location.latitude,
+                      longitude: item.location.longitude,
+                    };
+                  } else {
+                    return {
+                      latitude: item.latitude,
+                      longitude: item.longitude,
+                    };
+                  }
+                }}
+              />{" "}
             </div>
           </div>
         </div>
