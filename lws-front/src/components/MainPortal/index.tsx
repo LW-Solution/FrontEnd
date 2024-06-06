@@ -5,6 +5,9 @@ import CardSemInfo from "../../components/CardSemInfo";
 const MainPortal: React.FC = () => {
   const [location, setLocation] = useState(null);
   const [city, setCity] = useState("");
+  const [stations, setStations] = useState([]);
+  const [stationParameters, setStationParameters] = useState([]);
+  const [parameters, setParameters] = useState([]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -14,14 +17,12 @@ const MainPortal: React.FC = () => {
           setLocation({ latitude, longitude });
 
           const apiKey = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pt-br`;
-          console.log(apiKey);
           fetch(apiKey)
             .then((response) => response.json())
             .then((data) => setCity(data))
             .catch((error) =>
               console.error("Erro ao encontrar nome da cidade: ", error)
             );
-          console.log(city);
         },
         (error) => {
           console.error("Erro ao encontrar localização: ", error);
@@ -31,6 +32,62 @@ const MainPortal: React.FC = () => {
       console.warn("Geolocalização não está disponível.");
     }
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await window.stations3001.get("station");
+        setStations(response.data);
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await window.stations3001.get(`stationParameter`);
+        setStationParameters(response.data);
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (stations && city) {
+      const foundStation = stations.find(
+        (station) => station?.station_description === city?.city
+      );
+      if (foundStation) {
+        console.log("Estação encontrada:", foundStation);
+        const fetchParameters = async () => {
+          try {
+            const foundParameters = await stationParameters.filter(
+              (stationParameter) =>
+                stationParameter?.station?.station_description ===
+                foundStation?.station_description
+            );
+            if (foundParameters) {
+              setParameters(foundParameters);
+            }
+          } catch (error) {
+            console.error("Erro ao buscar parâmetros da estação:", error);
+          }
+        };
+        fetchParameters();
+      } else {
+        console.log(
+          "Nenhuma estação correspondente encontrada para:",
+          city.city
+        );
+      }
+    }
+  }, [stations, city, stationParameters]);
+
   return (
     <main className="main row flex-grow-1">
       {location ? (
@@ -39,32 +96,32 @@ const MainPortal: React.FC = () => {
             tituloDoCard={city?.city}
             conteudoDoCard={29}
             unidade="ºC"
-            textoDeAjuda="A localização é um dado importante para diversos setores, como meteorologia e logística. Ela pode ser obtida por GPS ou por endereço."
+            textoDeAjuda=""
           />
         ) : (
-          <p>Buscando sua cidade...</p>
+          <CardSemInfo
+            tituloDoCard="Buscando sua cidade..."
+            conteudoDoCard=""
+            unidade=""
+            textoDeAjuda=""
+          />
         )
       ) : (
-        <p>Localização não está disponível.</p>
+        <CardSemInfo
+          tituloDoCard="Localização não disponível no momento"
+          conteudoDoCard=""
+          unidade=""
+          textoDeAjuda=""
+        />
       )}
-      <CardComInfo
-        tituloDoCard="Temperatura Média"
-        conteudoDoCard={29}
-        unidade="ºC"
-        textoDeAjuda="A temperatura, medida por termômetros, indica o nível de calor ou frio do ar, influenciando nosso conforto e diversos outros fatores. ️"
-      />
-      <CardComInfo
-        tituloDoCard="Umidade Relativa"
-        conteudoDoCard={3}
-        unidade="g/m³"
-        textoDeAjuda="A umidade relativa, medida por higrômetros, indica a porcentagem de vapor de água no ar em relação ao máximo que ele pode suportar, influenciando nosso conforto e saúde."
-      />
-      <CardComInfo
-        tituloDoCard="Velocidade do Vento"
-        conteudoDoCard={5}
-        unidade="m/s"
-        textoDeAjuda="A velocidade do vento, medida por anemômetros, revela o quão rápido o ar se move. Essa informação é crucial para diversas áreas, desde a meteorologia até a geração de energia eólica."
-      />
+      {parameters.map((parameter) => (
+        <CardComInfo
+          tituloDoCard={`${parameter?.parameter_type?.parameter_name}`}
+          conteudoDoCard={29} // Replace with actual value
+          unidade={`${parameter?.parameter_type?.unit?.unit}`}
+          textoDeAjuda="..." // Replace with actual value
+        />
+      ))}
     </main>
   );
 };

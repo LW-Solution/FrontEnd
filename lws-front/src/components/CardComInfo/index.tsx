@@ -13,8 +13,7 @@ const CardComInfo: React.FC<CardProps> = ({ tituloDoCard, conteudoDoCard, unidad
   const [isHovered, setIsHovered] = useState(false);
 
   const getIcon = (temperature: number, titulo: string) => {
-    console.log(temperature, titulo)
-    if (titulo == 'Temperatura Média') {
+    if (titulo == 'Temperatura') {
       if (temperature >= -1 && temperature <= 10) {
         return faSnowflake;
       } else if (temperature >= 11 && temperature <= 20) {
@@ -24,9 +23,9 @@ const CardComInfo: React.FC<CardProps> = ({ tituloDoCard, conteudoDoCard, unidad
       } else if (temperature >= 26 && temperature <= 45) {
         return faSun;
       }
-    } else if (titulo == 'Umidade Relativa') { 
+    } else if (titulo == 'Umidade') { 
       return faDroplet;
-    } else if (titulo == 'Velocidade do Vento'){
+    } else if (titulo == 'Vento'){
       return faWind;
     } else {
       return faLocationArrow;

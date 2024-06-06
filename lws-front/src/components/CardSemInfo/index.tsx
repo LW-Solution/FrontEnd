@@ -11,7 +11,7 @@ import {
 
 type CardProps = {
   tituloDoCard: string;
-  conteudoDoCard: number;
+  conteudoDoCard: string | number;
   unidade: string;
   textoDeAjuda: string;
 };
@@ -23,7 +23,6 @@ const CardSemInfo: React.FC<CardProps> = ({
   textoDeAjuda,
 }) => {
   const getIcon = (temperature: number, titulo: string) => {
-    console.log(temperature, titulo);
     if (titulo == "Temperatura Média") {
       if (temperature >= -1 && temperature <= 10) {
         return faSnowflake;
