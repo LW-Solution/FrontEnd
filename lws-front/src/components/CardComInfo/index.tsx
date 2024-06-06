@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSnowflake, faCloud, faCloudSun, faSun, faWind, faDroplet } from "@fortawesome/free-solid-svg-icons";
+import { faSnowflake, faCloud, faCloudSun, faSun, faWind, faDroplet, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
 
 type CardProps = {
   tituloDoCard: string;
@@ -26,8 +26,10 @@ const CardComInfo: React.FC<CardProps> = ({ tituloDoCard, conteudoDoCard, unidad
       }
     } else if (titulo == 'Umidade Relativa') { 
       return faDroplet;
-    } else {
+    } else if (titulo == 'Velocidade do Vento'){
       return faWind;
+    } else {
+      return faLocationArrow;
     }
   };
 
@@ -51,10 +53,10 @@ const CardComInfo: React.FC<CardProps> = ({ tituloDoCard, conteudoDoCard, unidad
             position: 'absolute',
             right: 0,
             top: '50%',
-            width: '40%',
-            height: '125px',
-            transform: 'translate(110%, -55%)',
-            backgroundColor: '#f0f0f0',
+            width: '42.5%',
+            height: '123px',
+            transform: 'translate(102.5%, -57%)',
+            backgroundColor: '#fff',
             border: '1px solid #ccc',
             padding: '5px 10px',
             margin: '10px 0',
