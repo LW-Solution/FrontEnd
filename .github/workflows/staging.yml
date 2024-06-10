@@ -23,16 +23,14 @@ jobs:
           cd lws-front
           npm install
 
-      - name: Merge to prod
+      - name: Create Pull Request
         if: success() && github.ref == 'refs/heads/staging'
-        env:
-          GHUB_TOKEN: ${{ secrets.GHUB_TOKEN }}
-        run: |
-          git config user.name "jonasrsribeiro"
-          git config user.email "jonas.ribeiro01@fatec.sp.gov.br"
-          git fetch origin
-          git checkout staging
-          git pull origin staging
-          git checkout prod
-          git merge --allow-unrelated-histories --strategy-option=theirs staging
-          git push origin prod
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GHUB_TOKEN }}
+          commit-message: "Merge de staging para prod"
+          branch: "prod"
+          title: "PR Automatico: Merge de staging para prod"
+          body: "Pull request automático de staging para prod."
+          labels: "automated,merge"
+          reviewers: "jonasrsribeiro"
