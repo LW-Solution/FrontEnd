@@ -131,11 +131,11 @@ export default function StationsRead({
             {modalData.stationIdToDelete}
           </p>
           <p>
-            <b>Nome: </b>
+            <b>Estação: </b>
             {modalData.stationToDelete}
           </p>
           <p>
-            <b>E-mail: </b>
+            <b>Localização: </b>
             {modalData.stationEmailToDelete}
           </p>
         </div>
@@ -150,9 +150,7 @@ export default function StationsRead({
         <thead>
           <tr>
             <th>Descrição da Estação</th>
-            <th>Localização</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
+            <th>Localização</th>           
             <th className="text-center">Ações</th>
           </tr>
         </thead>
@@ -168,11 +166,9 @@ export default function StationsRead({
               };
             }) => (
               <tr key={station.id_station}>
-                <td className="col-3">{station.station_description}</td>
-                <td className="col-2">{station?.location?.location_name}</td>
-                <td className="col-2">{station?.location?.latitude}</td>
-                <td className="col-2">{station?.location?.longitude}</td>
-                <td className="col-1 text-center">
+                <td >{station.station_description}</td>
+                <td >{station?.location?.location_name}</td>               
+                <td className="text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
@@ -205,7 +201,7 @@ export default function StationsRead({
             )
           )}
         </tbody>
-      </table>
+      </table>      
       <Modal
         showModal={modalData.showModal}
         handler={cancelDelete}

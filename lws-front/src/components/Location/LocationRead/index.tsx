@@ -170,10 +170,10 @@ export default function LocationsRead({
               longitude: string;
             }) => (
               <tr key={location.id_location}>
-                <td className="col-2">{location?.location_name}</td>
-                <td className="col-2">{location?.latitude}</td>
-                <td className="col-2">{location?.longitude}</td>
-                <td className="col-1 text-center">
+                <td >{location?.location_name}</td>
+                <td >{location?.latitude}</td>
+                <td >{location?.longitude}</td>
+                <td className="text-center">
                   {/* Ícone de Editar */}
                   <FontAwesomeIcon
                     icon={faEdit}
