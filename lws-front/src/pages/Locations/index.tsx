@@ -3,6 +3,7 @@ import { SetStateAction, useEffect, useState } from "react";
 import LocationCreate from "../../components/Location/LocationCreate";
 import LocationRead from "../../components/Location/LocationRead";
 import LocationUpdate from "../../components/Location/LocationUpdate";
+import Maps from "../../components/Maps";
 
 const navigation = [
   { link: "#listar", title: "Listar" },
@@ -17,7 +18,7 @@ export default function Location() {
 
   const handleReload = () => {
     setReload(true);
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +43,6 @@ export default function Location() {
     }
   };
 
-
   const updateLocationList = async () => {
     try {
       const response = await window.stations3001.get("location");
@@ -58,12 +58,42 @@ export default function Location() {
       <div className="my-3 tab-content">
         {/* Listagem de Estações */}
         <div className="tab-pane active" id="listar" role="tabpanel">
-          <LocationRead locationList={location} onEditLocation={handleEditarLocation} reload={handleReload} />
+          <div style={{ display: "flex" }}>
+            <div style={{ flex: 1 }}>
+              <LocationRead
+                locationList={location}
+                onEditLocation={handleEditarLocation}
+                reload={handleReload}
+              />
+            </div>
+
+            <div className="maps">
+              <Maps
+                data={location}
+                getCoordinates={(item) => {
+                  if ("location" in item) {
+                    return {
+                      latitude: item.location.latitude,
+                      longitude: item.location.longitude,
+                    };
+                  } else {
+                    return {
+                      latitude: item.latitude,
+                      longitude: item.longitude,
+                    };
+                  }
+                }}
+              />{" "}
+            </div>
+          </div>
         </div>
 
         {/* Cadastro de Estações */}
         <div className="tab-pane" id="cadastrar" role="tabpanel">
-          <LocationCreate updateLocationList={updateLocationList}  reload={handleReload} />
+          <LocationCreate
+            updateLocationList={updateLocationList}
+            reload={handleReload}
+          />
         </div>
 
         {/* Edição de Estações */}
