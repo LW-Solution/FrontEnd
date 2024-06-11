@@ -2,7 +2,7 @@ import "./style.scss";
 import lwlogo from "../../assets/images/LW_logo_w_light.png";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Portal() {
 
     const navigate = useNavigate();
     const entrar = () => {

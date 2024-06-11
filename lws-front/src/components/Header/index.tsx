@@ -35,8 +35,7 @@ export default function Header(props: HeaderProps) {
         console.error("Ocorreu um erro!", error);
       });
   }, [occurrence]);
-
-  console.log(occurrence);
+  
   return (
     <div className="header d-flex justify-content-between">
       <h2>{title}</h2>

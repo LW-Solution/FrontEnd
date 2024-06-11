@@ -16,7 +16,7 @@ export default function ParamsRead({
 }) {
   const [toast, setToast] = useState(false);
   const [stationParameter, setStationParameter] = useState([]);
-  console.log(stationParameterList)
+
   useEffect(() => {
     if (Array.isArray(stationParameterList)) {
       setStationParameter(stationParameterList);
