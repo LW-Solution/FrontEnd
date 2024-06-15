@@ -21,7 +21,7 @@ const LoginPortal: React.FC = () => {
       setUsername("");
       setPassword("");
       localStorage.removeItem("token");
-      navigate("/"); // E navegue para "/" aqui, se houver um erro
+      navigate("/");
     }
   };
 
