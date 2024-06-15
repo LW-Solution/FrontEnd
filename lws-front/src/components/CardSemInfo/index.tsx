@@ -27,7 +27,6 @@ const CardSemInfo: React.FC<CardProps> = ({
   const [alerta, setAlerta] = useState(null);
 
   useEffect(() => {
-    // Simulando a obtenção do alerta da API
     window.stations3001
       .get("occurrence")
       .then((response) => {
