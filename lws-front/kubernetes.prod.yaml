@@ -1,0 +1,350 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: microsservicos
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "test_db"
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: microsservicos
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  namespace: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: "doxito007@gmail.com"
+            - name: PGADMIN_DEFAULT_PASSWORD
+              value: "postgres"
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  namespace: microsservicos
+spec:
+  ports:
+    - port: 5050
+      targetPort: 5050
+  selector:
+    app: pgadmin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+            - name: MYSQL_DATABASE
+              value: "estacoes_parametros_db"
+            - name: MYSQL_USER
+              value: "username"
+            - name: MYSQL_PASSWORD
+              value: "password"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-storage
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: microsservicos
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-cadastro-autenticacao
+  namespace: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controller-cadastro-autenticacao
+  template:
+    metadata:
+      labels:
+        app: controller-cadastro-autenticacao
+    spec:
+      containers:
+        - name: controller-cadastro-autenticacao
+          image: jonasrsribeiro/lw-controller-cadastro-autenticacao:prod
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: controller-cadastro-autenticacao
+  namespace: microsservicos
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: controller-cadastro-autenticacao
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-gerenciamento-estacoes-metricas
+  namespace: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controller-gerenciamento-estacoes-metricas
+  template:
+    metadata:
+      labels:
+        app: controller-gerenciamento-estacoes-metricas
+    spec:
+      containers:
+        - name: controller-gerenciamento-estacoes-metricas
+          image: jonasrsribeiro/lw-controller-gerenciamento-estacoes-metricas:prod
+          ports:
+            - containerPort: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: controller-gerenciamento-estacoes-metricas
+  namespace: microsservicos
+spec:
+  ports:
+    - port: 3001
+      targetPort: 3001
+  selector:
+    app: controller-gerenciamento-estacoes-metricas
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: jonasrsribeiro/lw-frontend:prod
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: /app
+              name: front-storage
+          env:
+            - name: NODE_ENV
+              value: "development"
+      volumes:
+        - name: front-storage
+          persistentVolumeClaim:
+            claimName: front-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: microsservicos
+spec:
+  ports:
+    - port: 5000
+      targetPort: 5000
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-recepcao-dados
+  namespace: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controller-recepcao-dados
+  template:
+    metadata:
+      labels:
+        app: controller-recepcao-dados
+    spec:
+      containers:
+        - name: controller-recepcao-dados
+          image: jonasrsribeiro/lw-controller-recepcao-dados:prod
+          ports:
+            - containerPort: 3002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: controller-recepcao-dados
+  namespace: microsservicos
+spec:
+  ports:
+    - port: 3002
+      targetPort: 3002
+  selector:
+    app: controller-recepcao-dados
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-tratamento-dados
+  namespace: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controller-tratamento-dados
+  template:
+    metadata:
+      labels:
+        app: controller-tratamento-dados
+    spec:
+      containers:
+        - name: controller-tratamento-dados
+          image: jonasrsribeiro/lw-controller-tratamento-dados:prod
+          ports:
+            - containerPort: 3003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: controller-tratamento-dados
+  namespace: microsservicos
+spec:
+  ports:
+    - port: 3003
+      targetPort: 3003
+  selector:
+    app: controller-tratamento-dados
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: microsservicos
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: microsservicos
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: front-pvc
+  namespace: microsservicos
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+

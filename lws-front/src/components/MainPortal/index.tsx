@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import CardComInfo from "../../components/CardComInfo";
 import CardSemInfo from "../../components/CardSemInfo";
 
-const MainPortal: React.FC = () => {
-  const [location, setLocation] = useState(null);
-  const [city, setCity] = useState("");
+interface MainPortalProps {
+  selectedCity: any;
+}
+
+const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
+  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [city, setCity] = useState<string | null>(null);
   const [stations, setStations] = useState([]);
-  const [stationParameters, setStationParameters] = useState([]);
-  const [parameters, setParameters] = useState([]);
+  const [foundStation, setFoundStation] = useState<any>(null);
+  const [parametersData, setParametersData] = useState([]);
 
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (selectedCity) {
+      setCity(selectedCity.label);
+    } else if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -19,7 +25,7 @@ const MainPortal: React.FC = () => {
           const apiKey = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pt-br`;
           fetch(apiKey)
             .then((response) => response.json())
-            .then((data) => setCity(data))
+            .then((data) => setCity(data.city))
             .catch((error) =>
               console.error("Erro ao encontrar nome da cidade: ", error)
             );
@@ -31,7 +37,7 @@ const MainPortal: React.FC = () => {
     } else {
       console.warn("Geolocalização não está disponível.");
     }
-  }, []);
+  }, [selectedCity]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,80 +52,84 @@ const MainPortal: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (stations && city) {
+      const station = stations.find(
+        (station) => station.station_description === city
+      );
+
+      if (station) {
+        setFoundStation(station);
+      } else {
+        console.log("Nenhuma estação correspondente encontrada para:", city);
+      }
+    }
+  }, [stations, city]);
+
+  useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await window.stations3001.get(`stationParameter`);
-        setStationParameters(response.data);
-      } catch (error) {
-        console.error("Erro na requisição:", error);
+      if (foundStation) {
+        try {
+          const response = await window.stations3001.get(`station/parameters/${foundStation.id_station}`);
+          setParametersData(response.data);
+        } catch (error) {
+          console.error("Erro na requisição:", error);
+        }
       }
     };
     fetchData();
-  }, []);
+  }, [foundStation]);
 
-  useEffect(() => {
-    if (stations && city) {
-      const foundStation = stations.find(
-        (station) => station?.station_description === city?.city
-      );
-      if (foundStation) {
-        console.log("Estação encontrada:", foundStation);
-        const fetchParameters = async () => {
-          try {
-            const foundParameters = await stationParameters.filter(
-              (stationParameter) =>
-                stationParameter?.station?.station_description ===
-                foundStation?.station_description
-            );
-            if (foundParameters) {
-              setParameters(foundParameters);
-            }
-          } catch (error) {
-            console.error("Erro ao buscar parâmetros da estação:", error);
-          }
-        };
-        fetchParameters();
-      } else {
-        console.log(
-          "Nenhuma estação correspondente encontrada para:",
-          city.city
-        );
-      }
+  const getHelpText = (parameterName) => {
+    switch (parameterName) {
+      case "Temperatura":
+        return "A medição da temperatura é realizada utilizando termômetros, que podem ser digitais ou analógicos. A temperatura é uma medida do grau de calor ou frio de um objeto ou ambiente, e pode ser expressa em graus Celsius (°C).";
+      case "Umidade":
+        return "A umidade é medida usando higrômetros, que podem ser mecânicos, eletrônicos ou psicrômetros. Ela indica a quantidade de vapor de água presente no ar em comparação com a quantidade máxima que o ar tem a uma certa temperatura.";
+      case "Vento":
+        return "A velocidade do vento é medida com anemômetros, que podem ser de copos, de hélice ou ultrassônicos. Geralmente expressa em metros por segundo (m/s) ou quilômetros por hora (km/h) e indica a força com que o vento está se movendo.";
+      default:
+        return "";
     }
-  }, [stations, city, stationParameters]);
+  };
+
+  const getHealthText = (parameterName) => {
+    switch (parameterName) {
+      case "Temperatura":
+        return "Exposição a temperaturas extremas pode causar problemas de saúde. Em temperaturas muito altas, há risco de insolação e desidratação, enquanto temperaturas muito baixas podem levar à hipotermia. Verifique sempre a temperatura.";
+      case "Umidade":
+        return "A umidade alta pode dificultar a transpiração e a regulação da temperatura corporal, aumentando o risco de hipertermia e problemas respiratórios. Já a umidade muito baixa pode causar ressecamento da pele e desconforto nas vias respiratórias.";
+      case "Vento":
+        return "Ventos fortes podem aumentar a sensação térmica de frio, mesmo em temperaturas moderadas. Além disso, ventos intensos podem transportar poluentes e alérgenos, exacerbando condições respiratórias como asma e alergias.";
+      default:
+        return "";
+    }
+  };
 
   return (
     <main className="main row flex-grow-1">
-      {location ? (
-        city ? (
-          <CardSemInfo
-            tituloDoCard={city?.city}
-            conteudoDoCard={29}
-            unidade="ºC"
-            textoDeAjuda=""
-          />
-        ) : (
-          <CardSemInfo
-            tituloDoCard="Buscando sua cidade..."
-            conteudoDoCard=""
-            unidade=""
-            textoDeAjuda=""
-          />
-        )
+      {city ? (
+        <CardSemInfo
+          tituloDoCard={city}
+          conteudoDoCard={foundStation?.principalSubdivision || ""}
+          unidade={foundStation?.countryName || ""}
+          textoDeAjuda=""
+        />
       ) : (
         <CardSemInfo
-          tituloDoCard="Localização não disponível no momento"
+          tituloDoCard="Selecione uma cidade ou permita acesso à localização..."
           conteudoDoCard=""
           unidade=""
           textoDeAjuda=""
         />
       )}
-      {parameters.map((parameter) => (
+      {parametersData.map((parameter) => (
         <CardComInfo
-          tituloDoCard={`${parameter?.parameter_type?.parameter_name}`}
-          conteudoDoCard={29} // Replace with actual value
-          unidade={`${parameter?.parameter_type?.unit?.unit}`}
-          textoDeAjuda="..." // Replace with actual value
+          key={parameter.id}
+          tituloDoCard={`${parameter?.parameter_name}`}
+          conteudoDoCard={`${parameter?.measure[0]?.value || 0}`}
+          unidade={`${parameter?.unit}`}
+          textoDeAjuda={getHelpText(parameter?.parameter_name)}
+          textoDeSaude={getHealthText(parameter?.parameter_name)}
         />
       ))}
     </main>
