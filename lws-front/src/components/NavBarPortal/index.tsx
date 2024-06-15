@@ -1,7 +1,18 @@
 import React from "react";
+import BuscaPortal from "../BuscaPortal";
+import LoginPortal from "../LoginPortal";
+import logo from "../../assets/images/LW_logo_w_light.png";
 
 const NavBarPortal: React.FC = () => {
   return (
+    <>
+    <header className="header-portal row py-3 align-items-center">
+        <div className="logo col-md-3 d-flex align-items-center">
+          <img src={logo} alt="logo" />
+        </div>
+        <BuscaPortal />
+        <LoginPortal />
+      </header>
     <nav
       className="menu row py-2 align-items-center"
       style={{ backgroundColor: "#89A7B1" }}
@@ -16,14 +27,15 @@ const NavBarPortal: React.FC = () => {
         <a className="nav-link mx-2" href="#">
           10 dias
         </a>
-        <a className="nav-link mx-2" href="#">
+        {/* <a className="nav-link mx-2" href="#">
           Fim de semana
-        </a>
+        </a> */}
         <a className="nav-link mx-2" href="#">
-          Mensal
+          Tabelas
         </a>
       </div>
     </nav>
+    </>
   );
 };
 

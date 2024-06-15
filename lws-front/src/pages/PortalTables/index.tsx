@@ -1,8 +1,9 @@
+// src/pages/dashboard/PortalTable.jsx
 import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import TableParams from "../../components/TableParams";
+import PortalTableParams from "../../components/PortalTableParams";
 import {
   Button,
   FormControl,
@@ -12,7 +13,8 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { GridDataType } from "../../types/dashTypes"; 
+import NavBarPortal from "../../components/NavBarPortal";
+import { NewGridDataType, Station } from "../../types/groupHour";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -22,19 +24,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-interface Station {
-  id_station: number;
-  station_description: string;
-  station_mac_address: string;
-  location: {
-    id_location: number;
-    location_name: string;
-    latitude: string;
-    longitude: string;
-  };
-}
-
-export default function TablesPage() {
+export default function PortalTable() {
   const [id_station, setIdStation] = useState<string | null>(null);
   const [stations, setStations] = useState<Station[]>([]);
 
@@ -46,26 +36,20 @@ export default function TablesPage() {
   const [displayStartDate, setDisplayStartDate] = useState("");
   const [displayEndDate, setDisplayEndDate] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [gridData, setGridData] = useState<GridDataType | null>(null);
+  const [gridData, setGridData] = useState<NewGridDataType | null>(null);
 
   const sendDate = async () => {
     setError(null); // Reset error before new request
     if (window.stations3001) {
       try {
         const response = await window.stations3001.get(
-          `dashboard/bydate/${startDate}/${endDate}/${id_station}`
+          `dashboard/bydate/grouphour/${startDate}/${endDate}/${id_station}`
         );
-        // Mapeia as descrições dos parâmetros para suas respectivas unidades
-        const parameterUnits: { [key: string]: string } = {};
-        response.data.parameter_types.forEach((parameter) => {
-          parameterUnits[parameter.description] = parameter.unit.unit;
-        });
-        // Adiciona as unidades aos dados antes de atualizar o estado
-        const dataWithUnits = {
-          ...response.data,
-          parameterUnits,
-        };
-        setGridData(dataWithUnits);
+
+        // Ajustar dados recebidos para o novo formato
+        const gridData = response.data as NewGridDataType;
+
+        setGridData(gridData);
         setDisplayStartDate(new Date(startDate).toLocaleDateString());
         setDisplayEndDate(new Date(endDate).toLocaleDateString());
       } catch (error) {
@@ -96,6 +80,7 @@ export default function TablesPage() {
 
   return (
     <>
+      <NavBarPortal />
       <Grid container spacing={2}>
         <Grid item xs={12} sx={{ display: "flex" }}>
           <Grid item xs={3} sx={{ marginRight: 1 }}>
@@ -169,7 +154,7 @@ export default function TablesPage() {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <TableParams gridData={gridData} />
+          <PortalTableParams gridData={gridData} />
         </Grid>
       </Grid>
     </>

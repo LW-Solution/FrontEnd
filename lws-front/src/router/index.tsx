@@ -12,6 +12,7 @@ import Users from "../pages/Users";
 import StationsDashboards from "../pages/Dashboards";
 import TablesPage from "../pages/Tables";
 import Portal from "../pages/Portal";
+import PortalTables from "../pages/PortalTables";
 
 export default [
     {
@@ -77,6 +78,10 @@ export default [
     {
         path: "/",
         element: <Portal />,
+    },
+    {
+        path: "/tables",
+        element: <PortalTables />,
     },
     {
         path: "*",
