@@ -27,8 +27,6 @@ export default function UnitRead({
     }
   }, [reload, unitList]);
 
-  console.log(unit)
-
   const [modalData, setModalData] = useState({
     showModal: false,
     unitIdToDelete: null,

@@ -12,7 +12,7 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { GridDataType } from "../../types/dashTypes"; // Certifique-se de que o caminho está correto
+import { GridDataType } from "../../types/dashTypes"; 
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -128,7 +128,7 @@ export default function TablesPage() {
             <Item>
               <TextField
                 id="date-start"
-                label="Start Date"
+                label="Data Início"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -142,7 +142,7 @@ export default function TablesPage() {
             <Item>
               <TextField
                 id="date-end"
-                label="End Date"
+                label="Data Fim"
                 type="date"
                 InputLabelProps={{
                   shrink: true,

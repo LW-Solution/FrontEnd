@@ -76,21 +76,17 @@ export default function ParameterTypesUpdate({
   const handleUnitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedUnit = unit.find(unit => unit.unit === e.target.value);
 
-    console.log(selectedUnit)
-
     setParameterType({
       ...parameterType,
       unitIdUnit: selectedUnit ? selectedUnit.id_unit : '',
       unit: selectedUnit ? selectedUnit.unit : '',
     });
 
-    console.log(parameterType)
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      console.log(parameterType)
       const response = await window.stations3001.put(`parameterType/${parameterTypeId}`, parameterType);
       setToastMessage("Tipo de parâmetro atualizado com sucesso!");
       setToast(true);
