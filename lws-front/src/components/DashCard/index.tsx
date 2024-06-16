@@ -15,7 +15,7 @@ export default function DashCard({
   onClick,
 }: DashCardProps) {
   return (
-    <Card sx={{ height: "vh" }} className="gradient" onClick={onClick}>
+    <Card sx={{ height: "13vh" }} className="gradient" onClick={onClick}>
       <CardContent>
         <Grid container direction="column" alignItems="center">
           <Grid item>
@@ -34,7 +34,7 @@ export default function DashCard({
             item
             justifyContent="space-around"
             alignItems="center"            
-            spacing={3}
+            spacing={2}
             sx={{ color: "#ccd1d1" }}
           >
             <Grid item >
