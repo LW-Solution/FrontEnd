@@ -128,7 +128,7 @@ export default function TablesPage() {
             <Item>
               <TextField
                 id="date-start"
-                label="Start Date"
+                label="Data Início"
                 type="date"
                 InputLabelProps={{
                   shrink: true,
@@ -142,7 +142,7 @@ export default function TablesPage() {
             <Item>
               <TextField
                 id="date-end"
-                label="End Date"
+                label="Data Fim"
                 type="date"
                 InputLabelProps={{
                   shrink: true,

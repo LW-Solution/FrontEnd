@@ -1,40 +1,31 @@
 import React from "react";
-import BuscaPortal from "../BuscaPortal";
-import LoginPortal from "../LoginPortal";
-import logo from "../../assets/images/LW_logo_w_light.png";
+import { Link } from "react-router-dom"; // Importe o Link de react-router-dom
 
 const NavBarPortal: React.FC = () => {
   return (
     <>
-    <header className="header-portal row py-3 align-items-center">
-        <div className="logo col-md-3 d-flex align-items-center">
-          <img src={logo} alt="logo" />
+      <nav
+        className="menu row py-2 align-items-center"
+        style={{ backgroundColor: "#89A7B1" }}
+      >
+        <div className="d-flex flex-row justify-content-between px-5">
+          <Link className="nav-link mx-2" to="/">
+            Agora
+          </Link>
+          <Link className="nav-link mx-2" to="/">
+            A cada hora
+          </Link>
+          <Link className="nav-link mx-2" to="/">
+            10 dias
+          </Link>
+          {/* <Link className="nav-link mx-2" to="/">
+            Fim de semana
+          </Link> */}
+          <Link className="nav-link mx-2" to="/tables">
+            Tabelas
+          </Link>
         </div>
-        <BuscaPortal />
-        <LoginPortal />
-      </header>
-    <nav
-      className="menu row py-2 align-items-center"
-      style={{ backgroundColor: "#89A7B1" }}
-    >
-      <div className="d-flex flex-row justify-content-between px-5">
-        <a className="nav-link mx-2" href="#">
-          Agora
-        </a>
-        <a className="nav-link mx-2" href="#">
-          A cada hora
-        </a>
-        <a className="nav-link mx-2" href="#">
-          10 dias
-        </a>
-        {/* <a className="nav-link mx-2" href="#">
-          Fim de semana
-        </a> */}
-        <a className="nav-link mx-2" href="#">
-          Tabelas
-        </a>
-      </div>
-    </nav>
+      </nav>
     </>
   );
 };

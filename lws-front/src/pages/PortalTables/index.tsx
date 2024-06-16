@@ -1,4 +1,4 @@
-// src/pages/dashboard/PortalTable.jsx
+import "./style.scss";
 import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -13,8 +13,11 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import NavBarPortal from "../../components/NavBarPortal";
 import { NewGridDataType, Station } from "../../types/groupHour";
+import BuscaPortal from "../../components/BuscaPortal";
+import LoginPortal from "../../components/LoginPortal";
+import NavBarPortal from "../../components/NavBarPortal";
+import logo from "../../assets/images/LW_logo_w_light.png";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -37,6 +40,7 @@ export default function PortalTable() {
   const [displayEndDate, setDisplayEndDate] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [gridData, setGridData] = useState<NewGridDataType | null>(null);
+  const [selectedCity, setSelectedCity] = useState<any>(null);
 
   const sendDate = async () => {
     setError(null); // Reset error before new request
@@ -80,83 +84,94 @@ export default function PortalTable() {
 
   return (
     <>
-      <NavBarPortal />
-      <Grid container spacing={2}>
-        <Grid item xs={12} sx={{ display: "flex" }}>
-          <Grid item xs={3} sx={{ marginRight: 1 }}>
-            <Item>
-              <FormControl sx={{ minWidth: 200 }}>
-                <InputLabel>Estações</InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={id_station || ""}
-                  onChange={handleChange}
-                  label="Estações"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  {stations.map((station) => (
-                    <MenuItem
-                      key={station.id_station}
-                      value={station.id_station}
-                    >
-                      {station.station_description}
+      <div className="landing-page container-fluid d-flex flex-column h-100">
+        <header className="header-portal row py-3 align-items-center">
+          <div className="logo col-md-3 d-flex align-items-center">
+            <img src={logo} alt="logo" />
+          </div>
+          <BuscaPortal setSelectedCity={setSelectedCity} />
+          <LoginPortal />
+        </header>
+        <NavBarPortal />
+
+        <Grid container spacing={2}>
+          <Grid item xs={12} sx={{ display: "flex" }}>
+            <Grid item xs={3} sx={{ marginRight: 1 }}>
+              <Item>
+                <FormControl sx={{ minWidth: 200 }}>
+                  <InputLabel>Estações</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={id_station || ""}
+                    onChange={handleChange}
+                    label="Estações"
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
                     </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Item>
-          </Grid>
-          <Grid item xs={3} sx={{ marginRight: 1 }}>
-            <Item>
-              <TextField
-                id="date-start"
-                label="Start Date"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </Item>
-          </Grid>
-          <Grid item xs={3} sx={{ marginRight: 1 }}>
-            <Item>
-              <TextField
-                id="date-end"
-                label="End Date"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </Item>
-          </Grid>
-          <Grid
-            item
-            xs={3}
-            container
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Button
-              className="btnExibir"
-              variant="contained"
-              onClick={sendDate}
+                    {stations.map((station) => (
+                      <MenuItem
+                        key={station.id_station}
+                        value={station.id_station}
+                      >
+                        {station.station_description}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Item>
+            </Grid>
+            <Grid item xs={3} sx={{ marginRight: 1 }}>
+              <Item>
+                <TextField
+                  id="date-start"
+                  label="Data Início"
+                  type="date"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </Item>
+            </Grid>
+            <Grid item xs={3} sx={{ marginRight: 1 }}>
+              <Item>
+                <TextField
+                  id="date-end"
+                  label="Data Fim"
+                  type="date"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </Item>
+            </Grid>
+            <Grid
+              item
+              xs={3}
+              container
+              alignItems="center"
+              justifyContent="center"
             >
-              Exibir
-            </Button>
+              <Button
+                className="btnExibir"
+                variant="contained"
+                onClick={sendDate}
+              >
+                Exibir
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <PortalTableParams gridData={gridData} />
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <PortalTableParams gridData={gridData} />
-        </Grid>
-      </Grid>
+      
+      </div>
     </>
   );
 }
