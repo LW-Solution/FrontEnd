@@ -5,7 +5,7 @@ const NavBarPortal: React.FC = () => {
   return (
     <>
       <nav
-        className="menu row py-2 align-items-center"
+        className="menu row py-2 align-items-center mb-2"
         style={{ backgroundColor: "#89A7B1" }}
       >
         <div className="d-flex flex-row justify-content-between px-5">

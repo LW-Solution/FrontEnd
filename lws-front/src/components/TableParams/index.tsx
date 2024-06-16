@@ -42,6 +42,15 @@ const TableParams: React.FC<TableParamsProps> = ({ gridData }) => {
     return Array.from(headers);
   }, [gridData]);
 
+  const formatDatePtBr = (dateString: string) => {
+    const dateParts = dateString.split("-");
+    if (dateParts.length === 3) {
+      return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    }
+    return dateString; // Retornar o valor original se o formato não estiver correto
+  };
+
+
   // Agrupando medições pelo unixtime
   const groupedData = React.useMemo(() => {
     if (!gridData) return [];
@@ -81,7 +90,7 @@ const TableParams: React.FC<TableParamsProps> = ({ gridData }) => {
           {groupedData.map((data) => (
             <StyledTableRow key={data.unixtime}>
               <StyledTableCell component="th" scope="row">
-                {data.date}
+                {formatDatePtBr(data.date)}
               </StyledTableCell>
               <StyledTableCell>{new Date(data.unixtime * 1000).toLocaleTimeString()}</StyledTableCell>
               {parameterHeaders.map((header) => (
