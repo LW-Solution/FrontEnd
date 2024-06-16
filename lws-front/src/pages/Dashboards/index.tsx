@@ -142,7 +142,7 @@ const StationsDashboards = () => {
               <Grid item>
                 <TextField
                   id="date-start"
-                  label="Start Date"
+                  label="Data Início"
                   type="date"
                   InputLabelProps={{
                     shrink: true,
@@ -154,7 +154,7 @@ const StationsDashboards = () => {
               <Grid item>
                 <TextField
                   id="date-end"
-                  label="End Date"
+                  label="Data Fim"
                   type="date"
                   InputLabelProps={{
                     shrink: true,

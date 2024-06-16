@@ -1,3 +1,4 @@
+// src/components/PortalTableParams.tsx
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -7,7 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { GridDataType, DailyData, Measurement } from '../../types/dashTypes';
+import { NewGridDataType, DailyDataEntry, AvgParameterValues } from '../../types/groupHour';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,19 +30,40 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 interface TableParamsProps {
-  gridData: GridDataType | null;
+  gridData: NewGridDataType | null;
 }
 
-const TableParams: React.FC<TableParamsProps> = ({ gridData }) => {
+const PortalTableParams: React.FC<TableParamsProps> = ({ gridData }) => {
   // Extraindo cabeçalhos únicos das descrições dos parâmetros
   const parameterHeaders = React.useMemo(() => {
     const headers = new Set<string>();
-    gridData?.dailyData.forEach((dailyData: DailyData) =>
-      dailyData.measurements.forEach((measurement: Measurement) => headers.add(measurement.description))
-    );
+    gridData?.parameter_types.forEach((parameter) => headers.add(parameter.description));
     return Array.from(headers);
   }, [gridData]);
 
+  // Agrupando medições por data e hora
+  const groupedData = React.useMemo(() => {
+    if (!gridData) return [];
+    const dataMap = new Map<string, { date: string, hour: string, measurements: { [key: string]: AvgParameterValues } }>();
+
+    gridData.dailyData.forEach((dailyData: DailyDataEntry) => {
+      const key = `${dailyData.date}-${dailyData.hour}`;
+      if (!dataMap.has(key)) {
+        dataMap.set(key, { date: dailyData.date, hour: dailyData.hour, measurements: {} });
+      }
+      Object.entries(dailyData.avgParameterValues).forEach(([description, values]) => {
+        dataMap.get(key)!.measurements[description] = values;
+      });
+    });
+
+    return Array.from(dataMap.entries()).map(([key, data]) => ({
+      date: data.date,
+      hour: data.hour,
+      measurements: data.measurements,
+    }));
+  }, [gridData]);
+
+  // Função para formatar a data para o padrão PT-BR
   const formatDatePtBr = (dateString: string) => {
     const dateParts = dateString.split("-");
     if (dateParts.length === 3) {
@@ -49,28 +71,6 @@ const TableParams: React.FC<TableParamsProps> = ({ gridData }) => {
     }
     return dateString; // Retornar o valor original se o formato não estiver correto
   };
-
-
-  // Agrupando medições pelo unixtime
-  const groupedData = React.useMemo(() => {
-    if (!gridData) return [];
-    const dataMap = new Map<number, { date: string, measurements: { [key: string]: number } }>();
-
-    gridData.dailyData.forEach((dailyData: DailyData) => {
-      dailyData.measurements.forEach((measurement: Measurement) => {
-        if (!dataMap.has(measurement.unixtime)) {
-          dataMap.set(measurement.unixtime, { date: dailyData.date, measurements: {} });
-        }
-        dataMap.get(measurement.unixtime)!.measurements[measurement.description] = measurement.value;
-      });
-    });
-
-    return Array.from(dataMap.entries()).map(([unixtime, data]) => ({
-      unixtime,
-      date: data.date,
-      measurements: data.measurements,
-    }));
-  }, [gridData]);
 
   return (
     <TableContainer component={Paper}>
@@ -81,21 +81,21 @@ const TableParams: React.FC<TableParamsProps> = ({ gridData }) => {
             <StyledTableCell>Hora</StyledTableCell>
             {parameterHeaders.map((header) => (
               <StyledTableCell key={header} align="right">
-                {header} ({gridData?.parameterUnits[header]})
+                {header} ({gridData?.parameter_types.find(pt => pt.description === header)?.unit.unit})
               </StyledTableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {groupedData.map((data) => (
-            <StyledTableRow key={data.unixtime}>
+          {groupedData.map((data, index) => (
+            <StyledTableRow key={index}>
               <StyledTableCell component="th" scope="row">
                 {formatDatePtBr(data.date)}
               </StyledTableCell>
-              <StyledTableCell>{new Date(data.unixtime * 1000).toLocaleTimeString()}</StyledTableCell>
+              <StyledTableCell>{data.hour}</StyledTableCell>
               {parameterHeaders.map((header) => (
                 <StyledTableCell key={header} align="right">
-                  {data.measurements[header] !== undefined ? data.measurements[header] : 'N/A'}
+                  {data.measurements[header] !== undefined ? data.measurements[header].avgValue : 'N/A'}
                 </StyledTableCell>
               ))}
             </StyledTableRow>
@@ -106,4 +106,4 @@ const TableParams: React.FC<TableParamsProps> = ({ gridData }) => {
   );
 };
 
-export default TableParams;
+export default PortalTableParams;
