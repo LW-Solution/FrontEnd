@@ -1,0 +1,169 @@
+/* Define custom colors */
+$primary-color: #3A415A; // Adjust as needed to match the reference image
+$secondary-color: lighten($primary-color, 20%); // Lighter shade for hover effects
+
+/* Base styles */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure full viewport height */
+  background-color: #e4e4e4; /* Light gray background */
+  gap: 0.5px;
+}
+
+/* Header */
+.header-portal {
+  display: flex;
+  justify-content: space-between; /* Align logo and login to opposite ends */
+  align-items: center;
+  padding: 1rem 2rem; /* Add some padding for spacing */
+  background-color: $primary-color; /* Dark blue background for header */
+  color: white; /* White text for header elements */
+}
+
+.logo {
+  padding: 10px 30px; /* Maintain your existing logo padding */
+  img {
+    width: 200px; /* Maintain your existing logo width */
+  }
+}
+
+.login-form {
+  display: flex;
+  gap: 0.5rem; /* Add some spacing between form elements */
+}
+
+.login-form label {
+  font-weight: bold;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc; /* Light gray border for inputs */
+  border-radius: 4px; /* Rounded corners for inputs */
+}
+
+.login-form button {
+  padding: 0.5rem 1rem;
+  background-color: $secondary-color; /* Lighter blue for the button */
+  border: none; /* Remove default button border */
+  border-radius: 4px; /* Rounded corners for button */
+  color: white; /* White text for button */
+  cursor: pointer; /* Indicate clickable button */
+  transition: background-color 0.3s ease; /* Smoother hover effect */
+}
+
+.login-form button:hover {
+  background-color: darken($secondary-color, 10%); /* Darken button on hover */
+}
+
+/* Main content (assuming the hero section) */
+.main {
+  flex: 1; /* Take up remaining space */
+  display: flex; /* Allow for hero image and content side-by-side */
+  padding: 2rem; /* Add some padding for main content */
+}
+
+.hero-image {
+  flex: 1; /* Take up half the space */
+  background-image: url("hero-image.jpg"); /* Replace with your hero image path */
+  background-size: cover; /* Ensure hero image covers the container */
+  background-position: center; /* Center the hero image */
+}
+
+.hero-content {
+  flex: 1; /* Take up half the space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-content h2 {
+  font-size: 2rem; /* Adjust heading size as needed */
+  margin-bottom: 1rem; /* Add some spacing after the heading */
+}
+
+.footer {
+  padding: 1rem;
+  text-align: center;
+  background-color: $primary-color; /* Dark blue background for footer */
+  color: white; /* White text for footer elements */
+}
+
+.card {
+  position: relative;
+  width: 70%;
+  height: 150px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px 0;
+  border-radius: 5px;
+
+  .question-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #89A7B1;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .exclamation-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #93c572;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .icon {
+    position: absolute;
+    left: 80%;
+  }
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  gap: 10px;
+  height: fit-content;
+}
+
+.card-sem-info {
+  position: relative;
+  height: 120px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+
+.new-card {
+  height: 123px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+}

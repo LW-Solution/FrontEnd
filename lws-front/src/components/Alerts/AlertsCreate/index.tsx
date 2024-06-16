@@ -140,9 +140,7 @@ export default function AlertsCreate({
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      console.log(alert);
       const resposta = await window.stations3001.post("alert", alert);
-      console.log(resposta);
 
       setToastMessage(`Parâmetro cadastrado na estação!`);
       setToast(true);

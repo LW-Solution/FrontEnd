@@ -1,0 +1,51 @@
+.paddingall {
+    padding: 10px;
+  }
+  
+  .pricetitle {
+    font-weight: 600;
+  }
+  .pricesubtitle {
+    font-size: 14px;
+  }
+  
+  .iconstyle {
+    margin-top: 20px !important;
+    margin-left: 20px !important;
+    color: aliceblue;
+  }
+  .iconstyleblack {
+    margin-top: 20px !important;
+    margin-left: 20px !important;
+  }
+ 
+  
+  .gradientlight {
+    background: rgb(53, 198, 148);
+    background: linear-gradient(
+      158deg,
+      rgba(53, 138, 148, 1) 0%,
+      rgba(91, 180, 96, 1) 100%
+    );
+  }
+  
+  .bgcolor {
+    min-height: 100vh;
+    background: #eceff1;
+    background: linear-gradient(
+      158deg,
+      rgb(224, 224, 224) 0%,
+      rrgb(233, 237, 254) 100%
+    );
+  }
+  
+  .btnExibir{
+    background-color: #3A415A !important;
+  }
+
+  hr {
+    width: 100%;
+    border-width: 1px;
+    border-color: #000;
+    margin: 10px 0;
+  }

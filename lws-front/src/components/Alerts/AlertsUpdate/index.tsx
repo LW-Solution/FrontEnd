@@ -171,7 +171,6 @@ export default function AlertsUpdate({
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      console.log(alert);
       await window.stations3001.put(`alert/${alertId}`, alert);
       setToastMessage("Parâmetro da estação atualizado com sucesso!");
       setToast(true);
