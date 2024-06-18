@@ -126,7 +126,7 @@ const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
         <CardComInfo
           key={parameter.id}
           tituloDoCard={`${parameter?.parameter_name}`}
-          conteudoDoCard={`${parameter?.measure[0]?.value || 0}`}
+          conteudoDoCard={`${parameter?.measure[0]?.value ||390}`}
           unidade={`${parameter?.unit}`}
           textoDeAjuda={getHelpText(parameter?.parameter_name)}
           textoDeSaude={getHealthText(parameter?.parameter_name)}
