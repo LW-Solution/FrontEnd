@@ -46,6 +46,8 @@ const CardComInfo: React.FC<CardProps> = ({
       }
     } else if (titulo == "Umidade") {
       return faDroplet;
+    } else if (titulo == "Vento") {
+      return faWind;
     } else if (titulo == "Luminosidade") {
       if (temperature >= 32000) {
         return faSun;
@@ -111,9 +113,11 @@ const CardComInfo: React.FC<CardProps> = ({
         )}
         <div className="icon">
           {
-            icon == WiMoonAltFull || icon == GiLightProjector || icon == FaLightbulb || icon == IoFlashlight || icon == WiMoonAltNew ? <icon /> : null
-          }
-          {
+            icon == WiMoonAltFull ? <WiMoonAltFull style={{ width: '60px', height: '80px' }}/> :
+            icon == GiLightProjector ? <GiLightProjector style={{ width: '60px', height: '80px' }}/> :
+            icon == FaLightbulb ? <FaLightbulb style={{ width: '60px', height: '80px' }}/> :
+            icon == IoFlashlight ? <IoFlashlight style={{ width: '60px', height: '80px' }}/> :
+            icon == WiMoonAltNew ? <WiMoonAltNew style={{ width: '60px', height: '80px' }}/> :
             <FontAwesomeIcon icon={icon} size="5x" />
           }
         </div>

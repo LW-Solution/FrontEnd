@@ -87,6 +87,8 @@ const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
         return "A umidade é medida usando higrômetros, que podem ser mecânicos, eletrônicos ou psicrômetros. Ela indica a quantidade de vapor de água presente no ar em comparação com a quantidade máxima que o ar tem a uma certa temperatura.";
       case "Vento":
         return "A velocidade do vento é medida com anemômetros, que podem ser de copos, de hélice ou ultrassônicos. Geralmente expressa em metros por segundo (m/s) ou quilômetros por hora (km/h) e indica a força com que o vento está se movendo.";
+      case "Luminosidade":
+        return "A luminosidade é medida em lux (lx) usando luxímetros. Ela indica a intensidade da luz em uma determinada área e é importante para avaliar condições de iluminação em ambientes internos e externos."; 
       default:
         return "";
     }
@@ -100,6 +102,8 @@ const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
         return "A umidade alta pode dificultar a transpiração e a regulação da temperatura corporal, aumentando o risco de hipertermia e problemas respiratórios. Já a umidade muito baixa pode causar ressecamento da pele e desconforto nas vias respiratórias.";
       case "Vento":
         return "Ventos fortes podem aumentar a sensação térmica de frio, mesmo em temperaturas moderadas. Além disso, ventos intensos podem transportar poluentes e alérgenos, exacerbando condições respiratórias como asma e alergias.";
+      case "Luminosidade":
+        return "Exposição excessiva à luminosidade, especialmente à luz solar direta, pode causar problemas de saúde como queimaduras solares e danos oculares. O uso de protetor solar e óculos de sol é recomendado para proteção.";
       default:
         return "";
     }
@@ -126,7 +130,7 @@ const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
         <CardComInfo
           key={parameter.id}
           tituloDoCard={`${parameter?.parameter_name}`}
-          conteudoDoCard={`${parameter?.measure[0]?.value ||390}`}
+          conteudoDoCard={`${parameter?.measure[0]?.value || 0}`}
           unidade={`${parameter?.unit}`}
           textoDeAjuda={getHelpText(parameter?.parameter_name)}
           textoDeSaude={getHealthText(parameter?.parameter_name)}
