@@ -6,9 +6,14 @@ import {
   faCloudSun,
   faSun,
   faWind,
+  faMoon,
   faDroplet,
   faLocationArrow,
 } from "@fortawesome/free-solid-svg-icons";
+import { WiMoonAltNew, WiMoonAltFull } from "react-icons/wi";
+import { GiLightProjector } from "react-icons/gi";
+import { FaLightbulb } from "react-icons/fa";
+import { IoFlashlight } from "react-icons/io5";
 
 type CardProps = {
   tituloDoCard: string;
@@ -43,6 +48,22 @@ const CardComInfo: React.FC<CardProps> = ({
       return faDroplet;
     } else if (titulo == "Vento") {
       return faWind;
+    } else if (titulo == "Luminosidade") {
+      if (temperature >= 32000) {
+        return faSun;
+      } else if (temperature >= 10000 && temperature <= 25000) {
+        return WiMoonAltFull;
+      } else if (temperature >= 1000 && temperature <= 9999) {
+        return GiLightProjector;
+      } else if (temperature >= 400 && temperature <= 999) {
+        return FaLightbulb;
+      } else if (temperature >= 320 && temperature <= 399) {
+        return IoFlashlight;
+      } else if (temperature >= 0 && temperature <= 321) {
+        return faMoon;
+      } else {
+        return WiMoonAltNew;
+      }
     } else {
       return faLocationArrow;
     }
@@ -57,18 +78,17 @@ const CardComInfo: React.FC<CardProps> = ({
         <h1>
           {conteudoDoCard} {unidade}
         </h1>
-        //
         <button
           className="question-button"
-          onMouseEnter={() => {setIsHovered(true); setHoveredElement('question');}}
-          onMouseLeave={() => {setIsHovered(false); setHoveredElement('');}}
+          onMouseEnter={() => { setIsHovered(true); setHoveredElement('question'); }}
+          onMouseLeave={() => { setIsHovered(false); setHoveredElement(''); }}
         >
           ?
         </button>
         <button
           className="exclamation-button"
-          onMouseEnter={() => {setIsHovered(true); setHoveredElement('exclamation');}}
-          onMouseLeave={() => {setIsHovered(false); setHoveredElement('');}}
+          onMouseEnter={() => { setIsHovered(true); setHoveredElement('exclamation'); }}
+          onMouseLeave={() => { setIsHovered(false); setHoveredElement(''); }}
         >
           i
         </button>
@@ -92,7 +112,14 @@ const CardComInfo: React.FC<CardProps> = ({
           </div>
         )}
         <div className="icon">
-          <FontAwesomeIcon icon={icon} size="5x" />
+          {
+            icon == WiMoonAltFull ? <WiMoonAltFull style={{ width: '60px', height: '80px' }}/> :
+            icon == GiLightProjector ? <GiLightProjector style={{ width: '60px', height: '80px' }}/> :
+            icon == FaLightbulb ? <FaLightbulb style={{ width: '60px', height: '80px' }}/> :
+            icon == IoFlashlight ? <IoFlashlight style={{ width: '60px', height: '80px' }}/> :
+            icon == WiMoonAltNew ? <WiMoonAltNew style={{ width: '60px', height: '80px' }}/> :
+            <FontAwesomeIcon icon={icon} size="5x" />
+          }
         </div>
       </div>
     </div>
