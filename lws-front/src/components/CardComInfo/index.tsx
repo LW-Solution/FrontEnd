@@ -9,6 +9,7 @@ import {
   faMoon,
   faDroplet,
   faLocationArrow,
+  faUmbrella,
 } from "@fortawesome/free-solid-svg-icons";
 import { WiMoonAltNew, WiMoonAltFull } from "react-icons/wi";
 import { GiLightProjector } from "react-icons/gi";
@@ -48,6 +49,8 @@ const CardComInfo: React.FC<CardProps> = ({
       return faDroplet;
     } else if (titulo == "Vento") {
       return faWind;
+    } else if (titulo == 'Precipitação'){
+      return faUmbrella;
     } else if (titulo == "Luminosidade") {
       if (temperature >= 32000) {
         return faSun;

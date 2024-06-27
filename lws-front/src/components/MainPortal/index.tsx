@@ -7,7 +7,10 @@ interface MainPortalProps {
 }
 
 const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
-  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
   const [city, setCity] = useState<string | null>(null);
   const [stations, setStations] = useState([]);
   const [foundStation, setFoundStation] = useState<any>(null);
@@ -69,7 +72,9 @@ const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
     const fetchData = async () => {
       if (foundStation) {
         try {
-          const response = await window.stations3001.get(`station/parameters/${foundStation.id_station}`);
+          const response = await window.stations3001.get(
+            `station/parameters/${foundStation.id_station}`
+          );
           setParametersData(response.data);
         } catch (error) {
           console.error("Erro na requisição:", error);
@@ -88,7 +93,9 @@ const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
       case "Vento":
         return "A velocidade do vento é medida com anemômetros, que podem ser de copos, de hélice ou ultrassônicos. Geralmente expressa em metros por segundo (m/s) ou quilômetros por hora (km/h) e indica a força com que o vento está se movendo.";
       case "Luminosidade":
-        return "A luminosidade é medida em lux (lx) usando luxímetros. Ela indica a intensidade da luz em uma determinada área e é importante para avaliar condições de iluminação em ambientes internos e externos."; 
+        return "A luminosidade é medida em lux (lx) usando luxímetros. Ela indica a intensidade da luz em uma determinada área e é importante para avaliar condições de iluminação em ambientes internos e externos.";
+      case "Precipitação":
+        return "A precipitação é medida usando pluviômetros, que registram a quantidade de chuva em milímetros (mm). Ela indica o volume de água que caiu em uma determinada área em um período de tempo.";
       default:
         return "";
     }
@@ -104,6 +111,8 @@ const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
         return "Ventos fortes podem aumentar a sensação térmica de frio, mesmo em temperaturas moderadas. Além disso, ventos intensos podem transportar poluentes e alérgenos, exacerbando condições respiratórias como asma e alergias.";
       case "Luminosidade":
         return "Exposição excessiva à luminosidade, especialmente à luz solar direta, pode causar problemas de saúde como queimaduras solares e danos oculares. O uso de protetor solar e óculos de sol é recomendado para proteção.";
+      case "Precipitação":
+        return "Podem causar inundações e deslizamentos de terra, representando riscos significativos à saúde e segurança. Mantenha-se informado e siga as recomendações das autoridades em casos de chuvas fortes.";
       default:
         return "";
     }
