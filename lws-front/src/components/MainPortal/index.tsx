@@ -112,7 +112,7 @@ const MainPortal: React.FC<MainPortalProps> = ({ selectedCity }) => {
       case "Luminosidade":
         return "Exposição excessiva à luminosidade, especialmente à luz solar direta, pode causar problemas de saúde como queimaduras solares e danos oculares. O uso de protetor solar e óculos de sol é recomendado para proteção.";
       case "Precipitação":
-        return "Podem causar inundações e deslizamentos de terra, representando riscos significativos à saúde e segurança. Mantenha-se informado e seguir as recomendações das autoridades em casos de chuvas fortes.";
+        return "Podem causar inundações e deslizamentos de terra, representando riscos significativos à saúde e segurança. Mantenha-se informado e siga as recomendações das autoridades em casos de chuvas fortes.";
       default:
         return "";
     }
